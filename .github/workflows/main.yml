@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:       
+    - name: Deploy using ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          cd meowketplace/frontend
+          git pull
+          docker build -t meowketplace .
+          docker stop $(docker ps -a -q)
+          docker rm $(docker ps -a -q) 
+          docker rm meowketplace
+          docker run -dp 80:80 meowketplace
