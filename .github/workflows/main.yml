@@ -1,8 +1,11 @@
-name: Deploy
+name: Deploy frontend
 
 on:
   push:
-    branches: [ main ]
+    paths:
+      - 'frontend/**'
+    branches:
+      - 'main'
 
 jobs:
   build:
