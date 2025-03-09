@@ -25,5 +25,4 @@ jobs:
           docker build -t meowketplace .
           docker stop $(docker ps -a -q)
           docker rm $(docker ps -a -q) 
-          docker rm meowketplace
           docker run -dp 80:80 meowketplace
