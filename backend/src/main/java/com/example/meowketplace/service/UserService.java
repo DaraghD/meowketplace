@@ -1,6 +1,6 @@
 package com.example.meowketplace.service;
 
-import com.example.meowketplace.dto.SignupDTO;
+import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void addUser(SignupDTO signupRequest) throws Exception {
+    public void addUser(SignupRequest signupRequest) throws Exception {
         if (signupRequest.getUsername() == null || signupRequest.getPassword() == null || signupRequest.getEmail() == null) {
             throw new Exception("Missing required fields");
         }

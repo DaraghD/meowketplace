@@ -1,9 +1,7 @@
 package com.example.meowketplace.dto;
 
 
-import jakarta.validation.constraints.NotNull;
-
-public class SignupDTO {
+public class SignupRequest {
 
     private String username;
     private String password;
