@@ -6,8 +6,7 @@ A business marketplace website with a focus on pets
 - Frontend - React
 - Database - MySQL/MariaDB
 
-To easily run the database install docker compose and run `docker-compose up` in the root directory to start the database.  
-Springboot is set to use the config in the 'docker-compose.yml' file to connect to the database.
+To easily run the database install docker compose and run `docker-compose up` in the root directory to start the database, backend and frontend.
 
 # Artifacts
 [Trello](https://trello.com/b/8407TRM7/cs4116group9businessservicemarketplace)  
