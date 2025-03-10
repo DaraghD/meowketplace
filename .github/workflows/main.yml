@@ -1,0 +1,26 @@
+name: Deploy website
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+    branches:
+      - 'main'
+    
+jobs:
+  rebuild_backend_frontend:
+    runs-on: ubuntu-latest
+
+    steps:       
+    - name: Deploy using ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          cd meowketplace
+          git pull
+          docker compose up --build -d frontend backend

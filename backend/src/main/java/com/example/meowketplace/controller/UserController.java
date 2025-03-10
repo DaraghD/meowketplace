@@ -1,7 +1,6 @@
 package com.example.meowketplace.controller;
 
-import com.example.meowketplace.dto.SignupDTO;
-import com.example.meowketplace.model.User;
+import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,14 +21,23 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> addUser(@RequestBody SignupDTO signupRequest) {
+    @PostMapping("/signup")
+    public ResponseEntity<String> addUser(@RequestBody SignupRequest signupRequest) {
        try {
            userService.addUser(signupRequest);
        }catch (Exception e) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
        }
        return ResponseEntity.ok("User successfully added");
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody SignupRequest signupRequest) {
+        try {
+            userService.addUser(signupRequest);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.ok("User successfully added");
     }
 
 }
