@@ -34,7 +34,17 @@ services:
       - 8080:8080
     depends_on:
       - mariadb
-    #restart: on-failure
+      -
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    networks:
+      - meow_network
+    ports:
+      - 80:80
+    depends_on:
+      - backend
 
 volumes:
   mariadb_volume:
