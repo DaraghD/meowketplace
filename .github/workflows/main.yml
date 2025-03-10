@@ -20,9 +20,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          cd meowketplace/frontend
+          cd meowketplace
           git pull
-          docker build -t meowketplace .
-          docker stop $(docker ps -a -q)
-          docker rm $(docker ps -a -q) 
-          docker run -dp 80:80 meowketplace
+          docker compose up --build frontend
