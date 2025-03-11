@@ -7,6 +7,7 @@ function Meowbar() {
     return (
         <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
             <Container>
+            <img src = "C:\Users\User\Code\Meowketplace\meowketplace\frontend\logo.png" alt = "logo fail"/>
                 <Navbar.Brand href="#home">Meowketplace</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
