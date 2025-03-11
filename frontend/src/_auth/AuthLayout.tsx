@@ -7,6 +7,7 @@ const AuthLayout = () => {
   const routeToImageMap: { [key: string]: string } = {
     "/sign-up": "/assets/images/CreateAccountImg.png",
     "/sign-in": "/assets/images/LoginAccountImg.png",
+    "/business-sign-up": "/assets/images/BusinessSignUpImg.png",
   };
 
   // Get the image for the current route

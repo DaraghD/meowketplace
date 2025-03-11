@@ -12,38 +12,29 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SignUpValidation } from "@/lib/validation";
+import { BusinessSignUpValidation } from "@/lib/validation";
 import { z } from "zod";
 import { Link } from "react-router-dom";
 
-const SignUpForm = () => {
-  const form = useForm<z.infer<typeof SignUpValidation>>({
-    resolver: zodResolver(SignUpValidation),
+const BusinessSignUpForm = () => {
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof BusinessSignUpValidation>>({
+    resolver: zodResolver(BusinessSignUpValidation),
     defaultValues: {
-      username: "",
-      password: "",
+      companyName: "",
       email: "",
+      password: "",
+      description: "",
+      services: "",
     },
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof SignUpValidation>) {
+  async function onSubmit(values: z.infer<typeof BusinessSignUpValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    try {
-      const response = await fetch("http://localhost:8080/api/user/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      const data = await response.text();
-      alert(data);
-    } catch (error) {
-      console.log(error);
-    }
-    console.log("Data sent to backend");
+    console.log(values);
+    // TO DO: PASS DATA TO BACK END
   }
 
   return (
@@ -52,9 +43,9 @@ const SignUpForm = () => {
         className="absolute top-0 right-0 m-4 w-16 h-16"
         src="/assets/icons/logo.png"
       />
-      <div className="flex-center flex-col pl-10 pr-10 pb-10">
+      <div className="flex-center flex-col pl-10 pr-10 pb-4">
         <h1 className="text-3xl font-bold pt-5 sm:pt-12">
-          Create an User Account
+          Create Business account
         </h1>
         <p className="text-base text-gray-600">
           Already have an Account?{" "}
@@ -72,10 +63,10 @@ const SignUpForm = () => {
         >
           <FormField
             control={form.control}
-            name="username"
+            name="companyName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Company name</FormLabel>
                 <FormControl>
                   <Input type="text" className="shad-input" {...field} />
                 </FormControl>
@@ -88,9 +79,35 @@ const SignUpForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Contact email</FormLabel>
                 <FormControl>
                   <Input type="email" className="shad-input" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Input type="text" className="shad-input" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="services"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Services</FormLabel>
+                <FormControl>
+                  <Input type="text" className="shad-input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -117,19 +134,10 @@ const SignUpForm = () => {
             Policy
           </p>
           <Button type="submit">Create an account</Button>
-          <p>
-            Starting a business?{" "}
-            <Link
-              to="/business-sign-up"
-              className="underline text-blue-600 hover:text-blue-800"
-            >
-              Click here
-            </Link>
-          </p>
         </form>
       </div>
     </Form>
   );
 };
 
-export default SignUpForm;
+export default BusinessSignUpForm;

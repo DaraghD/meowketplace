@@ -6,6 +6,7 @@ import Home from "./_root/pages/Home";
 import SignUpForm from "./_auth/forms/SignUpForm";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
+import BusinessSignUpForm from "./_auth/forms/BusinessSignUpForm";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route element={<AuthLayout />}>
           <Route path="/sign-in" element={<SignInForm />} />
           <Route path="/sign-up" element={<SignUpForm />} />
+          <Route path="/business-sign-up" element={<BusinessSignUpForm />} />
         </Route>
 
         {/* private routes */}
