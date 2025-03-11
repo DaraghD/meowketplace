@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SignUpValidation } from "@/lib/validation";
 import { z } from "zod";
+import { Link } from "react-router-dom";
 
 const SignUpForm = () => {
   // 1. Define your form.
@@ -46,12 +47,12 @@ const SignUpForm = () => {
         </h1>
         <p className="text-base text-gray-600">
           Already have an Account?{" "}
-          <a
-            href="/login"
+          <Link
+            to="/sign-in"
             className="underline text-blue-600 hover:text-blue-800"
           >
             Log in
-          </a>
+          </Link>
         </p>
 
         <form
@@ -73,10 +74,10 @@ const SignUpForm = () => {
           />
           <FormField
             control={form.control}
-            name="username"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>email</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input type="email" className="shad-input" {...field} />
                 </FormControl>
@@ -89,7 +90,7 @@ const SignUpForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>password</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input type="password" className="shad-input" {...field} />
                 </FormControl>
@@ -107,12 +108,12 @@ const SignUpForm = () => {
           <Button type="submit">Create an account</Button>
           <p>
             Starting a business?{" "}
-            <a
-              href="/start-business"
+            <Link
+              to="/create-business"
               className="underline text-blue-600 hover:text-blue-800"
             >
               Click here
-            </a>
+            </Link>
           </p>
         </form>
       </div>
