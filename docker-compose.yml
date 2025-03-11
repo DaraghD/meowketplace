@@ -20,20 +20,7 @@ services:
       retries: 5
       start_period: 30s
 
-  backend:
-    build:
-      context: ./backend
-    container_name: backend
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/test
-      SPRING_DATASOURCE_USERNAME: meowdb
-      SPRING_DATASOURCE_PASSWORD: 123
-    networks:
-      - meow_network
-    ports:
-      - 8080:8080
-    depends_on:
-      - mariadb
+
   frontend:
     build:
       context: ./frontend
@@ -42,8 +29,7 @@ services:
       - meow_network
     ports:
       - 80:80
-    depends_on:
-      - backend
+
 
 volumes:
   mariadb_volume:
