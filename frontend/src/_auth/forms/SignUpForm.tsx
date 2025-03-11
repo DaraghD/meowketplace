@@ -18,13 +18,12 @@ import { z } from "zod";
 import { Link } from "react-router-dom";
 
 const SignUpForm = () => {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof SignUpValidation>>({
     resolver: zodResolver(SignUpValidation),
     defaultValues: {
       username: "",
-      email: "",
       password: "",
+      email: "",
     },
   });
 
@@ -32,8 +31,20 @@ const SignUpForm = () => {
   async function onSubmit(values: z.infer<typeof SignUpValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
-    // TO DO: PASS DATA TO BACK END
+    try{
+        const response = await fetch('http://localhost:8080/api/user/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+        })
+        const data = await response.text();
+        alert(data);
+    } catch(error){
+        console.log(error);
+    }
+    console.log("Data sent to backend");
   }
 
   return (
