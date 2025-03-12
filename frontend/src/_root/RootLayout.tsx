@@ -1,7 +1,7 @@
 
 const RootLayout = () => {
   return (
-    <div>Home</div>
+    <div>test</div>
   )
 }
 
