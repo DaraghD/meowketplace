@@ -26,10 +26,10 @@ jobs:
 
   rebuild_backend_frontend:
     runs-on: ubuntu-latest
+    needs: build_publish_images
 
     steps:
     - name: Deploy using ssh
-      needs: build_publish_images
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
