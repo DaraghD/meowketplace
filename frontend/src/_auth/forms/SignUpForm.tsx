@@ -31,7 +31,7 @@ const SignUpForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     try {
-      const response = await fetch("http://localhost:8080/api/user/signup", {
+      const response = await fetch("http://127.0.0.1:8080/api/user/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
