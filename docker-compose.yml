@@ -13,12 +13,6 @@ services:
       - meow_network
     expose:
       - 3306:3306
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
 
   backend:
     build:
@@ -34,6 +28,7 @@ services:
       - 8080:8080
     depends_on:
       - mariadb
+      
   frontend:
     build:
       context: ./frontend
@@ -42,7 +37,6 @@ services:
       - meow_network
     ports:
       - 80:80
-
 
 volumes:
   mariadb_volume:
