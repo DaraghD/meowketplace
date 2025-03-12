@@ -27,8 +27,9 @@ jobs:
   rebuild_backend_frontend:
     runs-on: ubuntu-latest
 
-    steps:       
+    steps:
     - name: Deploy using ssh
+      needs: build_publish_images
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -38,5 +39,6 @@ jobs:
         script: |
           cd meowketplace
           git pull
+          docker login --username daraghd --password ${{ secrets.GCR_TOKEN }} ghcr.io
           docker compose down
           docker compose up --pull always -d
