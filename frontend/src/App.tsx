@@ -1,5 +1,4 @@
-import { Routes, Route } from "react-router-dom";
-
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
 import SignInForm from "./_auth/forms/SignInForm";
 import Home from "./_root/pages/Home";
@@ -9,8 +8,13 @@ import RootLayout from "./_root/RootLayout";
 import BusinessSignUpForm from "./_auth/forms/BusinessSignUpForm";
 
 const App = () => {
+  const location = useLocation();
+  const isPublicRoute = ["/sign-in", "/sign-up", "/business-sign-up"].includes(
+    location.pathname
+  );
+
   return (
-    <main className="flex h-screen">
+    <main className={isPublicRoute ? "flex h-screen" : ""}>
       <Routes>
         {/* public routes */}
         <Route element={<AuthLayout />}>
