@@ -45,7 +45,10 @@ const RootLayout = () => {
       <div className="block xl:hidden w-screen">
         <Menubar className="h-16">
           <MenubarMenu>
-            <MenubarTrigger className="flex items-center space-x-2 h-full cursor-pointer">
+            <MenubarTrigger
+              className="flex items-center space-x-2 h-full cursor-pointer"
+              style={{ backgroundColor: "transparent" }}
+            >
               <img src="/assets/icons/logo.png" className="w-auto h-14" />
               <span className="text-lg font-bold">Meowketplace</span>
             </MenubarTrigger>
