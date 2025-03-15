@@ -7,6 +7,7 @@ A business marketplace website with a focus on pets
 - Database - MySQL/MariaDB
 
 To easily run the project install docker compose and run `docker-compose up` in the root directory to start the database, backend and frontend.
+- You will need to modify the compose file to build the images instead of pulling them from ghcr
 
 # Artifacts
 [Trello](https://trello.com/b/8407TRM7/cs4116group9businessservicemarketplace)  

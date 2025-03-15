@@ -9,10 +9,26 @@ on:
       - 'main'
     
 jobs:
-  rebuild_backend_frontend:
+  build_publish_images:
     runs-on: ubuntu-latest
 
-    steps:       
+    steps:
+      - uses: actions/checkout@v3
+      - name: Checkout
+        run: |
+          docker login --username daraghd --password ${{ secrets.GCR_TOKEN }} ghcr.io
+          cd frontend 
+          docker build . --tag ghcr.io/daraghd/meowketplace_frontend:latest
+          docker push ghcr.io/daraghd/meowketplace_frontend:latest
+          cd ../backend
+          docker build . --tag ghcr.io/daraghd/meowketplace_backend:latest
+          docker push ghcr.io/daraghd/meowketplace_backend:latest
+
+  rebuild_backend_frontend:
+    runs-on: ubuntu-latest
+    needs: build_publish_images
+
+    steps:
     - name: Deploy using ssh
       uses: appleboy/ssh-action@master
       with:
@@ -23,4 +39,6 @@ jobs:
         script: |
           cd meowketplace
           git pull
-          docker compose up --build -d frontend backend
+          docker login --username daraghd --password ${{ secrets.GCR_TOKEN }} ghcr.io
+          docker compose down
+          docker compose up --pull always -d

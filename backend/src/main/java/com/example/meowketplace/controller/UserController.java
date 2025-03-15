@@ -5,10 +5,7 @@ import com.example.meowketplace.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -21,6 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @CrossOrigin
     @PostMapping("/signup")
     public ResponseEntity<String> addUser(@RequestBody SignupRequest signupRequest) {
        try {
@@ -28,7 +26,7 @@ public class UserController {
        }catch (Exception e) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
        }
-       return ResponseEntity.ok("User successfully added");
+       return ResponseEntity.status(HttpStatus.OK).body("User successfully added");
     }
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody SignupRequest signupRequest) {
