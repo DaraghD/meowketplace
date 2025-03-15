@@ -107,7 +107,12 @@ const BusinessSignUpForm = () => {
               <FormItem>
                 <FormLabel>Services</FormLabel>
                 <FormControl>
-                  <Input type="text" className="shad-input" {...field} />
+                  <Input
+                    placeholder="Seperate each service via comma e.g. (Grooming,Walking,Training)"
+                    type="text"
+                    className="shad-input"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
