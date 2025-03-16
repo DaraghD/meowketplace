@@ -29,6 +29,32 @@ const SignInForm = () => {
   async function onSubmit(values: z.infer<typeof SignInValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    const response = await fetch("http://127.0.0.1:8080/api/user/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Allow-Control-Allow-Origin": "http://127.0.0.1:8080",
+            "Access-Control-Allow-Credentials": "true",
+        },
+        body: JSON.stringify(values),
+        credentials: "same-origin",
+    });
+    const data = await response.text();
+    alert(data);
+
+    const cookieResponse = await fetch("http://127.0.0.1:8080/api/user/auth", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Allow-Control-Allow-Origin": "http://127.0.0.1:8080",
+            "Access-Control-Allow-Credentials": "true",
+    },
+    credentials: "same-origin",
+    });
+    const cookieData = await cookieResponse.text();
+    alert(cookieData);
+
+
     console.log(values);
     // TO DO: PASS DATA TO BACK END
   }

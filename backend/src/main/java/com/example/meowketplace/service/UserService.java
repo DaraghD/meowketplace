@@ -1,5 +1,7 @@
 package com.example.meowketplace.service;
 
+import com.example.meowketplace.component.JwtUtil;
+import com.example.meowketplace.dto.LoginRequest;
 import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.repository.UserRepository;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private UserRepository userRepository;
+    JwtUtil jwtUtil;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -32,6 +35,21 @@ public class UserService {
         user.setEmail(signupRequest.getEmail()); //TODO: validate on frontend
 
         userRepository.save(user);
+    }
+    public boolean authenticateUserPassword(LoginRequest loginRequest) throws Exception {
+        if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+            throw new Exception("Missing required fields");
+        }
+
+        if (userRepository.findByEmail(loginRequest.getEmail()).isEmpty()){
+            throw new Exception("Email not found");
+        }
+
+        User user = userRepository.findByEmail(loginRequest.getEmail()).get();
+        if(user.getPassword().equals(loginRequest.getPassword()) && user.getEmail().equals(loginRequest.getEmail())) {
+            return true;
+        }
+        return false;
     }
 
 }
