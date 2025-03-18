@@ -28,6 +28,7 @@ public class UserController {
        }
        return ResponseEntity.status(HttpStatus.OK).body("User successfully added");
     }
+
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody SignupRequest signupRequest) {
         try {

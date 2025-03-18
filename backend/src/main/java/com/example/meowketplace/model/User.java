@@ -2,22 +2,49 @@ package com.example.meowketplace.model;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+import java.util.List;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "user")
-public class User{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String username;
+
     private String email;
+
     private String password;
-    private String phone_number;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String description;
+
+    @Column(nullable = false)
     private boolean is_business;
+
+    @Column(nullable = false)
     private boolean is_verified;
-    private String first_name;
-    private String last_name;
+
     private String profile_picture;
-    private String address;
+
+    @Column(nullable = false)
+    private boolean is_admin;
+
+    @Column(nullable = false)
+    private boolean is_banned;
+
+    @Column(precision = 2)
+    private double business_rating;
+
+    @Column(nullable = false)
+    private Date created_at = new Date();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Product> products;
+
 
     public Long getId() {
         return id;
@@ -51,14 +78,6 @@ public class User{
         this.password = password;
     }
 
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
     public boolean isIs_business() {
         return is_business;
     }
@@ -73,22 +92,6 @@ public class User{
 
     public void setIs_verified(boolean is_verified) {
         this.is_verified = is_verified;
-    }
-
-    public String getFirst_name() {
-        return first_name;
-    }
-
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
     }
 
 }
