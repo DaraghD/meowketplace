@@ -138,7 +138,9 @@ const BusinessSignUpForm = () => {
             By creating an account, you agree to our Terms of use and Privacy
             Policy
           </p>
-          <Button type="submit">Create an account</Button>
+          <Button type="submit" className="cursor-pointer">
+            Create an account
+          </Button>
         </form>
       </div>
     </Form>

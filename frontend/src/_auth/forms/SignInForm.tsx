@@ -30,19 +30,18 @@ const SignInForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     const response = await fetch("http://127.0.0.1:8080/api/user/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
     });
     const data = await response.text();
-    if(response.status === 200){
-        localStorage.setItem("token", data);
-        alert(data);
-        return window.location.href = "/";
+    if (response.status === 200) {
+      localStorage.setItem("token", data);
+      alert(data);
+      return (window.location.href = "/");
     }
-
   }
 
   return (
@@ -93,7 +92,9 @@ const SignInForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Log In</Button>
+          <Button type="submit" className="cursor-pointer">
+            Log In
+          </Button>
           <p>Purr, Wag, Repeat! - You're one click away!</p>
         </form>
       </div>
