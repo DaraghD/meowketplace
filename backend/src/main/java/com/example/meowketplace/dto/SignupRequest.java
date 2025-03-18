@@ -6,9 +6,6 @@ public class SignupRequest {
     private String username;
     private String password;
     private String email;
-    //private String address;
-    //private String phone_number;
-    //private String business_description;
 
     private boolean is_business;
 

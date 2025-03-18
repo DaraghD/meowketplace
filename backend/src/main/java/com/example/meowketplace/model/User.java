@@ -2,9 +2,7 @@ package com.example.meowketplace.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
 import java.util.List;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
@@ -13,14 +11,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String description;
+    private String bio;
 
     @Column(nullable = false)
     private boolean is_business;
@@ -39,12 +40,8 @@ public class User {
     @Column(precision = 2)
     private double business_rating;
 
-    @Column(nullable = false)
-    private Date created_at = new Date();
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
-
 
     public Long getId() {
         return id;
@@ -106,7 +103,7 @@ public class User {
                 ", is_admin=" + is_admin +
                 ", profile_picture='" + profile_picture + '\'' +
                 ", business_rating=" + business_rating +
-                ", description='" + description+ '\'' +
+                ", bio='" + bio + '\'' +
                 '}';
     }
 }
