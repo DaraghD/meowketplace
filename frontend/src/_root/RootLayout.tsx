@@ -7,9 +7,10 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Outlet } from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 
 const RootLayout = () => {
+  const navigate = useNavigate();
   return (
     <>
       <div className="hidden xl:block">
@@ -26,7 +27,7 @@ const RootLayout = () => {
             <button className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
               Services
             </button>
-            <button className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
+            <button onClick={()=> navigate("/messages")} className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
               Messages
             </button>
             <button className="cursor-pointer">
@@ -52,7 +53,7 @@ const RootLayout = () => {
             <MenubarContent>
               <MenubarItem className="cursor-pointer">Services</MenubarItem>
               <MenubarSeparator />
-              <MenubarItem className="cursor-pointer">Messages</MenubarItem>
+              <MenubarItem className="cursor-pointer" onClick={() => navigate("/messages")}>Messages</MenubarItem>
               <MenubarSeparator />
               <MenubarItem className="cursor-pointer">
                 <span>Profile</span>{" "}
