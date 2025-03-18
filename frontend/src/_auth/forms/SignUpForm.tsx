@@ -31,14 +31,17 @@ const SignUpForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     try {
-      const response = await fetch("http://meowketplace.ie:8080/api/user/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": '*',
-        },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        "http://meowketplace.ie:8080/api/user/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify(values),
+        }
+      );
       const data = await response.text();
       alert(data);
     } catch (error) {
@@ -117,7 +120,9 @@ const SignUpForm = () => {
             By creating an account, you agree to our Terms of use and Privacy
             Policy
           </p>
-          <Button type="submit">Create an account</Button>
+          <Button type="submit" className="cursor-pointer">
+            Create an account
+          </Button>
           <p>
             Starting a business?{" "}
             <Link
