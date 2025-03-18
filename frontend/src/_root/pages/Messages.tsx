@@ -1,5 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import {
   ChatBubble,
   ChatBubbleAvatar,
@@ -7,62 +6,159 @@ import {
 } from "@/components/ui/chat/chat-bubble";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Message, User } from "@/lib/types/types";
 
 const Messages = () => {
+  const [chatUsers, setChatUsers] = useState<User[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch chat users from the database
+  useEffect(() => {
+    const fetchChatUsers = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/chat-users");
+        if (!response.ok) {
+          throw new Error("Failed to fetch chat users");
+        }
+        const data = await response.json();
+        setChatUsers(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChatUsers();
+  }, []);
+
+  // Fetch all messages from the backend
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/messages");
+        if (!response.ok) {
+          throw new Error("Failed to fetch messages");
+        }
+        const data: Message[] = await response.json();
+        setMessages(data);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
+  // Filter messages for the selected user
+  const filteredMessages = selectedUser
+    ? messages.filter(
+        (message) =>
+          message.sender.id === selectedUser.id ||
+          message.receiver.id === selectedUser.id
+      )
+    : [];
+
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-gray-100">
       {/* Sidebar (1/4 width) */}
       <div className="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
         <h2 className="text-lg font-semibold mb-4">Chats</h2>
-        <div className="space-y-2">
-          <div className="p-2 hover:bg-gray-100 rounded cursor-pointer flex">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <p className="font-medium pl-3">John Doe</p>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : (
+          <div className="space-y-2">
+            {chatUsers.map((user) => (
+              <div
+                key={user.id}
+                className="p-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"
+                onClick={() => setSelectedUser(user)} // Set selected user on click
+              >
+                <Avatar>
+                  <AvatarImage src={user.avatarUrl} />
+                  <AvatarFallback>
+                    {user.username
+                      .split(" ")
+                      .map((part) => part[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="pl-3">
+                  <p className="font-medium">{user.username}</p>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="p-2 hover:bg-gray-100 rounded cursor-pointer flex">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <p className="font-medium pl-3">John Dee</p>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Chat Area (3/4 width) */}
       <div className="w-3/4 flex flex-col">
         {/* Chat Header */}
         <div className="p-4 bg-white border-b border-gray-200">
-          <h2 className="text-lg font-semibold">John Doe</h2>
+          <h2 className="text-lg font-semibold">
+            {selectedUser
+              ? selectedUser.username
+              : "Select a user to start chatting"}
+          </h2>
         </div>
 
         {/* Chat Messages */}
         <div className="flex-1 p-4 overflow-y-auto">
           <ChatMessageList>
-            <ChatBubble variant="sent">
-              <ChatBubbleAvatar fallback="US" />
-              <ChatBubbleMessage variant="sent">
-                Hello, how has your day been? I hope you are doing well.
-              </ChatBubbleMessage>
-            </ChatBubble>
-            <ChatBubble variant="received">
-              <ChatBubbleAvatar fallback="AI" />
-              <ChatBubbleMessage variant="received">
-                Hi, I am doing well, thank you for asking. How can I help you
-                today?
-              </ChatBubbleMessage>
-            </ChatBubble>
-            <ChatBubble variant="received">
-              <ChatBubbleAvatar fallback="AI" />
-              <ChatBubbleMessage isLoading />
-            </ChatBubble>
+            {selectedUser ? (
+              filteredMessages.length > 0 ? (
+                filteredMessages.map((message) => (
+                  <ChatBubble
+                    key={message.id}
+                    variant={
+                      message.sender.id === selectedUser.id
+                        ? "sent"
+                        : "received"
+                    }
+                  >
+                    <ChatBubbleAvatar
+                      src={
+                        message.sender.id === selectedUser.id
+                          ? selectedUser.avatarUrl // Selected user is the sender
+                          : message.receiver.avatarUrl // Selected user is the receiver
+                      }
+                      fallback={
+                        message.sender.id === selectedUser.id
+                          ? selectedUser.username.substring(0, 2).toUpperCase()
+                          : message.receiver.username
+                              .substring(0, 2)
+                              .toUpperCase()
+                      }
+                    />
+                    <ChatBubbleMessage
+                      variant={
+                        message.sender.id === selectedUser.id
+                          ? "sent"
+                          : "received"
+                      }
+                    >
+                      {message.messageContent}
+                    </ChatBubbleMessage>
+                  </ChatBubble>
+                ))
+              ) : (
+                <p>No messages found.</p>
+              )
+            ) : (
+              <p>Please select a user to view messages.</p>
+            )}
           </ChatMessageList>
         </div>
 
-        {/* Chat Input */}
+        {/* Chat Input with Submit Button */}
         <div className="p-4 bg-white border-t border-gray-200 flex items-center gap-2">
           <ChatInput
             placeholder="Type your message here..."
