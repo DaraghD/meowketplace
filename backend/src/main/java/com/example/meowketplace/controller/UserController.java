@@ -43,7 +43,7 @@ public class UserController {
             boolean validUser = userService.authenticateUserPassword(loginRequest);
             if(validUser){
                 String token = jwtUtil.generateToken(userService.getUserByEmail(loginRequest.getEmail()).getId().toString());
-                return ResponseEntity.ok().body("Body: " + token);
+                return ResponseEntity.ok().body(token);
             }
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

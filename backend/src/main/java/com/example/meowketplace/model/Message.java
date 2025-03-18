@@ -1,5 +1,6 @@
 package com.example.meowketplace.model;
 
+import com.example.meowketplace.dto.MessageRequest;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -54,4 +55,5 @@ public class Message {
     public void setMessageContent(String messageContent) {
         this.messageContent = messageContent;
     }
+
 }
