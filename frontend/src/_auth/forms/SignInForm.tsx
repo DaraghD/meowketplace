@@ -29,8 +29,19 @@ const SignInForm = () => {
   async function onSubmit(values: z.infer<typeof SignInValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
-    // TO DO: PASS DATA TO BACK END
+    const response = await fetch("http://127.0.0.1:8080/api/user/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+    });
+    const data = await response.text();
+    if(response.status === 200){
+        localStorage.setItem("token", data);
+    }
+    alert(data);
+
   }
 
   return (
