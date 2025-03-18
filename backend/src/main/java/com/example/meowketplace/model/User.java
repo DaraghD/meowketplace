@@ -2,21 +2,48 @@ package com.example.meowketplace.model;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+import java.util.List;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "user")
-public class User{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String username;
+
     private String email;
+
     private String password;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String description;
+
+    @Column(nullable = false)
     private boolean is_business;
+
+    @Column(nullable = false)
     private boolean is_verified;
-    private boolean is_admin;
+
     private String profile_picture;
-    private float business_rating;
-    private String bio;
+
+    @Column(nullable = false)
+    private boolean is_admin;
+
+    @Column(nullable = false)
+    private boolean is_banned;
+
+    @Column(precision = 2)
+    private double business_rating;
+
+    @Column(nullable = false)
+    private Date created_at = new Date();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Product> products;
 
 
     public Long getId() {
@@ -79,7 +106,7 @@ public class User{
                 ", is_admin=" + is_admin +
                 ", profile_picture='" + profile_picture + '\'' +
                 ", business_rating=" + business_rating +
-                ", bio='" + bio + '\'' +
+                ", description='" + description+ '\'' +
                 '}';
     }
 }

@@ -36,7 +36,7 @@ public class UserController {
        }
        return ResponseEntity.status(HttpStatus.OK).body("User successfully added");
     }
-    @CrossOrigin(allowCredentials = "true", origins="http://localhost:5173")
+
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         try {
@@ -50,6 +50,7 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
     }
+
     @RequestMapping("/auth")
     public ResponseEntity<String> authenticateUser(@RequestHeader("Authorization") String authHeader) {
         try {
