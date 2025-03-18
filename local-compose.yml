@@ -3,7 +3,7 @@ services:
     image: mariadb:11.7
     container_name: mariadb
     environment:
-      MARIADB_ROOT_PASSWORD: 123
+      MYSQL_ROOT_PASSWORD: 123
       MYSQL_DATABASE: test
       MYSQL_USER: meowdb
       MYSQL_PASSWORD: 123
@@ -15,27 +15,29 @@ services:
       - 3306:3306
 
   backend:
-    image: ghcr.io/daraghd/meowketplace_backend:latest
+    build:
+      context: ./backend
     container_name: backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/test
       SPRING_DATASOURCE_USERNAME: meowdb
       SPRING_DATASOURCE_PASSWORD: 123
     networks:
-    - meow_network
+      - meow_network
     ports:
       - 8080:8080
     depends_on:
       - mariadb
   frontend:
-    image: ghcr.io/daraghd/meowketplace_frontend:latest
+    build:
+      context: ./frontend
     container_name: frontend
-    environment:
-      VITE_API_URL: http://meowketplace.ie/api
     networks:
       - meow_network
     ports:
       - 80:80
+    depends_on:
+      - backend
 
 volumes:
   mariadb_volume:
