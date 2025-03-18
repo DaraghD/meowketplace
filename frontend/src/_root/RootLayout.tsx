@@ -6,6 +6,7 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
@@ -28,15 +29,11 @@ const RootLayout = () => {
             <button className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
               Messages
             </button>
-            <button className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
-              Profile
-            </button>
             <button className="cursor-pointer">
-              <img
-                src="/assets/icons/cartIcon.png"
-                className="h-8 pl--4 w-auto"
-                alt="Cart"
-              />
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
             </button>
           </div>
         </div>
@@ -49,7 +46,7 @@ const RootLayout = () => {
               className="flex items-center space-x-2 h-full cursor-pointer"
               style={{ backgroundColor: "transparent" }}
             >
-              <img src="/assets/icons/logo.png" className="w-auto h-14" />
+              <img src="/assets/icons/hamburger.png" className="w-auto h-10" />
               <span className="text-lg font-bold">Meowketplace</span>
             </MenubarTrigger>
             <MenubarContent>
@@ -57,13 +54,18 @@ const RootLayout = () => {
               <MenubarSeparator />
               <MenubarItem className="cursor-pointer">Messages</MenubarItem>
               <MenubarSeparator />
-              <MenubarItem className="cursor-pointer">Profile</MenubarItem>
-              <MenubarSeparator />
               <MenubarItem className="cursor-pointer">
-                Cart{" "}
-                <img className="w-auto h-5" src="/assets/icons/cartIcon.png" />
+                <span>Profile</span>{" "}
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
               </MenubarItem>
             </MenubarContent>
+            <img
+              src="/assets/icons/logo.png"
+              className="w-auto h-14 ml-auto pr-3"
+            />
           </MenubarMenu>
         </Menubar>
       </div>
