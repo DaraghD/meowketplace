@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,23 +17,21 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository, JwtUtil jwtUtil) {
+    public MessageService(MessageRepository messageRepository, JwtUtil jwtUtil, UserService userService) {
         this.messageRepository = messageRepository;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
     public List<Message> getMessages(Long sender, Long receiver) {
-        return messageRepository.findAllBySenderAndReceiver(sender, receiver);
+        return messageRepository.findAllBySenderAndReceiver(userService.getUserById(sender), userService.getUserById(receiver));
     }
 
     public Optional<Message> getMessageById(Long id) {
         return messageRepository.findById(id);
-    }
-
-    public Optional<List<Message>> findAllBySenderOrReceiver(Long id) {
-        return messageRepository.findAllBySenderOrReceiver(id);
     }
 
     public Message createMessage(Message message) {
@@ -44,7 +43,7 @@ public class MessageService {
     }
 
     public List<Message> findAllBySenderAndReceiver(Long sender, Long receiver) {
-        return messageRepository.findAllBySenderAndReceiver(sender, receiver);
+        return messageRepository.findAllBySenderAndReceiver(userService.getUserById(sender), userService.getUserById(receiver));
     }
 
     public Message send(MessageRequest messageRequest) {
@@ -61,14 +60,22 @@ public class MessageService {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Optional<List<Message>> messages = messageRepository.findAllBySenderOrReceiver(id);
+        Optional<List<Message>> messagesReceived = messageRepository.findAllByReceiver(userService.getUserById(id));
+        Optional<List<Message>> messagesSent = messageRepository.findAllBySender(userService.getUserById(id));
 
-        if(messages.isEmpty()){
+        if(messagesReceived.isEmpty() && messagesSent.isEmpty()){
             throw new IllegalArgumentException("No messages found");
         }
-        List<Message> MessageList = messages.get();
+
+        List<Message> received_list = messagesReceived.get();
+        List<Message> sent_list= messagesSent.get();
+        List<Message> messageList = new ArrayList<Message>();
+
+        messagesReceived.ifPresent(messageList::addAll);
+        messagesSent.ifPresent(messageList::addAll);
+
         try {
-            return objectMapper.writeValueAsString(MessageList);
+            return objectMapper.writeValueAsString(messageList);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error parsing messages");
         }
