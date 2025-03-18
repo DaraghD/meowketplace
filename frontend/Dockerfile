@@ -6,6 +6,10 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
+RUN echo "VITE_API_URL=http://meowketplace.ie:8080/api" > .env
+
+RUN cat .env
+
 COPY . .
 
 RUN npm run build
