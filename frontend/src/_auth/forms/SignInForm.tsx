@@ -39,8 +39,9 @@ const SignInForm = () => {
     const data = await response.text();
     if(response.status === 200){
         localStorage.setItem("token", data);
+        alert(data);
+        return window.location.href = "/";
     }
-    alert(data);
 
   }
 

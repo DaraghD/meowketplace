@@ -106,4 +106,20 @@ public class User {
                 ", bio='" + bio + '\'' +
                 '}';
     }
+
+    public String toJson() {
+        return "{" +
+                "\"id\":" + id + "," +
+                "\"username\":\"" + username + "\"," +
+                "\"email\":\"" + email + "\"," +
+                "\"password\":\"" + password + "\"," +
+                "\"bio\":\"" + bio + "\"," +
+                "\"is_business\":" + is_business + "," +
+                "\"is_verified\":" + is_verified + "," +
+                "\"profile_picture\":\"" + profile_picture + "\"," +
+                "\"is_admin\":" + is_admin + "," +
+                "\"is_banned\":" + is_banned + "," +
+                "\"business_rating\":" + business_rating +
+                "}";
+    }
 }

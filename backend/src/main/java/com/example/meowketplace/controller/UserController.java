@@ -51,7 +51,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
     }
 
-    @RequestMapping("/auth")
+    @RequestMapping("/auth")// maybe move to /user get request
     public ResponseEntity<String> authenticateUser(@RequestHeader("Authorization") String authHeader) {
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -67,7 +67,7 @@ public class UserController {
                 System.out.println("User: ");
                 System.out.println(user);
 
-                return ResponseEntity.ok(user.toString()); // return all user data for frontend to parse and show logged in
+                return ResponseEntity.ok(user.toJson()); // return all user data for frontend to parse and show logged in
             }
         }
         catch (Exception e) {
