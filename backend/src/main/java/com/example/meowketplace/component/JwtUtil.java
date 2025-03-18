@@ -24,16 +24,16 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
     // Generate JWT token
-    public String generateToken(String username) {
+    public String generateToken(String id) {
         return Jwts.builder()
-                .subject(username)
+                .subject(id)
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key)
                 .compact();
     }
 
-    public String extractUserName(String token) {
+    public String extractUserID(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -50,9 +50,9 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    public String validateToken(String token) {
-        final String emailToken = extractUserName(token); // extracting name verifies it with the signing key
-        return emailToken;
+    public boolean validateToken(String token, String id) {
+        final String idToken = extractUserID(token);
+        return id.equals(idToken) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

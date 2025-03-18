@@ -11,13 +11,13 @@ public class User{
     private String username;
     private String email;
     private String password;
-    private String phone_number;
     private boolean is_business;
     private boolean is_verified;
-    private String first_name;
-    private String last_name;
+    private boolean is_admin;
     private String profile_picture;
-    private String address;
+    private float business_rating;
+    private String bio;
+
 
     public Long getId() {
         return id;
@@ -51,14 +51,6 @@ public class User{
         this.password = password;
     }
 
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
     public boolean isIs_business() {
         return is_business;
     }
@@ -75,20 +67,19 @@ public class User{
         this.is_verified = is_verified;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", is_business=" + is_business +
+                ", is_verified=" + is_verified +
+                ", is_admin=" + is_admin +
+                ", profile_picture='" + profile_picture + '\'' +
+                ", business_rating=" + business_rating +
+                ", bio='" + bio + '\'' +
+                '}';
     }
-
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
 }

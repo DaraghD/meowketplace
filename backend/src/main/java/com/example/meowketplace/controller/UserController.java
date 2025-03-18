@@ -3,6 +3,7 @@ package com.example.meowketplace.controller;
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.LoginRequest;
 import com.example.meowketplace.dto.SignupRequest;
+import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,40 +42,38 @@ public class UserController {
         try {
             boolean validUser = userService.authenticateUserPassword(loginRequest);
             if(validUser){
-                String token = jwtUtil.generateToken(loginRequest.getEmail());
-                Cookie cookie = new Cookie("meow-token", token);
-                cookie.setMaxAge(60*60*24);
-                cookie.setPath("/");
-                cookie.setHttpOnly(true);
-                cookie.setAttribute("SameSite", "None");
-                //cookie.setSecure(true);
-                System.out.println(token);
-                response.addCookie(cookie);
-                response.addHeader("Access-Control-Allow-Credentials", "true");
-                return ResponseEntity.ok().body("User successfully logged in");
+                String token = jwtUtil.generateToken(userService.getUserByEmail(loginRequest.getEmail()).getId().toString());
+                return ResponseEntity.ok().body("Body: " + token);
             }
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        return ResponseEntity.ok("User not found");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
     }
     @RequestMapping("/auth")
-    public ResponseEntity<String> authenticateUser(@CookieValue(value="meow-token") String token) {
-        /*
-        if(jwtUtil.validateToken(token)) {
-            return ResponseEntity.ok("User is authenticated");
-        }*/
-        return ResponseEntity.ok(jwtUtil.validateToken(token));
+    public ResponseEntity<String> authenticateUser(@RequestHeader("Authorization") String authHeader) {
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                System.out.println(token);
+                String id = jwtUtil.extractUserID(token);
+                boolean valid = jwtUtil.validateToken(token, id);
+                if (!valid) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+                }
 
-        //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
-    }
-/*
-    @CrossOrigin
-    @PostMapping("/auth")
-    public ResponseEntity<String> authenticateUser(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
+                User user = userService.getUserById(Long.parseLong(id));
+                System.out.println("User: ");
+                System.out.println(user);
 
+                return ResponseEntity.ok(user.toString()); // return all user data for frontend to parse and show logged in
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
     }
-*/
 
 }
