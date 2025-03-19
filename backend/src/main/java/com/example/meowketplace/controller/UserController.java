@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
         try {
             boolean validUser = userService.authenticateUserPassword(loginRequest);
             if(validUser){
@@ -54,7 +54,7 @@ public class UserController {
     @RequestMapping("/auth")// maybe move to /user get request
     public ResponseEntity<String> authenticateUser(@RequestHeader("Authorization") String authHeader) {
         try {
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {//todo: make this a util function
                 String token = authHeader.substring(7);
                 System.out.println(token);
                 String id = jwtUtil.extractUserID(token);

@@ -2,12 +2,15 @@ package com.example.meowketplace.service;
 
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.MessageRequest;
+import com.example.meowketplace.dto.MessageResponse;
 import com.example.meowketplace.model.Message;
+import com.example.meowketplace.model.User;
 import com.example.meowketplace.repository.MessageRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,37 +49,43 @@ public class MessageService {
         return messageRepository.findAllBySenderAndReceiver(userService.getUserById(sender), userService.getUserById(receiver));
     }
 
-    public Message send(MessageRequest messageRequest) {
+    public void send(MessageRequest messageRequest, String authHeader) {
+        jwtUtil.validateToken(authHeader, messageRequest.getSender_id().toString());
+
         Message message = new Message();
-        //TOOD: add user id from jwt token
-        return messageRepository.save(message);
+        message.setMessageContent(messageRequest.getMessage_content());
+        message.setSender(userService.getUserById(messageRequest.getSender_id()));
+        message.setReceiver(userService.getUserById(messageRequest.getReceiver_id()));
+        message.setCreated_at(new Date(System.currentTimeMillis()));
+
+        messageRepository.save(message);
     }
 
     public String getAllMessagesJSON(String jwtToken) {
         Long id = Long.parseLong(jwtUtil.extractUserID(jwtToken));
-        Boolean valid_token = jwtUtil.validateToken(jwtToken, id.toString());
+        boolean valid_token = jwtUtil.validateToken(jwtToken, id.toString());
         if(!valid_token){
             throw new IllegalArgumentException("Invalid token");
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Optional<List<Message>> messagesReceived = messageRepository.findAllByReceiver(userService.getUserById(id));
-        Optional<List<Message>> messagesSent = messageRepository.findAllBySender(userService.getUserById(id));
 
-        if(messagesReceived.isEmpty() && messagesSent.isEmpty()){
+        User user = userService.getUserById(id);
+        Optional<List<Message>> all_messages = messageRepository.findAllBySenderOrReceiver(user, user);
+
+        if(all_messages.isEmpty()){
             throw new IllegalArgumentException("No messages found");
         }
-
-        List<Message> received_list = messagesReceived.get();
-        List<Message> sent_list= messagesSent.get();
-        List<Message> messageList = new ArrayList<Message>();
-
-        messagesReceived.ifPresent(messageList::addAll);
-        messagesSent.ifPresent(messageList::addAll);
+        ArrayList<MessageResponse> message_response_list = new ArrayList<>();
+        for (Message msg : all_messages.get()) {
+            System.out.println(msg);
+            message_response_list.add(new MessageResponse(msg));
+        }
 
         try {
-            return objectMapper.writeValueAsString(messageList);
+            return objectMapper.writeValueAsString(message_response_list);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("Error parsing messages");
         }
     }

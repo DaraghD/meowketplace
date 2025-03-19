@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/messages")
+@RequestMapping("/api/messages")
 public class MessageController {
 
     private final MessageService messageService;
@@ -29,17 +29,23 @@ public class MessageController {
     }
 
     @PostMapping
-    public ResponseEntity<Message> sendMessage(@RequestHeader("Authorization") String authHeader, @RequestBody MessageRequest message) {
-        Message savedMessage = messageService.send(message);
-        return ResponseEntity.ok(savedMessage);
+    public ResponseEntity<String> sendMessage(@RequestHeader("Authorization") String authHeader, @RequestBody MessageRequest message) {
+        try {
+            String token = authHeader.substring(7);
+            System.out.println(authHeader);
+            messageService.send(message, token);
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.ok("Message sent");
     }
 
     @GetMapping
     public ResponseEntity<String> getAllMessages(@RequestHeader("Authorization") String authHeader) {
         try{
-
-        String response_data = messageService.getAllMessagesJSON(authHeader);
-        return ResponseEntity.status(HttpStatus.OK).body("All messages");
+            String token = authHeader.substring(7);
+        String response_data = messageService.getAllMessagesJSON(token);
+        return ResponseEntity.status(HttpStatus.OK).body(response_data);
 
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
