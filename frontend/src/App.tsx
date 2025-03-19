@@ -7,6 +7,7 @@ import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
 import BusinessSignUpForm from "./_auth/forms/BusinessSignUpForm";
 import Messages from "./_root/pages/Messages";
+import Search from "./_root/pages/Search";
 
 const App = () => {
   const location = useLocation();
@@ -28,6 +29,7 @@ const App = () => {
         <Route element={<RootLayout />}>
           <Route index element={<Home />} />
           <Route path="/messages" element={<Messages />} />
+          <Route path="/search" element={<Search />} />
         </Route>
       </Routes>
     </main>
