@@ -11,11 +11,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Message, User } from "@/lib/types/types";
 
 const Messages = () => {
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [chatUsers, setChatUsers] = useState<User[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+// Fetch Logged in User
+  useEffect(() => {
+    const fetchLoggedInUser = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/logged-in-user");
+        if (!response.ok) {
+          throw new Error("Failed to fetch logged-in user");
+        }
+        const data: User = await response.json();
+        setLoggedInUser(data);
+      } catch (error) {
+        console.error("Error fetching logged-in user:", error);
+      }
+    };
+
+    fetchLoggedInUser();
+  }, []);
 
   // Fetch chat users from the database
   useEffect(() => {
@@ -59,8 +78,10 @@ const Messages = () => {
   const filteredMessages = selectedUser
     ? messages.filter(
         (message) =>
-          message.sender.id === selectedUser.id ||
-          message.receiver.id === selectedUser.id
+          (message.sender.id === loggedInUser?.id &&
+            message.receiver.id === selectedUser.id) ||
+          (message.sender.id === selectedUser.id &&
+            message.receiver.id === loggedInUser?.id)
       )
     : [];
 
@@ -110,8 +131,8 @@ const Messages = () => {
           </h2>
         </div>
 
-        {/* Chat Messages */}
-        <div className="flex-1 p-4 overflow-y-auto">
+       {/* Chat Messages */}
+       <div className="flex-1 p-4 overflow-y-auto">
           <ChatMessageList>
             {selectedUser ? (
               filteredMessages.length > 0 ? (
@@ -119,28 +140,28 @@ const Messages = () => {
                   <ChatBubble
                     key={message.id}
                     variant={
-                      message.sender.id === selectedUser.id
+                      message.sender.id === loggedInUser?.id
                         ? "sent"
                         : "received"
                     }
                   >
                     <ChatBubbleAvatar
                       src={
-                        message.sender.id === selectedUser.id
-                          ? selectedUser.avatarUrl // Selected user is the sender
-                          : message.receiver.avatarUrl // Selected user is the receiver
+                        message.sender.id === loggedInUser?.id
+                          ? loggedInUser.avatarUrl // Logged-in user is the sender
+                          : selectedUser.avatarUrl // Selected user is the sender
                       }
                       fallback={
-                        message.sender.id === selectedUser.id
-                          ? selectedUser.username.substring(0, 2).toUpperCase()
-                          : message.receiver.username
+                        message.sender.id === loggedInUser?.id
+                          ? loggedInUser.username.substring(0, 2).toUpperCase()
+                          : selectedUser.username
                               .substring(0, 2)
                               .toUpperCase()
                       }
                     />
                     <ChatBubbleMessage
                       variant={
-                        message.sender.id === selectedUser.id
+                        message.sender.id === loggedInUser?.id
                           ? "sent"
                           : "received"
                       }
