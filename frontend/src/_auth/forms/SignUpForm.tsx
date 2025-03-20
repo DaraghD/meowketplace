@@ -32,12 +32,12 @@ const SignUpForm = () => {
     // ✅ This will be type-safe and validated.
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/user/signup`,
+        "http://localhost:8080/api/user/signup",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
+            //"Access-Control-Allow-Origin": "*",
           },
           body: JSON.stringify(values),
         }

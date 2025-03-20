@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/messages")
 public class MessageController {
 
@@ -30,19 +31,24 @@ public class MessageController {
 
     @PostMapping
     public ResponseEntity<String> sendMessage(@RequestHeader("Authorization") String authHeader, @RequestBody MessageRequest message) {
+        System.out.println(message);
         try {
             String token = authHeader.substring(7);
             System.out.println(authHeader);
-            messageService.send(message, token);
+            System.out.println(token);
+            messageService.send(message, authHeader);
         }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("FUCKKKKK");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        return ResponseEntity.ok("Message sent");
+        return ResponseEntity.status(HttpStatus.OK).body("Message sent");
     }
 
     @GetMapping
     public ResponseEntity<String> getAllMessages(@RequestHeader("Authorization") String authHeader) {
         try{
+            System.out.println(authHeader);
             String token = authHeader.substring(7);
         String response_data = messageService.getAllMessagesJSON(token);
         return ResponseEntity.status(HttpStatus.OK).body(response_data);

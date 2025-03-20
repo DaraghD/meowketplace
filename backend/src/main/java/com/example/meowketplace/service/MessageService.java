@@ -76,13 +76,16 @@ public class MessageService {
         if(all_messages.isEmpty()){
             throw new IllegalArgumentException("No messages found");
         }
+
         ArrayList<MessageResponse> message_response_list = new ArrayList<>();
         for (Message msg : all_messages.get()) {
-            System.out.println(msg);
             message_response_list.add(new MessageResponse(msg));
         }
 
         try {
+            System.out.println("TESTING");
+            System.out.println(message_response_list);
+            System.out.println(objectMapper.writeValueAsString(message_response_list));
             return objectMapper.writeValueAsString(message_response_list);
         } catch (Exception e) {
             e.printStackTrace();

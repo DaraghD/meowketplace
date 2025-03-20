@@ -31,4 +31,13 @@ public class MessageRequest {
     public Date getCreated_at() {
         return created_at;
     }
+    @Override
+    public String toString() {
+        return "MessageRequest{" +
+                "message_content='" + message_content + '\'' +
+                ", sender_id=" + sender_id +
+                ", receiver_id=" + receiver_id +
+                ", created_at=" + created_at +
+                '}';
+    }
 }

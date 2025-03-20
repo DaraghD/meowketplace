@@ -29,10 +29,11 @@ const SignInForm = () => {
   async function onSubmit(values: z.infer<typeof SignInValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/user/login`, {
+    const response = await fetch("http://localhost:8080/api/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+
       },
       body: JSON.stringify(values),
     });
