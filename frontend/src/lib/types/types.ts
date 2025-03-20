@@ -4,6 +4,12 @@ export interface Message_User {
     is_verified: boolean;
   }
 
+  export interface User {
+  id:number;
+  username: string;
+  is_verified: boolean;
+  }
+
   export interface Message {
     id: number;
     sender_id: number;
@@ -12,8 +18,8 @@ export interface Message_User {
     receiver_username: string;
     sender_verified: boolean;
     receiver_verified: boolean;
-    messageContent: string; 
-    createdAt: Date; 
+    message_content: string;
+    created_at: Date;
   }
 
   export interface Product {

@@ -27,7 +27,7 @@ const Messages = () => {
     const fetchCurrentUser = async () => {
       try {
         console.log("TOken : ", localStorage.getItem("token"));
-        const response = await fetch("http://localhost:8080/api/user/auth",{
+        const response = await fetch("http://meowketplace.ie:8080/api/user/auth",{
           method: "GET",
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -56,7 +56,7 @@ const Messages = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/messages",
+        const response = await fetch("http://meowketplace.ie:8080/api/messages",
             {
               method: "GET",
               headers: {"Authorization": `Bearer ${localStorage.getItem("token")}`,}
@@ -103,7 +103,7 @@ const Messages = () => {
     fetchMessages();
   }, []);
 
-
+  console.log(selectedUser);
   // Filter messages for the selected user
   const filteredMessages = selectedUser
     ? messages.filter(
@@ -112,6 +112,9 @@ const Messages = () => {
           message.receiver_id === selectedUser.id
       )
     : [];
+  console.log()
+  console.log(9999999999);
+  console.log(filteredMessages);
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-gray-100">
@@ -131,7 +134,7 @@ const Messages = () => {
                 onClick={() => setSelectedUser(user)} // Set selected user on click
               >
                 <Avatar>
-                  <AvatarImage src={user.avatarUrl} />
+                  <AvatarImage src={"1"} />
                   <AvatarFallback>
                     {user.username
                       .split(" ")
@@ -176,8 +179,8 @@ const Messages = () => {
                     <ChatBubbleAvatar
                       src={
                         message.sender_id === selectedUser.id
-                          ? selectedUser.avatarUrl // Selected user is the sender
-                          : message.receiver.avatarUrl // Selected user is the receiver
+                          ? "1" // Selected user is the sender
+                          : "2" // Selected user is the receiver
                       }
                       fallback={
                         message.sender_id === selectedUser.id
@@ -194,7 +197,7 @@ const Messages = () => {
                           : "received"
                       }
                     >
-                      {message.messageContent}
+                      {message.message_content}
                     </ChatBubbleMessage>
                   </ChatBubble>
                 ))

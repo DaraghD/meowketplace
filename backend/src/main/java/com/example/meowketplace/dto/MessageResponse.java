@@ -5,6 +5,7 @@ import com.example.meowketplace.model.Message;
 import java.sql.Date;
 
 public class MessageResponse {
+    private Long id;
     private String message_content;
     private Long sender_id;
     private Long receiver_id;
@@ -23,8 +24,8 @@ public class MessageResponse {
         this.receiver_username = message.getReceiver().getUsername();
         this.sender_verified = message.getReceiver().isIs_verified();
         this.receiver_verified = message.getReceiver().isIs_verified();
+        this.id = message.getId();
     }
-
 
     @Override
         public String toString() {
@@ -40,6 +41,13 @@ public class MessageResponse {
                     '}';
         }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getMessage_content() {
         return message_content;
     }
