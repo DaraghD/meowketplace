@@ -36,7 +36,7 @@ public class MessageController {
             String token = authHeader.substring(7);
             System.out.println(authHeader);
             System.out.println(token);
-            messageService.send(message, authHeader);
+            messageService.send(message, token);
         }catch(Exception e){
             e.printStackTrace();
             System.out.println("FUCKKKKK");
