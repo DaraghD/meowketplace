@@ -101,7 +101,17 @@ const Messages = () => {
     };
 
     fetchMessages();
-  }, []);
+
+        // Start polling
+        const pollingInterval = setInterval(fetchMessages, 5000); // Poll every 5 seconds
+
+        // Cleanup polling on unmount
+        return () => clearInterval(pollingInterval);
+      }, []);
+
+ 
+
+  
 
   console.log(selectedUser);
   // Filter messages for the selected user
