@@ -43,7 +43,7 @@ const RootLayout = () => {
         </div>
       </div>
 
-      <div className="block xl:hidden w-screen">
+      <div className="block xl:hidden max-w-screen">
         <Menubar className="h-16">
           <MenubarMenu>
             <MenubarTrigger
