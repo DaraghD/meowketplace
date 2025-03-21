@@ -4,9 +4,10 @@ const ProductListing = () => {
   return (
     <div>
       <div className="flex h-screen max-w-screen">
-        <div className="flex flex-col w-1/2 p-5">
-          <Button className="bg-white text-black">Add Image</Button>
-          <p>REVIEWS</p>
+        <div className="flex flex-col w-1/2 p-5 justify-center item-center">
+          <Button className="h-full bg-white text-black hover:bg-amber-200 hover:cursor-pointer">
+            Add Image
+          </Button>
         </div>
         <div className="flex flex-col w-1/2 p-5">
           <p>TITLE</p>
