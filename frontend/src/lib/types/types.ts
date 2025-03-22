@@ -2,15 +2,29 @@ export interface Message_User {
     id: number;
     username: string;
     is_verified: boolean;
-  }
+}
 
-  export interface User {
-  id:number;
-  username: string;
-  is_verified: boolean;
-  }
+export interface userData {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+    bio: string;
+    is_business: boolean;
+    is_verified: boolean;
+    profile_picture: string;
+    is_admin: boolean;
+    is_banned: boolean;
+    business_rating: number;
+}
 
-  export interface Message {
+export interface User {
+    id: number;
+    username: string;
+    is_verified: boolean;
+}
+
+export interface Message {
     id: number;
     sender_id: number;
     receiver_id: number;
@@ -20,9 +34,9 @@ export interface Message_User {
     receiver_verified: boolean;
     message_content: string;
     created_at: Date;
-  }
+}
 
-  export interface Product {
+export interface Product {
     id: number;
     user: User;
     productText: string;
@@ -33,10 +47,10 @@ export interface Message_User {
 }
 
 export interface Review {
-  id: number;
-  user: User;
-  product: Product;
-  reviewText: string;
-  starRating: number;
-  createdAt: Date;
+    id: number;
+    user: User;
+    product: Product;
+    reviewText: string;
+    starRating: number;
+    createdAt: Date;
 }

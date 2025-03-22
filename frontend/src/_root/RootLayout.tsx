@@ -31,7 +31,7 @@ const RootLayout = () => {
               Messages
             </button>
             <button className="cursor-pointer">
-              <Avatar>
+              <Avatar onClick={() => navigate("/profile")}>
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>

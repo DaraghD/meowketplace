@@ -27,14 +27,12 @@ const AuthLayout= () => {
         setAuthentication(false);
         return;
       }
-      const jwt = token.split(" ")[1];
-      console.log(jwt);
 
       try {
-        const auth_response = await fetch(`${import.meta.env.VITE_API_URL}/user/auth`, {
+        const auth_response = await fetch("http://localhost:8080/api/user/auth", {
           method: "GET",
           headers: {
-            "Authorization": `Bearer ${jwt}`,
+            "Authorization": `Bearer ${token}`,
           },
         });
 
