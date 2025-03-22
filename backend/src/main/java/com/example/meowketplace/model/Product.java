@@ -3,6 +3,7 @@ package com.example.meowketplace.model;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
+import com.example.meowketplace.model.Tier;
 
 @Entity
 @Table(name = "products")
@@ -18,9 +19,6 @@ public class Product {
     @Column(nullable = false)
     private String productText;
 
-    @Column(nullable = false)
-    private Double price;
-
     @Column(columnDefinition = "DECIMAL(3,2) DEFAULT 0.0")
     private Double starRating;
 
@@ -29,4 +27,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Tier> tiers;
 }
