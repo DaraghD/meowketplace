@@ -7,14 +7,14 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {Outlet, useNavigate} from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const RootLayout = () => {
   const navigate = useNavigate();
   return (
     <>
       <div className="hidden xl:block">
-        <div className="w-screen h-1/10 flex items-center justify-between pl-1">
+        <div className="max-w-screen h-1/10 flex items-center justify-between pl-1">
           <div className="flex items-center">
             <img
               src="/assets/icons/logo.png"
@@ -27,7 +27,10 @@ const RootLayout = () => {
             <button className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
               Services
             </button>
-            <button onClick={()=> navigate("/messages")} className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
+            <button
+              onClick={() => navigate("/messages")}
+              className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+            >
               Messages
             </button>
             <button className="cursor-pointer">
@@ -40,7 +43,7 @@ const RootLayout = () => {
         </div>
       </div>
 
-      <div className="block xl:hidden w-screen">
+      <div className="block xl:hidden max-w-screen">
         <Menubar className="h-16">
           <MenubarMenu>
             <MenubarTrigger
@@ -53,7 +56,12 @@ const RootLayout = () => {
             <MenubarContent>
               <MenubarItem className="cursor-pointer">Services</MenubarItem>
               <MenubarSeparator />
-              <MenubarItem className="cursor-pointer" onClick={() => navigate("/messages")}>Messages</MenubarItem>
+              <MenubarItem
+                className="cursor-pointer"
+                onClick={() => navigate("/messages")}
+              >
+                Messages
+              </MenubarItem>
               <MenubarSeparator />
               <MenubarItem className="cursor-pointer">
                 <span>Profile</span>{" "}

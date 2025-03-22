@@ -18,3 +18,12 @@ export const SignUpValidation = z.object({
     description: z.string().min(1).max(2000),
     services: z.string().min(1).max(1000),
   });
+
+  export const ProductListingValidation = z.object({
+    productTitle: z.string().min(1).max(2000),
+    productText: z.string().min(1).max(2000),
+    price: z.number(),
+    image: z.instanceof(File).refine((file) => file.size < 7000000, {
+      message: 'Your image must be less than 7MB.',
+    }),
+  });
