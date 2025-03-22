@@ -19,11 +19,18 @@ export const SignUpValidation = z.object({
     services: z.string().min(1).max(1000),
   });
 
-  export const ProductListingValidation = z.object({
-    productTitle: z.string().min(1).max(2000),
-    productText: z.string().min(1).max(2000),
-    price: z.number(),
-    image: z.instanceof(File).refine((file) => file.size < 7000000, {
-      message: 'Your image must be less than 7MB.',
+const TierValidation = z.object({
+  name: z.string().min(1, { message: "Title is required" }),
+  price: z.coerce.number().min(0, { message: "Price must be a positive number" }),
+});
+
+export const ProductListingValidation = z.object({
+  name: z.string().min(1).max(2000),
+  productText: z.string().min(1).max(2000),
+  image: z
+    .instanceof(File)
+    .refine((file) => file.size < 7000000, {
+      message: "Your image must be less than 7MB.",
     }),
-  });
+  tiers: z.array(TierValidation).min(1, { message: "At least one tier is required" }),
+});

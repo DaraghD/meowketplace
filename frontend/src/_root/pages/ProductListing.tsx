@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ProductListingValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 
 const ProductListing = () => {
@@ -22,11 +22,17 @@ const ProductListing = () => {
   const form = useForm<z.infer<typeof ProductListingValidation>>({
     resolver: zodResolver(ProductListingValidation),
     defaultValues: {
-      productTitle: "",
+      name: "",
       productText: "",
-      price: 0,
       image: undefined,
+      tiers: [], // Initialize tiers as an empty array
     },
+  });
+
+  // Use `useFieldArray` to manage dynamic tier fields
+  const { fields, append } = useFieldArray({
+    control: form.control,
+    name: "tiers", // Name of the field array
   });
 
   // 2. Define a submit handler.
@@ -52,8 +58,13 @@ const ProductListing = () => {
     fileInputRef.current?.click(); // Trigger the file input click
   };
 
+  // Handle "Add Tier" button click
+  const handleAddTier = () => {
+    append({ name: "", price: 0 }); // Append a new tier with default values
+  };
+
   return (
-    <div className="flex h-screen max-w-screen p-5 overflow-hidden">
+    <div className="flex h-screen max-w-screen p-5">
       <div
         className="flex flex-col h-4/5 w-1/2 justify-center items-center border border-dashed border-gray-400 cursor-pointer"
         onClick={handleDivClick} // Make the div clickable
@@ -100,7 +111,7 @@ const ProductListing = () => {
             />
             <FormField
               control={form.control}
-              name="productTitle"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Product Title</FormLabel>
@@ -124,22 +135,52 @@ const ProductListing = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button className="hover:cursor-pointer" type="submit">
-              Submit
-            </Button>
+
+            {/* Render additional tier forms */}
+            {fields.map((field, index) => (
+              <div key={field.id} className="space-y-4">
+                <h3 className="text-lg font-semibold">Tier {index + 1}</h3>
+                <FormField
+                  control={form.control}
+                  name={`tiers.${index}.name`} // Dynamic field name for title
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tier Title</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`tiers.${index}.price`} // Dynamic field name for price
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Price</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            ))}
+
+            <div className="flex flex-col m-5">
+              <Button
+                className="cursor-pointer mb-5"
+                type="button" // Prevent form submission
+                onClick={handleAddTier} // Add a new tier
+              >
+                Add Tier
+              </Button>
+              <Button className="cursor-pointer" type="submit">
+                Submit
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

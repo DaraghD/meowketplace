@@ -36,6 +36,13 @@ export interface Message {
     created_at: Date;
 }
 
+export interface Tier {
+    id: number;
+    product: Product;
+    price: number;
+    name: string;
+}
+
 export interface Product {
     id: number;
     user: User;
@@ -44,6 +51,7 @@ export interface Product {
     starRating: number;
     createdAt: Date;
     reviews: Review[];
+    tiers: Tier[];
 }
 
 export interface Review {
