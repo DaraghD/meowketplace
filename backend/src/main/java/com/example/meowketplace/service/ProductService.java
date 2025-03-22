@@ -1,5 +1,6 @@
 package com.example.meowketplace.service;
 
+import com.example.meowketplace.dto.AddProductRequest;
 import com.example.meowketplace.dto.UpdateProduct;
 import com.example.meowketplace.model.Product;
 import com.example.meowketplace.repository.ProductRepository;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Service
 public class ProductService {
-    private  ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -19,8 +20,8 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public void addProduct(Product product){
-        productRepository.save(product);
+    public void addProduct(AddProductRequest product){
+        //productRepository.save( product);
     }
 
     public void modifyProduct(Long productId, UpdateProduct newProduct) throws Exception {

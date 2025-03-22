@@ -19,7 +19,9 @@ public class Product {
     @Column(nullable = false)
     private String productText;
 
-    @Column(columnDefinition = "DECIMAL(3,2) DEFAULT 0.0")
+    private String name;
+
+    @Column(columnDefinition = "DECIMAL(3,2) DEFAULT 0.0")//TODO: only update this when a review is added
     private Double starRating;
 
     @Column(nullable = false)
@@ -30,4 +32,81 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Tier> tiers;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getProductText() {
+        return productText;
+    }
+
+    public void setProductText(String productText) {
+        this.productText = productText;
+    }
+
+    public Double getStarRating() {
+        return starRating;
+    }
+
+    public void setStarRating(Double starRating) {
+        this.starRating = starRating;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Tier> getTiers() {
+        return tiers;
+    }
+
+    public void setTiers(List<Tier> tiers) {
+        this.tiers = tiers;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", user=" + user +
+                ", productText='" + productText + '\'' +
+                ", starRating=" + starRating +
+                ", createdAt=" + createdAt +
+                ", reviews=" + reviews +
+                ", tiers=" + tiers +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

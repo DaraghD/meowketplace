@@ -1,5 +1,8 @@
 package com.example.meowketplace.model;
 
+import com.example.meowketplace.Views;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -11,33 +14,43 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    @JsonView(Views.Public.class)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    @JsonView(Views.Internal.class)
     private String email;
 
     @Column(nullable = false)
+    @JsonView(Views.Internal.class)
     private String password;
 
     @Column(columnDefinition = "TEXT")
+    @JsonView(Views.Public.class)
     private String bio;
 
     @Column(nullable = false)
+    @JsonView(Views.Internal.class)
     private boolean is_business;
 
     @Column(nullable = false)
+    @JsonView(Views.Internal.class)
     private boolean is_verified;
 
+    @JsonView(Views.Public.class)
     private String profile_picture;
 
     @Column(nullable = false)
+    @JsonView(Views.Internal.class)
     private boolean is_admin;
 
     @Column(nullable = false)
+    @JsonView(Views.Internal.class)
     private boolean is_banned;
 
     @Column(precision = 2)
+    @JsonView(Views.Public.class)
     private double business_rating;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -1,11 +1,15 @@
 package com.example.meowketplace.controller;
 
+import com.example.meowketplace.Views;
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.LoginRequest;
 import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.ProductService;
 import com.example.meowketplace.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +34,18 @@ public class ProductController {
     }
 
     @RequestMapping()
-    public ResponseEntity<String> getProducts() {
-        var products = productService.getAllProducts();
-
-        return null;
+    public ResponseEntity<String> getProducts() throws JsonProcessingException {
+        try {
+            System.out.println("Getting all products");
+            var products = productService.getAllProducts();
+            System.out.println(products);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            return new ResponseEntity<>(objectMapper.writerWithView(Views.Public.class).writeValueAsString(products), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("Problem serialising data ", HttpStatus.BAD_REQUEST);
+        }
     }
 
 
