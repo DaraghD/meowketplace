@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import BusinessProfile from "@/components/profile/BusinessProfile.tsx";
-import CustomerProfile from "@/components/profile/CustomerProfile.tsx";
+import UserProfile from "@/components/profile/UserProfile.tsx";
 import type {userData} from "@/lib/types/types.ts";
 import {useNavigate} from "react-router-dom";
 
@@ -42,7 +42,8 @@ const Profile = () => {
             {userData?.is_business ? (
                 <BusinessProfile business={userData} />
             ) : (
-                <CustomerProfile customer={userData} />
+                <UserProfile user={userData} />
+                //<BusinessProfile business={userData} />
             )}
         </>
     );
