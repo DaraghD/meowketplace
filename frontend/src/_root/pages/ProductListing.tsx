@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,6 +15,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const ProductListing = () => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // State to store the image URL
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProductListingValidation>>({
     resolver: zodResolver(ProductListingValidation),
@@ -21,6 +25,7 @@ const ProductListing = () => {
       productTitle: "",
       productText: "",
       price: 0,
+      image: undefined,
     },
   });
 
@@ -31,18 +36,68 @@ const ProductListing = () => {
     console.log(values);
   }
 
+  // Handle file input change
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Create a URL for the selected file
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl); // Update the state with the image URL
+      form.setValue("image", file); // Update the form value
+    }
+  };
+
+  // Handle div click to trigger file input
+  const handleDivClick = () => {
+    fileInputRef.current?.click(); // Trigger the file input click
+  };
+
   return (
     <div className="flex h-screen max-w-screen p-5 overflow-hidden">
-      <div className="flex flex-col w-1/2 justify-center items-center border border-dashed border-gray-400 p-10">
-        <Button className="bg-white text-black hover:bg-gray-200">
-          Add Image
-        </Button>
+      <div
+        className="flex flex-col h-4/5 w-1/2 justify-center items-center border border-dashed border-gray-400 cursor-pointer"
+        onClick={handleDivClick} // Make the div clickable
+      >
+        {selectedImage ? ( // Conditionally render the image or the button
+          <img
+            src={selectedImage}
+            alt="Selected"
+            className="max-h-full max-w-full object-contain"
+          />
+        ) : (
+          <Button
+            className="bg-white text-black hover:bg-gray-200"
+            type="button"
+          >
+            Add Image
+          </Button>
+        )}
       </div>
 
       <div className="flex flex-col w-1/2 p-5 space-y-3">
         <h2 className="text-xl font-bold">Add a Product to Sell!</h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field: { value, onChange, ...fieldProps } }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...fieldProps}
+                      ref={fileInputRef}
+                      placeholder="Picture"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange} // Use the custom handler
+                      className="hidden"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="productTitle"
@@ -58,10 +113,10 @@ const ProductListing = () => {
             />
             <FormField
               control={form.control}
-              name="price"
+              name="productText"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -71,10 +126,10 @@ const ProductListing = () => {
             />
             <FormField
               control={form.control}
-              name="productText"
+              name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Price</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
