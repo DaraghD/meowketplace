@@ -8,6 +8,7 @@ import RootLayout from "./_root/RootLayout";
 import BusinessSignUpForm from "./_auth/forms/BusinessSignUpForm";
 import Messages from "./_root/pages/Messages";
 import Product from "./_root/pages/Product";
+import Profile from "@/_root/pages/Profile.tsx";
 import ProductListing from "./_root/pages/ProductListing";
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/product" element={<Product />} />
+          <Route path="/profile" element={<Profile/>} />
           <Route path="/product-listing" element={<ProductListing />} />
         </Route>
       </Routes>
