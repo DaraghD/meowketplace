@@ -2,6 +2,7 @@ package com.example.meowketplace.controller;
 
 import com.example.meowketplace.Views;
 import com.example.meowketplace.component.JwtUtil;
+import com.example.meowketplace.dto.AddProductRequest;
 import com.example.meowketplace.dto.LoginRequest;
 import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.model.User;
@@ -33,7 +34,7 @@ public class ProductController {
         this.jwtUtil = jwtUtil;
     }
 
-    @RequestMapping()
+    @RequestMapping
     public ResponseEntity<String> getProducts() throws JsonProcessingException {
         try {
             System.out.println("Getting all products");
@@ -47,6 +48,28 @@ public class ProductController {
             return new ResponseEntity<>("Problem serialising data ", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping
+    public ResponseEntity<String> addProduct(@RequestBody AddProductRequest product, @RequestHeader("Authorization") String authHeader) {
+        System.out.println("adding product 999");
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                String id = jwtUtil.extractUserID(token);
+                System.out.println(id);
+                User user = userService.getUserById(product.getUserId());
+                jwtUtil.validateToken(token, product.getUserId().toString());
+
+                productService.addProduct(product);
+                return ResponseEntity.status(HttpStatus.OK).body("Product successfully added");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+    }
+
 
 
 

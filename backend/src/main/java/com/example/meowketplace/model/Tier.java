@@ -1,5 +1,6 @@
 package com.example.meowketplace.model;
 
+import com.example.meowketplace.dto.AddTierRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -18,6 +19,20 @@ public class Tier {
     private double price;
 
     private String name;
+
+    public Tier(double price, String name) {
+        this.price = price;
+        this.name = name;
+    }
+
+    public Tier() {
+
+    }
+
+    public Tier(AddTierRequest tier){
+        this.price = tier.getPrice();
+        this.name = tier.getName();
+    }
 
     public Long getId() {
         return id;

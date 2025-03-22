@@ -1,6 +1,10 @@
 package com.example.meowketplace.model;
 
+import com.example.meowketplace.dto.AddProductRequest;
+import com.example.meowketplace.dto.AddTierRequest;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.example.meowketplace.model.Tier;
@@ -32,6 +36,22 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Tier> tiers;
+
+    public Product(AddProductRequest product, User user) {
+        this.productText = product.getProductText();
+        this.name = product.getName();
+        this.createdAt = new Date(System.currentTimeMillis());
+        this.user = user;
+        List<Tier> tierList = new ArrayList<Tier>();
+        for(AddTierRequest tierDTO: product.getTiers()){
+            Tier newTier = new Tier(tierDTO);
+            newTier.setProduct(this);
+            tierList.add(newTier);
+        }
+        this.tiers = tierList;
+    }
+    public Product(){
+    }
 
     public Long getId() {
         return id;
