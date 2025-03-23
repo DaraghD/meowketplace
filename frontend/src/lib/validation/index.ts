@@ -27,10 +27,10 @@ const TierValidation = z.object({
 export const ProductListingValidation = z.object({
   name: z.string().min(1).max(2000),
   productText: z.string().min(1).max(2000),
-  image: z
-    .instanceof(File)
-    .refine((file) => file.size < 7000000, {
-      message: "Your image must be less than 7MB.",
+  images: z
+    .array(z.instanceof(File))
+    .refine((files) => files.every((file) => file.size < 7000000), {
+      message: "Each image must be less than 7MB.",
     }),
   tiers: z.array(TierValidation).min(1, { message: "At least one tier is required" }),
 });

@@ -16,7 +16,7 @@ import { z } from "zod";
 
 const ProductListing = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // State to store the image URL
+  const [selectedImages, setSelectedImages] = useState<string[]>([]); // State to store the image URLs
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProductListingValidation>>({
@@ -24,8 +24,8 @@ const ProductListing = () => {
     defaultValues: {
       name: "",
       productText: "",
-      image: undefined,
-      tiers: [], // Initialize tiers as an empty array
+      images: [],
+      tiers: [],
     },
   });
 
@@ -44,12 +44,13 @@ const ProductListing = () => {
 
   // Handle file input change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Create a URL for the selected file
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl); // Update the state with the image URL
-      form.setValue("image", file); // Update the form value
+    const files = event.target.files;
+    if (files) {
+      const imageUrls = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setSelectedImages(imageUrls); // Update the state with the image URLs
+      form.setValue("images", Array.from(files)); // Update the form value with the array of files
     }
   };
 
@@ -69,18 +70,23 @@ const ProductListing = () => {
         className="flex flex-col h-4/5 w-1/2 justify-center items-center border border-dashed border-gray-400 cursor-pointer"
         onClick={handleDivClick} // Make the div clickable
       >
-        {selectedImage ? ( // Conditionally render the image or the button
-          <img
-            src={selectedImage}
-            alt="Selected"
-            className="max-h-full max-w-full object-contain"
-          />
+        {selectedImages.length > 0 ? ( // Conditionally render the images or the button
+          <div className="flex flex-wrap gap-2">
+            {selectedImages.map((imageUrl, index) => (
+              <img
+                key={index}
+                src={imageUrl}
+                alt={`Selected ${index}`}
+                className="max-h-32 max-w-32 object-contain"
+              />
+            ))}
+          </div>
         ) : (
           <Button
             className="bg-white text-black hover:bg-gray-200"
             type="button"
           >
-            Add Image
+            Add Images
           </Button>
         )}
       </div>
@@ -91,18 +97,19 @@ const ProductListing = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="image"
+              name="images"
               render={({ field: { value, onChange, ...fieldProps } }) => (
                 <FormItem>
                   <FormControl>
                     <Input
                       {...fieldProps}
                       ref={fileInputRef}
-                      placeholder="Picture"
+                      placeholder="Pictures"
                       type="file"
                       accept="image/*"
                       onChange={handleFileChange} // Use the custom handler
                       className="hidden"
+                      multiple // Allow multiple files
                     />
                   </FormControl>
                   <FormMessage />
