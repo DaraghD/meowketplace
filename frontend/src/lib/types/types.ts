@@ -50,6 +50,7 @@ export interface AddTier {
 export interface AddProduct {
     name: string;
     productText: string;
+    tag: string;
     tiers: AddTier[];
 }
 export interface Product {

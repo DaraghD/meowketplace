@@ -31,6 +31,7 @@ const ProductListing = () => {
     defaultValues: {
       name: "",
       productText: "",
+      tag: "",
       images: [],
       tiers: [],
     },
@@ -51,6 +52,7 @@ const ProductListing = () => {
     const product: AddProduct = {
       name: values.name,
       productText: values.productText,
+      tag: values.tag, // hello
       tiers: values.tiers,
     };
     formData.append("product", JSON.stringify(product));
@@ -92,6 +94,8 @@ const ProductListing = () => {
   const handleAddTier = () => {
     append({ name: "", price: 0 }); // Append a new tier with default values
   };
+
+  const tags = ["Grooming", "Walking", "Training"];
 
   return (
     <div className="flex h-screen max-w-screen p-5">
@@ -173,12 +177,30 @@ const ProductListing = () => {
             />
             <FormField
               control={form.control}
-              name="productText"
+              name="tag"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Tag</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="cursor-pointer" asChild>
+                        <Button variant="outline">
+                          {field.value || "Select a tag"}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {tags.map((tag) => (
+                          <DropdownMenuItem
+                            key={tag}
+                            onSelect={() => {
+                              field.onChange(tag);
+                            }}
+                          >
+                            {tag}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

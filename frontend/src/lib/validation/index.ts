@@ -27,6 +27,7 @@ const TierValidation = z.object({
 export const ProductListingValidation = z.object({
   name: z.string().min(1).max(2000),
   productText: z.string().min(1).max(2000),
+  tag: z.string().min(1).max(2000),
   images: z
     .array(z.instanceof(File))
     .refine((files) => files.every((file) => file.size < 7000000), {
