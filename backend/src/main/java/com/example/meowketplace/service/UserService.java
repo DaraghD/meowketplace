@@ -6,6 +6,14 @@ import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class UserService {
@@ -58,5 +66,32 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).get();
+    }
+
+
+    public String storeProfilePicture(MultipartFile file, User user) throws IOException {
+            String uploadDir = "uploads/profile_pictures/";
+            String fileName = user.getId().toString();
+            Path uploadPath = Paths.get(uploadDir);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                user.setProfile_picture(filePath+fileName);
+                System.out.println(user.getProfile_picture());
+            } catch (IOException e) {
+                throw new IOException("Could not save profile picture: " + fileName, e);
+            }
+
+            userRepository.save(user);
+            return fileName;
+        }
+
+    public byte[] getProfilePicture(User user) {
+        return user.getProfile_picture().getBytes();
     }
 }

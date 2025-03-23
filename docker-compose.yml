@@ -3,7 +3,7 @@ services:
     image: mariadb:11.7
     container_name: mariadb
     environment:
-      MARIADB_ROOT_PASSWORD: 123
+      MYSQL_ROOT_PASSWORD: 123
       MYSQL_DATABASE: test
       MYSQL_USER: meowdb
       MYSQL_PASSWORD: 123
@@ -27,6 +27,9 @@ services:
       - 8080:8080
     depends_on:
       - mariadb
+    volumes:
+      - uploads:/uploads
+
   frontend:
     image: ghcr.io/daraghd/meowketplace_frontend:latest
     container_name: frontend
@@ -39,6 +42,7 @@ services:
 
 volumes:
   mariadb_volume:
+  uploads:
 
 networks:
   meow_network:

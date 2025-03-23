@@ -135,4 +135,52 @@ public class User {
                 "\"business_rating\":" + business_rating +
                 "}";
     }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getProfile_picture() {
+        return profile_picture;
+    }
+
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
+    }
+
+    public boolean isIs_admin() {
+        return is_admin;
+    }
+
+    public void setIs_admin(boolean is_admin) {
+        this.is_admin = is_admin;
+    }
+
+    public boolean isIs_banned() {
+        return is_banned;
+    }
+
+    public void setIs_banned(boolean is_banned) {
+        this.is_banned = is_banned;
+    }
+
+    public double getBusiness_rating() {
+        return business_rating;
+    }
+
+    public void setBusiness_rating(double business_rating) {
+        this.business_rating = business_rating;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 }

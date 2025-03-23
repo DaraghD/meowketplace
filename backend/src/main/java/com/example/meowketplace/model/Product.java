@@ -23,7 +23,10 @@ public class Product {
     @Column(nullable = false)
     private String productText;
 
+    @Column(nullable = false)
     private String name;
+
+    private String imagePath;// allow multiple images in future
 
     @Column(columnDefinition = "DECIMAL(3,2) DEFAULT 0.0")//TODO: only update this when a review is added
     private Double starRating;

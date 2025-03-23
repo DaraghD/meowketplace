@@ -3,20 +3,21 @@ package com.example.meowketplace.controller;
 import com.example.meowketplace.Views;
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.AddProductRequest;
-import com.example.meowketplace.dto.LoginRequest;
-import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.ProductService;
 import com.example.meowketplace.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @CrossOrigin
 @RestController
@@ -35,7 +36,7 @@ public class ProductController {
     }
 
     @RequestMapping
-    public ResponseEntity<String> getProducts() throws JsonProcessingException {
+    public ResponseEntity<String> getProducts() {
         try {
             System.out.println("Getting all products");
             var products = productService.getAllProducts();
@@ -70,7 +71,19 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
     }
 
-
-
+    @GetMapping("/picture/{id}/{image}")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long id, @PathVariable Long image) {
+        try {
+            Path filePath = Paths.get("uploads/products/"+id+"/"+image).normalize();
+            byte[] fileContent = Files.readAllBytes(filePath);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filePath.getFileName() + "\"")
+                    .body(fileContent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
 
 }
