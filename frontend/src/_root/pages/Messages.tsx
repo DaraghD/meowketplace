@@ -9,8 +9,8 @@ import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Message, Message_User } from "@/lib/types/types";
-import {useNavigate} from "react-router-dom";
-import {sendMessage } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { sendMessage } from "@/lib/utils";
 
 const Messages = () => {
   const [chatUsers, setChatUsers] = useState<Message_User[]>([]);
@@ -27,22 +27,21 @@ const Messages = () => {
     const fetchCurrentUser = async () => {
       try {
         console.log("TOken : ", localStorage.getItem("token"));
-        const response = await fetch("http://localhost:8080/api/user/auth",{
+        const response = await fetch("http://localhost:8080/api/user/auth", {
           method: "GET",
           headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-
         });
         if (!response.ok) {
           navigate("/sign-in"); //token out of date relogin,
         }
         const data = await response.json();
-        const user : Message_User = {
-            id: data.id,
-            username: data.username,
-            is_verified: data.is_verified,
-        }
+        const user: Message_User = {
+          id: data.id,
+          username: data.username,
+          is_verified: data.is_verified,
+        };
         setCurrentUser(user);
         alert(user.username);
       } catch (err) {
@@ -56,12 +55,10 @@ const Messages = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/messages",
-            {
-              method: "GET",
-              headers: {"Authorization": `Bearer ${localStorage.getItem("token")}`,}
-            },
-        )
+        const response = await fetch("http://localhost:8080/api/messages", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch messages");
         }
@@ -69,30 +66,32 @@ const Messages = () => {
         console.log(data);
 
         const userMap = new Map<number, Message_User>();
-        data.forEach(message => {
-            if (!userMap.has(message.sender_id)) {
-                console.log("Adding sender user to map: ", message.sender_id);
-                userMap.set(message.sender_id, {
-                    id: message.sender_id,
-                    username: message.sender_username,
-                    is_verified: message.sender_verified,
-                });
-            }
-            if (!userMap.has(message.receiver_id)) {
-                console.log(message);
-                console.log("Adding receiver user to map: ", message.receiver_id);
-                console.log("Receiver username: ", message.receiver_username);
-                userMap.set(message.receiver_id, {
-                    id: message.receiver_id,
-                    username: message.receiver_username,
-                    is_verified: message.receiver_verified,
-                });
-            }
+        data.forEach((message) => {
+          if (!userMap.has(message.sender_id)) {
+            console.log("Adding sender user to map: ", message.sender_id);
+            userMap.set(message.sender_id, {
+              id: message.sender_id,
+              username: message.sender_username,
+              is_verified: message.sender_verified,
+            });
+          }
+          if (!userMap.has(message.receiver_id)) {
+            console.log(message);
+            console.log("Adding receiver user to map: ", message.receiver_id);
+            console.log("Receiver username: ", message.receiver_username);
+            userMap.set(message.receiver_id, {
+              id: message.receiver_id,
+              username: message.receiver_username,
+              is_verified: message.receiver_verified,
+            });
+          }
         });
         console.log("UserMap: ");
-        userMap.forEach((user) => { console.log(user)});
+        userMap.forEach((user) => {
+          console.log(user);
+        });
         setChatUsers(Array.from(userMap.values()));
-        console.log("ChatUSRES: " + chatUsers)
+        console.log("ChatUSRES: " + chatUsers);
         setMessages(data);
         setLoading(false);
       } catch (error) {
@@ -102,16 +101,12 @@ const Messages = () => {
 
     fetchMessages();
 
-        // Start polling
-        const pollingInterval = setInterval(fetchMessages, 5000); // Poll every 5 seconds
+    // Start polling
+    const pollingInterval = setInterval(fetchMessages, 5000); // Poll every 5 seconds
 
-        // Cleanup polling on unmount
-        return () => clearInterval(pollingInterval);
-      }, []);
-
- 
-
-  
+    // Cleanup polling on unmount
+    return () => clearInterval(pollingInterval);
+  }, []);
 
   console.log(selectedUser);
   // Filter messages for the selected user
@@ -122,7 +117,7 @@ const Messages = () => {
           message.receiver_id === selectedUser.id
       )
     : [];
-  console.log()
+  console.log();
   console.log(9999999999);
   console.log(filteredMessages);
 
@@ -225,18 +220,24 @@ const Messages = () => {
           <ChatInput
             placeholder="Type your message here..."
             className="flex-1"
-            value = {messageContent}
+            value={messageContent}
             onChange={(e) => setMessageContent(e.target.value)}
           />
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white"
-                  onClick={async () => {
-                    try {
-                      console.log("Trying to send message : ", messageContent);
-                      await sendMessage(messageContent, currentUser?.id, selectedUser?.id);
-                      setMessageContent("");
-                    } catch (error) {
-                      console.error(error);
-                  }}}
+          <Button
+            className="bg-blue-500 hover:bg-blue-600 text-white"
+            onClick={async () => {
+              try {
+                console.log("Trying to send message : ", messageContent);
+                await sendMessage(
+                  messageContent,
+                  currentUser?.id,
+                  selectedUser?.id
+                );
+                setMessageContent("");
+              } catch (error) {
+                console.error(error);
+              }
+            }}
           >
             Send
           </Button>
