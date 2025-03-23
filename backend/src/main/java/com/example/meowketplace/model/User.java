@@ -53,6 +53,18 @@ public class User {
     @JsonView(Views.Public.class)
     private double business_rating;
 
+    @JsonView(Views.Public.class)
+    private String business_tags;
+
+    public String getBusiness_tags() {
+        return business_tags;
+    }
+
+    public void setBusiness_tags(String business_tags) {
+        this.business_tags = business_tags;
+    }
+
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
 

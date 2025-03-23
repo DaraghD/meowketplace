@@ -34,6 +34,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<String> addUser(@RequestBody SignupRequest signupRequest) {
         try {
+            System.out.println(signupRequest.toString());
             userService.addUser(signupRequest);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

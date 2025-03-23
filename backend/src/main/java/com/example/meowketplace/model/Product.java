@@ -41,6 +41,8 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Tier> tiers;
 
+    private String tag;
+
     public Product(AddProductRequest product, User user) {
         this.productText = product.getProductText();
         this.name = product.getName();
@@ -53,6 +55,7 @@ public class Product {
             tierList.add(newTier);
         }
         this.tiers = tierList;
+        this.tag = product.getTag();
     }
     public Product(){
     }

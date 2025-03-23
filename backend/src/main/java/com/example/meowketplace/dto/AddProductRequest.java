@@ -3,15 +3,14 @@ package com.example.meowketplace.dto;
 import java.util.List;
 
 public class AddProductRequest {
-    private Long userId;
     private String name;
     private String productText;
     private List<AddTierRequest> tiers;
+    private String tag;
 
-    public Long getUserId() {
-        return userId;
+    public String getTag() {
+        return tag;
     }
-
     public String getName() {
         return name;
     }

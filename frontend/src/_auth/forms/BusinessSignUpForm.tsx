@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,11 +28,12 @@ const BusinessSignUpForm = () => {
   const form = useForm<z.infer<typeof BusinessSignUpValidation>>({
     resolver: zodResolver(BusinessSignUpValidation),
     defaultValues: {
-      companyName: "",
-      email: "",
-      password: "",
-      description: "",
-      services: [], // Initialize as an empty array
+        username: "",
+        email: "",
+        password: "",
+        description: "",
+        services: "",
+        is_business: true,
     },
   });
 
@@ -39,6 +41,21 @@ const BusinessSignUpForm = () => {
   async function onSubmit(values: z.infer<typeof BusinessSignUpValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+      console.log(9999);
+      try{
+          const response = await fetch("http://localhost:8080/api/user/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+          },
+          );
+            const data = await response.text();
+            alert(data);
+      }catch(error){
+          console.log(error);
+      }
     console.log(values);
     // TO DO: PASS DATA TO BACK END
   }
@@ -48,16 +65,15 @@ const BusinessSignUpForm = () => {
 
   const handleTagSelect = (tag: string) => {
     if (!selectedTags.includes(tag)) {
-      const updatedTags = [...selectedTags, tag];
-      setSelectedTags(updatedTags);
-      form.setValue("services", updatedTags);
+      setSelectedTags([...selectedTags, tag]);
+      form.setValue("services", [...selectedTags, tag].join(", "));
     }
   };
 
   const handleTagDelete = (tag: string) => {
     const updatedTags = selectedTags.filter((t) => t !== tag); // Remove the tag
     setSelectedTags(updatedTags);
-    form.setValue("services", updatedTags);
+    form.setValue("services", updatedTags.join(", "));
   };
 
   return (
@@ -86,7 +102,7 @@ const BusinessSignUpForm = () => {
         >
           <FormField
             control={form.control}
-            name="companyName"
+            name="username"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Company name</FormLabel>
@@ -110,6 +126,19 @@ const BusinessSignUpForm = () => {
               </FormItem>
             )}
           />
+            <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                            <Input type="text" className="shad-input" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+                />
           <FormField
             control={form.control}
             name="services"
