@@ -26,7 +26,8 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    private String imagePath;// allow multiple images in future
+    //private String imagePath;// allow multiple images in future
+    private int imageCount = 0;
 
     @Column(columnDefinition = "DECIMAL(3,2) DEFAULT 0.0")//TODO: only update this when a review is added
     private Double starRating;
@@ -131,5 +132,13 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getImageCount() {
+        return imageCount;
+    }
+
+    public void setImageCount(int imageCount) {
+        this.imageCount = imageCount;
     }
 }

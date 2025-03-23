@@ -42,7 +42,16 @@ export interface Tier {
     price: number;
     name: string;
 }
+export interface AddTier {
+    price: number;
+    name: string;
+}
 
+export interface AddProduct {
+    name: string;
+    productText: string;
+    tiers: AddTier[];
+}
 export interface Product {
     id: number;
     user: User;

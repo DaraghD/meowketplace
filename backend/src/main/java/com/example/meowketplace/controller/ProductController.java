@@ -14,10 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -50,18 +52,23 @@ public class ProductController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<String> addProduct(@RequestBody AddProductRequest product, @RequestHeader("Authorization") String authHeader) {
-        System.out.println("adding product 999");
+    @PostMapping(consumes={"multipart/form-data", "application/octet-stream"})
+    public ResponseEntity<String> addProduct(@RequestParam String product,
+                                             @RequestHeader("Authorization") String authHeader,
+                                             @RequestParam List<MultipartFile> images)
+    {
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                AddProductRequest addProductRequest = objectMapper.readValue(product, AddProductRequest.class);
+
                 String token = authHeader.substring(7);
                 String id = jwtUtil.extractUserID(token);
                 System.out.println(id);
-                User user = userService.getUserById(product.getUserId());
-                jwtUtil.validateToken(token, product.getUserId().toString());
+                User user = userService.getUserById(Long.parseLong(id));
+                jwtUtil.validateToken(token, id);
 
-                productService.addProduct(product);
+                productService.addProduct(addProductRequest, user, images);
                 return ResponseEntity.status(HttpStatus.OK).body("Product successfully added");
             }
         }catch (Exception e) {
