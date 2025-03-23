@@ -16,6 +16,7 @@ export interface userData {
     is_admin: boolean;
     is_banned: boolean;
     business_rating: number;
+    tags: string;
 }
 
 export interface User {

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react"; // Add useEffect
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,6 +24,31 @@ import { AddProduct } from "@/lib/types/types.ts";
 const ProductListing = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImages, setSelectedImages] = useState<string[]>([]); // State to store the image URLs
+  const [userTags, setUserTags] = useState<string[]>([]); // State to store the user's tags
+
+  useEffect(() => {
+    const fetchUserTags = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/user/auth", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const userData = await response.json();
+        setUserTags(userData.tags || []);
+      } catch (error) {
+        console.error("Error fetching user tags:", error);
+      }
+    };
+
+    fetchUserTags();
+  }, []);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProductListingValidation>>({
@@ -94,8 +119,6 @@ const ProductListing = () => {
   const handleAddTier = () => {
     append({ name: "", price: 0 }); // Append a new tier with default values
   };
-
-  const tags = ["Grooming", "Walking", "Training"];
 
   return (
     <div className="flex h-screen max-w-screen p-5">
@@ -189,7 +212,7 @@ const ProductListing = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        {tags.map((tag) => (
+                        {userTags.map((tag) => (
                           <DropdownMenuItem
                             key={tag}
                             onSelect={() => {
