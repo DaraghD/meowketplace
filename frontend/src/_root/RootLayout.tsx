@@ -8,8 +8,26 @@ import {
 } from "@/components/ui/menubar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Outlet, useNavigate } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {userData} from "@/lib/types/types.ts";
 
 const RootLayout = () => {
+  const [user, setUser] = useState<userData| null>(null);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const response = await fetch("http://localhost:8080/api/user/auth", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const auth_data = await response.json();
+      setUser(auth_data as userData);
+    }
+    getUserData();
+    console.log(user);
+  }, []);
   const navigate = useNavigate();
   return (
     <>
@@ -35,7 +53,7 @@ const RootLayout = () => {
             </button>
             <button className="cursor-pointer">
               <Avatar onClick={() => navigate("/profile")}>
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={`https://localhost:8080/api/user/picture/${user?.id}`} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </button>
@@ -66,7 +84,7 @@ const RootLayout = () => {
               <MenubarItem className="cursor-pointer">
                 <span>Profile</span>{" "}
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src={`https://localhost:8080/api/user/picture/${user?.id}`} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </MenubarItem>

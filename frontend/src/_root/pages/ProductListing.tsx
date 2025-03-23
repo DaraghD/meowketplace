@@ -65,16 +65,12 @@ const ProductListing = () => {
     },
   });
 
-  // Use `useFieldArray` to manage dynamic tier fields
   const { fields, append } = useFieldArray({
     control: form.control,
     name: "tiers", // Name of the field array
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof ProductListingValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     const formData = new FormData();
 
     const product: AddProduct = {
@@ -87,7 +83,6 @@ const ProductListing = () => {
     values.images.forEach((image) => {
       formData.append(`images`, image);
     });
-    console.log(999);
     console.log(formData);
     const response = await fetch("http://localhost:8080/api/service", {
       method: "POST",
@@ -98,7 +93,6 @@ const ProductListing = () => {
     });
     console.log(response);
 
-    console.log(values);
   }
 
   // Handle file input change
