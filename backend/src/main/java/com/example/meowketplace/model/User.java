@@ -58,6 +58,7 @@ public class User {
     private String business_tags;
 
     @JsonManagedReference
+    @JsonView(Views.Exclude.class)//exclude product list from user responses, might revert later
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
 

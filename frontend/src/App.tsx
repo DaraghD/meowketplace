@@ -10,14 +10,19 @@ import Messages from "./_root/pages/Messages";
 import Product from "./_root/pages/Product";
 import Profile from "@/_root/pages/Profile.tsx";
 import ProductListing from "./_root/pages/ProductListing";
+import React, {useState} from "react";
+import {userData} from "@/lib/types/types.ts";
+export const Context = React.createContext<[userData | null, React.Dispatch<React.SetStateAction<userData | null>>] | null>(null);
 
 const App = () => {
+  const [user , setUser] = useState<userData | null>(null);
   const location = useLocation();
   const isPublicRoute = ["/sign-in", "/sign-up", "/business-sign-up"].includes(
     location.pathname
   );
 
   return (
+      <Context.Provider value={[user, setUser]}>
     <main className={isPublicRoute ? "flex h-screen" : ""}>
       <Routes>
         {/* public routes */}
@@ -37,6 +42,7 @@ const App = () => {
         </Route>
       </Routes>
     </main>
+      </Context.Provider>
   );
 };
 

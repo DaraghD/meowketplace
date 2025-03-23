@@ -1,7 +1,9 @@
 package com.example.meowketplace.controller;
 
+import com.example.meowketplace.Views;
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.LoginRequest;
+import com.example.meowketplace.dto.LoginResponse;
 import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.UserService;
@@ -91,7 +93,9 @@ public class UserController {
             boolean validUser = userService.authenticateUserPassword(loginRequest);
             if (validUser) {
                 String token = jwtUtil.generateToken(userService.getUserByEmail(loginRequest.getEmail()).getId().toString());
-                return ResponseEntity.ok().body(token);
+                LoginResponse loginResponse = new LoginResponse(token, userService.getUserByEmail(loginRequest.getEmail()));
+                ObjectMapper mapper = new ObjectMapper();
+                return ResponseEntity.ok(mapper.writerWithView(Views.Internal.class).writeValueAsString(loginResponse));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
