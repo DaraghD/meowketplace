@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -32,7 +31,7 @@ const BusinessSignUpForm = () => {
       email: "",
       password: "",
       description: "",
-      services: "",
+      services: [], // Initialize as an empty array
     },
   });
 
@@ -49,15 +48,16 @@ const BusinessSignUpForm = () => {
 
   const handleTagSelect = (tag: string) => {
     if (!selectedTags.includes(tag)) {
-      setSelectedTags([...selectedTags, tag]);
-      form.setValue("services", [...selectedTags, tag].join(", "));
+      const updatedTags = [...selectedTags, tag];
+      setSelectedTags(updatedTags);
+      form.setValue("services", updatedTags);
     }
   };
 
   const handleTagDelete = (tag: string) => {
     const updatedTags = selectedTags.filter((t) => t !== tag); // Remove the tag
     setSelectedTags(updatedTags);
-    form.setValue("services", updatedTags.join(", "));
+    form.setValue("services", updatedTags);
   };
 
   return (

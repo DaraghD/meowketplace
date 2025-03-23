@@ -16,7 +16,7 @@ export const SignUpValidation = z.object({
     email: z.string().email(),
     password: z.string().min(4, {message: "Must be at least 4 characters"}),
     description: z.string().min(1).max(2000),
-    services: z.string().min(1).max(1000),
+    services: z.array(z.string()).min(1).max(1000),
   });
 
 const TierValidation = z.object({
