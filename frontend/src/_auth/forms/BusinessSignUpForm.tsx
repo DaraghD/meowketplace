@@ -113,7 +113,7 @@ const BusinessSignUpForm = () => {
           <FormField
             control={form.control}
             name="services"
-            render={({ field }) => (
+            render={({}) => (
               <FormItem>
                 <FormLabel>
                   <DropdownMenu>
