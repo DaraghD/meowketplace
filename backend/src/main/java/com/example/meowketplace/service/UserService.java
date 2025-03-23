@@ -40,7 +40,7 @@ public class UserService {
         User user = new User();
         if(signupRequest.isIs_business()){
             user.setIs_business(true);
-            user.setBusiness_tags(signupRequest.getTags());
+            user.setBusiness_tags(signupRequest.getServices());
         }
         user.setUsername(signupRequest.getUsername());
         user.setPassword(signupRequest.getPassword());// TODO: hash password, validate on frontend

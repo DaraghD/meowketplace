@@ -41,7 +41,10 @@ const ProductListing = () => {
         }
 
         const userData = await response.json();
-        setUserTags(userData.tags || []);
+        console.log(userData.business_tags);
+
+        setUserTags(userData.business_tags.split(",") || []);
+       // setUserTags(["tag1", "tag2", "tag3"]);
       } catch (error) {
         console.error("Error fetching user tags:", error);
       }

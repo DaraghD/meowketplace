@@ -7,18 +7,8 @@ public class SignupRequest {
     private String password;
     private String email;
     private boolean is_business;
-    private String bio;
+    private String description;
     private String services;
-
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    private String tags;
 
     public String getUsername() {
         return username;
@@ -59,8 +49,24 @@ public class SignupRequest {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", is_business=" + is_business +
-                ", bio='" + bio + '\'' +
+                ", description='" + description + '\'' +
                 ", services='" + services + '\'' +
                 '}';
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getServices() {
+        return services;
+    }
+
+    public void setServices(String services) {
+        this.services = services;
     }
 }

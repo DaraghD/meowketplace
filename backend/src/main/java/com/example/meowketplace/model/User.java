@@ -2,6 +2,7 @@ package com.example.meowketplace.model;
 
 import com.example.meowketplace.Views;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
@@ -56,6 +57,10 @@ public class User {
     @JsonView(Views.Public.class)
     private String business_tags;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Product> products;
+
     public String getBusiness_tags() {
         return business_tags;
     }
@@ -63,10 +68,6 @@ public class User {
     public void setBusiness_tags(String business_tags) {
         this.business_tags = business_tags;
     }
-
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Product> products;
 
     public Long getId() {
         return id;
@@ -130,22 +131,6 @@ public class User {
                 ", business_rating=" + business_rating +
                 ", bio='" + bio + '\'' +
                 '}';
-    }
-
-    public String toJson() {
-        return "{" +
-                "\"id\":" + id + "," +
-                "\"username\":\"" + username + "\"," +
-                "\"email\":\"" + email + "\"," +
-                "\"password\":\"" + password + "\"," +
-                "\"bio\":\"" + bio + "\"," +
-                "\"is_business\":" + is_business + "," +
-                "\"is_verified\":" + is_verified + "," +
-                "\"profile_picture\":\"" + profile_picture + "\"," +
-                "\"is_admin\":" + is_admin + "," +
-                "\"is_banned\":" + is_banned + "," +
-                "\"business_rating\":" + business_rating +
-                "}";
     }
 
     public String getBio() {

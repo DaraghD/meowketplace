@@ -5,6 +5,7 @@ import com.example.meowketplace.dto.LoginRequest;
 import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -114,7 +115,8 @@ public class UserController {
                 System.out.println("User: ");
                 System.out.println(user);
 
-                return ResponseEntity.ok(user.toJson()); // return all user data for frontend to parse and show logged in
+                ObjectMapper mapper = new ObjectMapper();
+                return ResponseEntity.ok(mapper.writeValueAsString(user)); // return all user data for frontend to parse and show logged in
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

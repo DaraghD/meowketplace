@@ -38,6 +38,7 @@ public class ProductService {
         //    throw new IllegalArgumentException("User is not a business");
         //}
         Product newProduct = new Product(product,user);
+        productRepository.save(newProduct);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writeValueAsString(newProduct));
         newProduct.setImageCount(images.size());
