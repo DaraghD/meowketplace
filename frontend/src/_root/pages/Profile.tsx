@@ -1,48 +1,29 @@
-import {useEffect, useState} from "react";
+import {useContext } from "react";
 import BusinessProfile from "@/components/profile/BusinessProfile.tsx";
 import UserProfile from "@/components/profile/UserProfile.tsx";
 import type {userData} from "@/lib/types/types.ts";
-import {useNavigate} from "react-router-dom";
+import { Context } from "@/context.tsx";
 
 
 // want it to work for business and user
 const Profile = () => {
-    const [userData, setUserData] = useState<userData | null>(null);
-    const navigate = useNavigate();
+    const context = useContext(Context);
+    if(!context){
+        throw new Error("Context not found");
+    }
+    const {user} = context;
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const response = await fetch("http://localhost:8080/api/user/auth", {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                },
-            })
-            if (!response.ok) {
-                console.log("Not ok response");
-                alert("Unable to fetch user data, please sign in again")
-                navigate("/sign-in");
-                return;
-            }
-            const data = await response.json();
-
-            setUserData(data);
-            console.log(userData);
-
-        };
-        fetchUserData();
-    }, []);
-
-    if(!userData) {
-        return null;
+    if(!user) {
+        console.log(9999999);
+        return window.location.href = "/sign-in";
     }
 
     return (
         <>
-            {userData?.is_business ? (
-                <BusinessProfile business={userData} />
+            {user?.is_business ? (
+                <BusinessProfile business={user as userData} />
             ) : (
-                <UserProfile user={userData} />
+                <UserProfile user={user as userData} />
                 //<BusinessProfile business={userData} />
             )}
         </>

@@ -1,13 +1,22 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
+import { Context } from "@/context.tsx";
 
 const Home: React.FC = () => {
+    const context = useContext(Context);
+    if(!context) {
+        throw new Error("Context not found");
+    }
+    const {user} = context;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold mb-4">Welcome to Meowketplace</h1>
       <p>Purr, Wag, Repeat - Find Pet Services with Ease</p>
       <p className="text-lg mb-6">Join us today!</p>
+        <p> Hello {user?.username}</p>
+
       <Link
         to="/sign-up"
         className="bg-blue-500 text-black px-4 py-2 rounded hover:bg-blue-600 transition"

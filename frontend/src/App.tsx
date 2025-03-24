@@ -10,16 +10,9 @@ import Messages from "./_root/pages/Messages";
 import Product from "./_root/pages/Product";
 import Profile from "@/_root/pages/Profile.tsx";
 import ProductListing from "./_root/pages/ProductListing";
-import React, { useState } from "react";
-import { userData } from "@/lib/types/types.ts";
 import { Toaster } from "./components/ui/sonner";
-export const Context = React.createContext<
-    | [userData | null, React.Dispatch<React.SetStateAction<userData | null>>]
-    | null
->(null);
 
 const App = () => {
-    const [user, setUser] = useState<userData | null>(null);
     const location = useLocation();
     const isPublicRoute = [
         "/sign-in",
@@ -28,34 +21,31 @@ const App = () => {
     ].includes(location.pathname);
 
     return (
-        <Context.Provider value={[user, setUser]}>
+        <>
             <main className={isPublicRoute ? "flex h-screen" : ""}>
                 <Routes>
                     {/* public routes */}
-                    <Route element={<AuthLayout />}>
-                        <Route path="/sign-in" element={<SignInForm />} />
-                        <Route path="/sign-up" element={<SignUpForm />} />
+                    <Route element={<AuthLayout/>}>
+                        <Route path="/sign-in" element={<SignInForm/>}/>
+                        <Route path="/sign-up" element={<SignUpForm/>}/>
                         <Route
                             path="/business-sign-up"
-                            element={<BusinessSignUpForm />}
-                        />
+                            element={<BusinessSignUpForm/>}/>
                     </Route>
 
                     {/* private routes */}
-                    <Route element={<RootLayout />}>
-                        <Route index element={<Home />} />
-                        <Route path="/messages" element={<Messages />} />
-                        <Route path="/product" element={<Product />} />
-                        <Route path="/profile" element={<Profile />} />
+                    <Route element={<RootLayout/>}>
+                        <Route index element={<Home/>}/>
+                        <Route path="/messages" element={<Messages/>}/>
+                        <Route path="/product" element={<Product/>}/>
+                        <Route path="/profile" element={<Profile/>}/>
                         <Route
                             path="/product-listing"
-                            element={<ProductListing />}
-                        />
+                            element={<ProductListing/>}/>
                     </Route>
                 </Routes>
             </main>
-            <Toaster />
-        </Context.Provider>
+            <Toaster/></>
     );
 };
 

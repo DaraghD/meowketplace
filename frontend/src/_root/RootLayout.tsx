@@ -9,15 +9,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { Context } from "@/App.tsx";
+import { Context } from "@/context.tsx";
 
 const RootLayout = () => {
     const context = useContext(Context);
     if (!context) {
         throw new Error("Context not found");
     }
-    const [user] = context;
-    console.log(user);
+    const {user} = context;
 
     const navigate = useNavigate();
     return (
@@ -42,12 +41,12 @@ const RootLayout = () => {
                         >
                             Messages
                         </button>
-                        <button className="cursor-pointer">
+                        <button className="cursor-pointer" onClick={() => navigate("/profile")}>
                             <Avatar onClick={() => navigate("/profile")}>
                                 <AvatarImage
-                                    src={`https://localhost:8080/api/user/picture/${user?.id}`}
+                                    src={`http://localhost:8080/api/user/picture/${user?.id}`}
                                 />
-                                <AvatarFallback> :(</AvatarFallback>
+                                <AvatarFallback>Login</AvatarFallback>
                             </Avatar>
                         </button>
                     </div>

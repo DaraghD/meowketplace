@@ -15,7 +15,7 @@ import {SignInValidation} from "@/lib/validation";
 import {z} from "zod";
 import {Link} from "react-router-dom";
 import {useContext} from "react";
-import {Context} from "@/App.tsx";
+import { Context } from "@/context.tsx";
 import {userData} from "@/lib/types/types.ts";
 
 const SignInForm = () => {
@@ -23,8 +23,7 @@ const SignInForm = () => {
     if (!context) {
         throw new Error("Context not found");
     }
-    const [test, setUser] = context;
-    // 1. Define your form.
+    const {user, setUser} = context;
     const form = useForm<z.infer<typeof SignInValidation>>({
         resolver: zodResolver(SignInValidation),
         defaultValues: {
@@ -44,11 +43,11 @@ const SignInForm = () => {
         if (response.status === 200) {
             const data = await response.json();
             const token = data.token;
-            const user = data.user;
-            console.log(data);
+            const user_data = data.user;
+            console.log(user_data);
             localStorage.setItem("token", token);
-            setUser(user as userData);
-            console.log(test);
+            setUser(user_data as userData);
+            console.log("Trying to log user : ", user);
             //return (window.location.href = "/");
         }
     }

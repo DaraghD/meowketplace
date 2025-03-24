@@ -1,12 +1,20 @@
 import {userData} from "@/lib/types/types";
 import React, {useState} from "react";
 import {Button} from "@/components/ui/button.tsx";
+import {useNavigate} from "react-router-dom";
 
 interface UserProfileProps {
     user: userData;
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({user}) => {
+    const navigate = useNavigate();
+
+    console.log("LOGGING USER");
+    console.log(user);
+    if(!user){
+        navigate("/sign-in");
+    }
     const [file, setFile] = useState<File | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

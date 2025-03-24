@@ -139,7 +139,7 @@ const Messages = () => {
                 onClick={() => setSelectedUser(user)} // Set selected user on click
               >
                 <Avatar>
-                  <AvatarImage src={"http://localhost:8080/api/user/picture/2"} />
+                  <AvatarImage src={`http://localhost:8080/api/user/picture/${user?.id}`} />
                   <AvatarFallback>
                     {user.username
                       .split(" ")
