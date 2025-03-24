@@ -5,6 +5,13 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 
 const Product = () => {
@@ -43,10 +50,27 @@ const Product = () => {
 
                     <p>REVIEWS</p>
                 </div>
-                <div className="flex flex-col w-1/2 p-5">
-                    <p>TITLE</p>
+                <div className="pl-10 flex flex-col w-1/2 p-5 gap-4">
+                    <h1 className="text-3xl font-bold pt-5">title</h1>
+                    <p>tags</p>
                     <p>DESCRIPTION</p>
-                    <button className="hover:cursor-pointer">MESSAGE</button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="cursor-pointer">
+                            Tiers
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem>Profile</DropdownMenuItem>
+                            <DropdownMenuItem>Billing</DropdownMenuItem>
+                            <DropdownMenuItem>Team</DropdownMenuItem>
+                            <DropdownMenuItem>Subscription</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <button
+                        className="hover:cursor-pointer mb-20"
+                        onClick={() => toast("Service Inquiry sent!")}
+                    >
+                        MESSAGE
+                    </button>
                 </div>
             </div>
             <hr />

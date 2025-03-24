@@ -6,17 +6,17 @@ import {
     MenubarSeparator,
     MenubarTrigger,
 } from "@/components/ui/menubar";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Outlet, useNavigate} from "react-router-dom";
-import {useContext} from "react";
-import {Context} from "@/App.tsx";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { Context } from "@/App.tsx";
 
 const RootLayout = () => {
     const context = useContext(Context);
     if (!context) {
         throw new Error("Context not found");
     }
-    const [user, ] = context;
+    const [user] = context;
     console.log(user);
 
     const navigate = useNavigate();
@@ -33,8 +33,7 @@ const RootLayout = () => {
                     </div>
 
                     <div className="flex space-x-4 mr-5 items-center">
-                        <button
-                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
+                        <button className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
                             Services
                         </button>
                         <button
@@ -45,7 +44,9 @@ const RootLayout = () => {
                         </button>
                         <button className="cursor-pointer">
                             <Avatar onClick={() => navigate("/profile")}>
-                                <AvatarImage src={`https://localhost:8080/api/user/picture/${user?.id}`}/>
+                                <AvatarImage
+                                    src={`https://localhost:8080/api/user/picture/${user?.id}`}
+                                />
                                 <AvatarFallback> :(</AvatarFallback>
                             </Avatar>
                         </button>
@@ -58,25 +59,34 @@ const RootLayout = () => {
                     <MenubarMenu>
                         <MenubarTrigger
                             className="flex items-center space-x-2 h-full cursor-pointer"
-                            style={{backgroundColor: "transparent"}}
+                            style={{ backgroundColor: "transparent" }}
                         >
-                            <img src="/assets/icons/hamburger.png" className="w-auto h-10"/>
-                            <span className="text-lg font-bold">Meowketplace</span>
+                            <img
+                                src="/assets/icons/hamburger.png"
+                                className="w-auto h-10"
+                            />
+                            <span className="text-lg font-bold">
+                                Meowketplace
+                            </span>
                         </MenubarTrigger>
                         <MenubarContent>
-                            <MenubarItem className="cursor-pointer">Services</MenubarItem>
-                            <MenubarSeparator/>
+                            <MenubarItem className="cursor-pointer">
+                                Services
+                            </MenubarItem>
+                            <MenubarSeparator />
                             <MenubarItem
                                 className="cursor-pointer"
                                 onClick={() => navigate("/messages")}
                             >
                                 Messages
                             </MenubarItem>
-                            <MenubarSeparator/>
+                            <MenubarSeparator />
                             <MenubarItem className="cursor-pointer">
                                 <span>Profile</span>{" "}
                                 <Avatar>
-                                    <AvatarImage src={`https://localhost:8080/api/user/picture/${user?.id}`}/>
+                                    <AvatarImage
+                                        src={`https://localhost:8080/api/user/picture/${user?.id}`}
+                                    />
                                     <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>
                             </MenubarItem>
@@ -90,7 +100,7 @@ const RootLayout = () => {
             </div>
 
             <section>
-                <Outlet/>
+                <Outlet />
             </section>
         </>
     );
