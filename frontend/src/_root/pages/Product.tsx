@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Product = () => {
     const rating = 4.1;
@@ -72,7 +73,7 @@ const Product = () => {
                         {rating} <span>{renderStars(rating)}</span>
                     </p>
                 </div>
-                <div className="pl-10 flex flex-col p-5 gap-4">
+                <div className="pl-10 flex flex-col w-1/2 p-5 gap-4">
                     <div className="flex">
                         <h1 className="text-3xl font-bold pt-5">title</h1>
                         <DropdownMenu>
@@ -93,9 +94,39 @@ const Product = () => {
                     </div>
 
                     <p>tags</p>
-                    <p>DESCRIPTION</p>
+                    <ScrollArea className="h-[300px] w-full rounded-md border p-4">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Tempora impedit labore quas quis. Rem culpa nisi in!
+                        Tempora molestiae harum corporis nostrum facilis,
+                        veritatis fugit natus esse recusandae sapiente saepe
+                        sunt quidem, aspernatur vero deserunt necessitatibus sed
+                        exercitationem dolor ab voluptate pariatur optio?
+                        Similique et ratione accusamus non temporibus ut
+                        possimus autem quasi explicabo quas quod perferendis
+                        aliquid, mollitia, deserunt doloremque quidem reiciendis
+                        iusto at libero illo. Iusto cupiditate sapiente officiis
+                        asperiores adipisci ad quas temporibus atque dignissimos
+                        in? Ea a quidem possimus tempora rerum voluptates
+                        doloribus iste eum voluptatum assumenda ducimus
+                        veritatis ex, corporis labore odit distinctio
+                        consequatur culpa hic illum deserunt iure in. Sint
+                        dolore quae aliquam corrupti error vitae placeat! Quia
+                        ducimus quidem itaque voluptatibus impedit amet nemo
+                        nobis totam dicta aspernatur dolores quo, tempora ipsum
+                        velit sint? Quo corporis fugiat rerum odit quibusdam
+                        voluptates rem ratione, natus cumque numquam repellat
+                        optio, voluptatem ab quidem impedit culpa earum ex cum
+                        corrupti voluptatibus tempora porro delectus sint
+                        exercitationem! Id ut nesciunt illo debitis neque totam
+                        a omnis sapiente, quaerat nostrum ad, vel repellat.
+                        Eligendi sunt numquam quos aspernatur facilis aliquid.
+                        Saepe unde laboriosam architecto quam accusantium
+                        laborum non consequatur, obcaecati illo debitis voluptas
+                        maxime ut impedit doloribus officiis.
+                    </ScrollArea>
+
                     <Button
-                        className="hover:cursor-pointer mb-20 flex"
+                        className="hover:cursor-pointer mt-auto mb-10 flex"
                         onClick={() => toast("Service Inquiry sent!")}
                     >
                         Send Service Inquiry{" "}
