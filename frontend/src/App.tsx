@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import {Routes, Route, useLocation, Navigate} from "react-router-dom";
 import "./index.css";
 import SignInForm from "./_auth/forms/SignInForm";
 import Home from "./_root/pages/Home";
@@ -25,6 +25,7 @@ const App = () => {
             <main className={isPublicRoute ? "flex h-screen" : ""}>
                 <Routes>
                     {/* public routes */}
+                    <Route path="*" element={<Navigate to="/" />} />
                     <Route element={<AuthLayout/>}>
                         <Route path="/sign-in" element={<SignInForm/>}/>
                         <Route path="/sign-up" element={<SignUpForm/>}/>
@@ -32,12 +33,12 @@ const App = () => {
                             path="/business-sign-up"
                             element={<BusinessSignUpForm/>}/>
                     </Route>
-
                     {/* private routes */}
                     <Route element={<RootLayout/>}>
                         <Route index element={<Home/>}/>
                         <Route path="/messages" element={<Messages/>}/>
                         <Route path="/product" element={<Product/>}/>
+                        <Route path="/product/:id" element={<Product/>}/> {/* individual product*/}
                         <Route path="/profile" element={<Profile/>}/>
                         <Route
                             path="/product-listing"

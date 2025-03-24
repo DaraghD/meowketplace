@@ -69,9 +69,17 @@ const RootLayout = () => {
                             </span>
                         </MenubarTrigger>
                         <MenubarContent>
-                            <MenubarItem className="cursor-pointer">
+                            <MenubarItem className="cursor-pointer"
+                            onClick={() => navigate("/product")}>
                                 Services
                             </MenubarItem>
+                            {user?.is_business ?
+                            <MenubarItem
+                                className="cursor-pointer"
+                                onClick={() => navigate("/product-listing")}>
+                                Add listing
+                            </MenubarItem>
+                            : <></>}
                             <MenubarSeparator />
                             <MenubarItem
                                 className="cursor-pointer"
@@ -84,7 +92,7 @@ const RootLayout = () => {
                                 <span>Profile</span>{" "}
                                 <Avatar>
                                     <AvatarImage
-                                        src={`https://localhost:8080/api/user/picture/${user?.id}`}
+                                        src={`http://localhost:8080/api/user/picture/${user?.id}`}
                                     />
                                     <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>

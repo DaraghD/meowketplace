@@ -127,7 +127,7 @@ const Product = () => {
 
                     <Button
                         className="hover:cursor-pointer mt-auto mb-10 flex"
-                        onClick={() => toast("Service Inquiry sent!")}
+                        onClick={() => toast("Service Inquiry sent!")}//add send message logic
                     >
                         Send Service Inquiry{" "}
                         <span>

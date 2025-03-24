@@ -48,7 +48,7 @@ const SignInForm = () => {
             localStorage.setItem("token", token);
             setUser(user_data as userData);
             console.log("Trying to log user : ", user);
-            //return (window.location.href = "/");
+            return (window.location.href = "/");
         }
     }
 

@@ -43,7 +43,6 @@ const Messages = () => {
           is_verified: data.is_verified,
         };
         setCurrentUser(user);
-        alert(user.username);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       }
@@ -117,10 +116,17 @@ const Messages = () => {
           message.receiver_id === selectedUser.id
       )
     : [];
-  console.log();
-  console.log(9999999999);
   console.log(filteredMessages);
 
+  if (messages.length === 0 && !loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <h1 className="text-center text-2xl">
+          No conversations, start one with a service inquiry <a href="/product" className="text-blue-500 underline">here</a>.
+        </h1>
+      </div>
+    );
+  }
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-gray-100">
       {/* Sidebar (1/4 width) */}

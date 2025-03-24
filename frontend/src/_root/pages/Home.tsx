@@ -15,14 +15,18 @@ const Home: React.FC = () => {
       <h1 className="text-3xl font-bold mb-4">Welcome to Meowketplace</h1>
       <p>Purr, Wag, Repeat - Find Pet Services with Ease</p>
       <p className="text-lg mb-6">Join us today!</p>
-        <p> Hello {user?.username}</p>
+        {!user ? (
+          <Link
+            to="/sign-up"
+            className="bg-blue-500 text-black px-4 py-2 rounded hover:bg-blue-600 transition"
+          >
+            Sign Up
+          </Link>
+        ) : (
+          <p> Welcome {user.username}!</p>
+        )}
 
-      <Link
-        to="/sign-up"
-        className="bg-blue-500 text-black px-4 py-2 rounded hover:bg-blue-600 transition"
-      >
-        Sign Up
-      </Link>
+
       <div className="section1">
         <div className="text1">
           <h2>Where Pet Lovers can Find Trusted Services!</h2>
