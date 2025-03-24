@@ -27,7 +27,7 @@ const Messages = () => {
     const fetchCurrentUser = async () => {
       try {
         console.log("TOken : ", localStorage.getItem("token"));
-        const response = await fetch("http://localhost:8080/api/user/auth", {
+        const response = await fetch("http://meowketplace.ie:8080/api/user/auth", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -54,7 +54,7 @@ const Messages = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/messages", {
+        const response = await fetch("http://meowketplace.ie:8080/api/messages", {
           method: "GET",
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
@@ -145,7 +145,7 @@ const Messages = () => {
                 onClick={() => setSelectedUser(user)} // Set selected user on click
               >
                 <Avatar>
-                  <AvatarImage src={`http://localhost:8080/api/user/picture/${user?.id}`} />
+                  <AvatarImage src={`http://meowketplace.ie:8080/api/user/picture/${user?.id}`} />
                   <AvatarFallback>
                     {user.username
                       .split(" ")

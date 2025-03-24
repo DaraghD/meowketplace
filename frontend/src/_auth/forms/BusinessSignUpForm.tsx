@@ -43,7 +43,7 @@ const BusinessSignUpForm = () => {
     // ✅ This will be type-safe and validated.
       console.log(9999);
       try{
-          const response = await fetch("http://localhost:8080/api/user/signup", {
+          const response = await fetch("http://meowketplace.ie:8080/api/user/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

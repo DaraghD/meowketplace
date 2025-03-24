@@ -19,7 +19,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
             }
 
             try {
-                const auth_response = await fetch("http://localhost:8080/api/user/auth", {
+                const auth_response = await fetch("http://meowketplace.ie:8080/api/user/auth", {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,

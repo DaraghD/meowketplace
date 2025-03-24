@@ -29,7 +29,7 @@ const ProductListing = () => {
   useEffect(() => {
     const fetchUserTags = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/user/auth", {
+        const response = await fetch("http://meowketplace.ie:8080/api/user/auth", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -84,7 +84,7 @@ const ProductListing = () => {
       formData.append(`images`, image);
     });
     console.log(formData);
-    const response = await fetch("http://localhost:8080/api/service", {
+    const response = await fetch("http://meowketplace.ie:8080/api/service", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

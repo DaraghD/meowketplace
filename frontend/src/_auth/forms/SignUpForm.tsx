@@ -32,7 +32,7 @@ const SignUpForm = () => {
     // ✅ This will be type-safe and validated.
     try {
       const response = await fetch(
-        "http://localhost:8080/api/user/signup",
+        "http://meowketplace.ie:8080/api/user/signup",
         {
           method: "POST",
           headers: {
