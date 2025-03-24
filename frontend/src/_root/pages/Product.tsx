@@ -13,8 +13,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
+import { Button } from "@/components/ui/button";
 
 const Product = () => {
+    const rating = 4.1;
+
+    const renderStars = (rating: number) => {
+        switch (Math.floor(rating)) {
+            case 1:
+                return "⭐☆☆☆☆";
+            case 2:
+                return "⭐⭐☆☆☆";
+            case 3:
+                return "⭐⭐⭐☆☆";
+            case 4:
+                return "⭐⭐⭐⭐☆";
+            case 5:
+                return "🌟🌟🌟🌟🌟";
+            default:
+                return "No rating";
+        }
+    };
+
     return (
         <div>
             <div className="flex h-1/4">
@@ -48,29 +68,44 @@ const Product = () => {
                         <CarouselNext />
                     </Carousel>
 
-                    <p>REVIEWS</p>
+                    <p>
+                        {rating} <span>{renderStars(rating)}</span>
+                    </p>
                 </div>
-                <div className="pl-10 flex flex-col w-1/2 p-5 gap-4">
-                    <h1 className="text-3xl font-bold pt-5">title</h1>
+                <div className="pl-10 flex flex-col p-5 gap-4">
+                    <div className="flex">
+                        <h1 className="text-3xl font-bold pt-5">title</h1>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger className="pl-5 pt-5">
+                                <Button className="cursor-pointer ">
+                                    Available Tiers
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>Profile</DropdownMenuItem>
+                                <DropdownMenuItem>Billing</DropdownMenuItem>
+                                <DropdownMenuItem>Team</DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Subscription
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+
                     <p>tags</p>
                     <p>DESCRIPTION</p>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className="cursor-pointer">
-                            Tiers
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Billing</DropdownMenuItem>
-                            <DropdownMenuItem>Team</DropdownMenuItem>
-                            <DropdownMenuItem>Subscription</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <button
-                        className="hover:cursor-pointer mb-20"
+                    <Button
+                        className="hover:cursor-pointer mb-20 flex"
                         onClick={() => toast("Service Inquiry sent!")}
                     >
-                        MESSAGE
-                    </button>
+                        Send Service Inquiry{" "}
+                        <span>
+                            <img
+                                src="/assets/icons/MessageIcon.png"
+                                className="w-7 h-auto"
+                            />
+                        </span>
+                    </Button>
                 </div>
             </div>
             <hr />
