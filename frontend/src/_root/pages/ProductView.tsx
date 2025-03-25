@@ -86,7 +86,8 @@ const ProductView = () => {
             id: 101,
             user: users[1], // john
             product: {} as Product, // Will reference the product below
-            reviewText: "Great course! Learned a lot about SEO techniques.",
+            reviewText:
+                "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis, rem ipsum? Aspernatur, veritatis reiciendis, ",
             starRating: 5,
             createdAt: new Date("2023-06-01T14:30:00Z"),
         },
@@ -153,7 +154,7 @@ const ProductView = () => {
     exampleProduct.tiers.forEach((tier) => (tier.product = exampleProduct));
     // Now all circular references are properly set
 
-    const [visibleReviews, setVisibleReviews] = useState(3);
+    const [visibleReviews, setVisibleReviews] = useState(2);
     const displayedReviews = productReviews.slice(0, visibleReviews);
 
     const loadMoreReviews = () => {
@@ -161,7 +162,7 @@ const ProductView = () => {
     };
 
     const loadLessReviews = () => {
-        setVisibleReviews(3);
+        setVisibleReviews(2);
     };
 
     const renderStars = (rating: number) => {
@@ -183,8 +184,8 @@ const ProductView = () => {
 
     return (
         <div>
-            <div className="flex h-1/4">
-                <div className="flex flex-col w-1/2 max-h-1/3 p-5">
+            <div className="flex flex-col md:flex-row h-1/4">
+                <div className="flex flex-col w-full md:w-1/2 max-h-1/3 p-5">
                     <Carousel
                         plugins={[
                             Autoplay({
@@ -218,7 +219,7 @@ const ProductView = () => {
                         {rating} <span>{renderStars(rating)}</span>
                     </p>
                 </div>
-                <div className="pl-10 flex flex-col w-1/2 p-5 gap-4">
+                <div className="pl-10 flex flex-col p-5 gap-4 w-full md:w-1/2">
                     <div className="flex">
                         <h1 className="text-3xl font-bold pt-5">title</h1>
                         <DropdownMenu>
@@ -271,7 +272,9 @@ const ProductView = () => {
                             <p>{review.user.username}</p>
                             <p>{renderStars(review.starRating)} </p>
                         </div>
-                        <p>{review.reviewText}</p>
+                        <div className="max-w-2/3">
+                            <p>{review.reviewText}</p>
+                        </div>
                         <div className="flex gap-1">
                             <Button className="cursor-pointer">
                                 <img
