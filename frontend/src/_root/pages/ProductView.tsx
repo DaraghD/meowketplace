@@ -11,6 +11,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
@@ -222,12 +224,17 @@ const ProductView = () => {
                 <p className="mb-3">Latest Reviews</p>
                 {productReviews.map((review) => (
                     <div className="flex justify-between p-2" key={review.id}>
-                        <div className="flex p-2">
+                        <div className="flex p-2 gap-2">
+                            <Avatar>
+                                <AvatarImage src="https://github.com/shadcn.png" />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+
                             <p>{review.user.username}</p>
                             <p>{renderStars(review.starRating)} </p>
                         </div>
                         <p>{review.reviewText}</p>
-                        <div>
+                        <div className="flex gap-1">
                             <Button className="hover:cursor-pointer">
                                 <img
                                     src="/assets/icons/ReplyIcon.png"
