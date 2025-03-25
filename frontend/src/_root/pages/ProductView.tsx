@@ -11,6 +11,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { toast } from "sonner";
@@ -252,8 +263,28 @@ const ProductView = () => {
                 ))}
 
                 <div className="flex p-5 justify-between">
-                    <p>LOAD MORE...</p>
-                    <p>LEAVE A REVIEW</p>
+                    <Button>Load More...</Button>
+                    <Drawer>
+                        <DrawerTrigger>
+                            <Button className="cursor-pointer">
+                                Leave a Review
+                            </Button>
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle>Leave a Review</DrawerTitle>
+                                <DrawerDescription>
+                                    This action cannot be undone.
+                                </DrawerDescription>
+                            </DrawerHeader>
+                            <DrawerFooter>
+                                <Button>Submit</Button>
+                                <DrawerClose>
+                                    <Button variant="outline">Cancel</Button>
+                                </DrawerClose>
+                            </DrawerFooter>
+                        </DrawerContent>
+                    </Drawer>
                 </div>
             </div>
         </div>
