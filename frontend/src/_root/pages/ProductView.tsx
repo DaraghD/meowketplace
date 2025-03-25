@@ -42,6 +42,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User, Product, Review } from "@/lib/types/types";
 import { ReviewValidation } from "@/lib/validation";
+import { useState } from "react";
 
 const ProductView = () => {
     const form = useForm<z.infer<typeof ReviewValidation>>({
@@ -97,6 +98,22 @@ const ProductView = () => {
             starRating: 4,
             createdAt: new Date("2023-06-10T09:15:00Z"),
         },
+        {
+            id: 103,
+            user: users[1], // john
+            product: {} as Product, // Will reference the product below
+            reviewText: "nvm its shit",
+            starRating: 1,
+            createdAt: new Date("2023-06-01T14:30:00Z"),
+        },
+        {
+            id: 104,
+            user: users[2], // sarah
+            product: {} as Product,
+            reviewText: "Loving it!",
+            starRating: 5,
+            createdAt: new Date("2023-06-10T09:15:00Z"),
+        },
     ];
 
     // Product data
@@ -134,8 +151,14 @@ const ProductView = () => {
     // Fix circular references
     productReviews.forEach((review) => (review.product = exampleProduct));
     exampleProduct.tiers.forEach((tier) => (tier.product = exampleProduct));
-
     // Now all circular references are properly set
+
+    const [visibleReviews, setVisibleReviews] = useState(3);
+    const displayedReviews = productReviews.slice(0, visibleReviews);
+
+    const loadMoreReviews = () => {
+        setVisibleReviews((prev) => prev + 3);
+    };
 
     const renderStars = (rating: number) => {
         switch (Math.floor(rating)) {
@@ -213,34 +236,7 @@ const ProductView = () => {
 
                     <p>tags</p>
                     <ScrollArea className="h-[300px] w-full rounded-md border p-4">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Tempora impedit labore quas quis. Rem culpa nisi in!
-                        Tempora molestiae harum corporis nostrum facilis,
-                        veritatis fugit natus esse recusandae sapiente saepe
-                        sunt quidem, aspernatur vero deserunt necessitatibus sed
-                        exercitationem dolor ab voluptate pariatur optio?
-                        Similique et ratione accusamus non temporibus ut
-                        possimus autem quasi explicabo quas quod perferendis
-                        aliquid, mollitia, deserunt doloremque quidem reiciendis
-                        iusto at libero illo. Iusto cupiditate sapiente officiis
-                        asperiores adipisci ad quas temporibus atque dignissimos
-                        in? Ea a quidem possimus tempora rerum voluptates
-                        doloribus iste eum voluptatum assumenda ducimus
-                        veritatis ex, corporis labore odit distinctio
-                        consequatur culpa hic illum deserunt iure in. Sint
-                        dolore quae aliquam corrupti error vitae placeat! Quia
-                        ducimus quidem itaque voluptatibus impedit amet nemo
-                        nobis totam dicta aspernatur dolores quo, tempora ipsum
-                        velit sint? Quo corporis fugiat rerum odit quibusdam
-                        voluptates rem ratione, natus cumque numquam repellat
-                        optio, voluptatem ab quidem impedit culpa earum ex cum
-                        corrupti voluptatibus tempora porro delectus sint
-                        exercitationem! Id ut nesciunt illo debitis neque totam
-                        a omnis sapiente, quaerat nostrum ad, vel repellat.
-                        Eligendi sunt numquam quos aspernatur facilis aliquid.
-                        Saepe unde laboriosam architecto quam accusantium
-                        laborum non consequatur, obcaecati illo debitis voluptas
-                        maxime ut impedit doloribus officiis.
+                        {exampleProduct.productText}
                     </ScrollArea>
 
                     <Button
@@ -260,7 +256,7 @@ const ProductView = () => {
             <hr />
             <div className="flex flex-col p-5">
                 <p className="mb-3">Latest Reviews</p>
-                {productReviews.map((review) => (
+                {displayedReviews.map((review) => (
                     <div className="flex justify-between p-2" key={review.id}>
                         <div className="flex p-2 gap-2">
                             <Avatar>
@@ -290,7 +286,12 @@ const ProductView = () => {
                 ))}
 
                 <div className="flex p-5 justify-between">
-                    <Button className="cursor-pointer">Load More...</Button>
+                    <Button
+                        className="cursor-pointer"
+                        onClick={loadMoreReviews}
+                    >
+                        Load More...
+                    </Button>
                     <Drawer>
                         <DrawerTrigger>
                             <Button className="cursor-pointer">
