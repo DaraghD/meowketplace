@@ -160,6 +160,10 @@ const ProductView = () => {
         setVisibleReviews((prev) => prev + 3);
     };
 
+    const loadLessReviews = () => {
+        setVisibleReviews(3);
+    };
+
     const renderStars = (rating: number) => {
         switch (Math.floor(rating)) {
             case 1:
@@ -286,12 +290,20 @@ const ProductView = () => {
                 ))}
 
                 <div className="flex p-5 justify-between">
-                    <Button
-                        className="cursor-pointer"
-                        onClick={loadMoreReviews}
-                    >
-                        Load More...
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button
+                            className="cursor-pointer"
+                            onClick={loadLessReviews}
+                        >
+                            Load Less
+                        </Button>
+                        <Button
+                            className="cursor-pointer"
+                            onClick={loadMoreReviews}
+                        >
+                            Load More...
+                        </Button>
+                    </div>
                     <Drawer>
                         <DrawerTrigger>
                             <Button className="cursor-pointer">
