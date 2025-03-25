@@ -21,16 +21,44 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer";
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User, Product, Review } from "@/lib/types/types";
+import { ReviewValidation } from "@/lib/validation";
 
 const ProductView = () => {
+    const form = useForm<z.infer<typeof ReviewValidation>>({
+        resolver: zodResolver(ReviewValidation),
+        defaultValues: {
+            rating: 0,
+            text: "",
+        },
+    });
+    // 2. Define a submit handler.
+    function onSubmit(values: z.infer<typeof ReviewValidation>) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(values);
+    }
+
     const rating = 4.1; //placeholder
 
     // Users data (expanded from your example)
@@ -274,11 +302,51 @@ const ProductView = () => {
                             <DrawerHeader>
                                 <DrawerTitle>Leave a Review</DrawerTitle>
                                 <DrawerDescription>
-                                    This action cannot be undone.
+                                    <Form {...form}>
+                                        <form
+                                            onSubmit={form.handleSubmit(
+                                                onSubmit
+                                            )}
+                                            className="space-y-8 text-center"
+                                        >
+                                            <FormField
+                                                control={form.control}
+                                                name="rating"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Star Rating
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="text"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Reasoning
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <Button type="submit">
+                                                Submit
+                                            </Button>
+                                        </form>
+                                    </Form>
                                 </DrawerDescription>
                             </DrawerHeader>
                             <DrawerFooter>
-                                <Button>Submit</Button>
                                 <DrawerClose>
                                     <Button variant="outline">Cancel</Button>
                                 </DrawerClose>
