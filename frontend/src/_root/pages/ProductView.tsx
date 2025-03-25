@@ -15,9 +15,84 @@ import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { User, Product } from "@/lib/types/types";
 
-const Product = () => {
-    const rating = 4.1;
+const ProductView = () => {
+    const rating = 4.1; //placeholder
+
+    const users: User[] = [
+        {
+            id: 1,
+            username: "oscar",
+            is_verified: true,
+        },
+        {
+            id: 2,
+            username: "john",
+            is_verified: false,
+        },
+    ]; //placeholder
+
+    const exampleProduct: Product = {
+        id: 1,
+        user: {
+            id: 1,
+            username: "oscar",
+            is_verified: true,
+        },
+        productText:
+            "This is a premium digital marketing course with comprehensive modules covering SEO, social media, and content marketing.",
+        price: 99.99, // base price
+        starRating: 4.7,
+        createdAt: new Date("2023-05-15T10:00:00Z"),
+        reviews: [
+            {
+                id: 101,
+                user: {
+                    id: 2,
+                    username: "john",
+                    is_verified: false,
+                },
+                product: {} as Product, // This would circular reference the parent product
+                reviewText: "Great course! Learned a lot about SEO techniques.",
+                starRating: 5,
+                createdAt: new Date("2023-06-01T14:30:00Z"),
+            },
+            {
+                id: 102,
+                user: {
+                    id: 3,
+                    username: "sarah",
+                    is_verified: true,
+                },
+                product: {} as Product,
+                reviewText:
+                    "Good content but could use more practical examples.",
+                starRating: 4,
+                createdAt: new Date("2023-06-10T09:15:00Z"),
+            },
+        ],
+        tiers: [
+            {
+                id: 1001,
+                product: {} as Product,
+                price: 99.99,
+                name: "Basic",
+            },
+            {
+                id: 1002,
+                product: {} as Product,
+                price: 149.99,
+                name: "Professional",
+            },
+            {
+                id: 1003,
+                product: {} as Product,
+                price: 199.99,
+                name: "Enterprise",
+            },
+        ],
+    };
 
     const renderStars = (rating: number) => {
         switch (Math.floor(rating)) {
@@ -127,7 +202,7 @@ const Product = () => {
 
                     <Button
                         className="hover:cursor-pointer mt-auto mb-10 flex"
-                        onClick={() => toast("Service Inquiry sent!")}//add send message logic
+                        onClick={() => toast("Service Inquiry sent!")} //add send message logic
                     >
                         Send Service Inquiry{" "}
                         <span>
@@ -141,13 +216,13 @@ const Product = () => {
             </div>
             <hr />
             <div className="flex flex-col p-5">
-                <p>LATEST REVIEWS</p>
+                <p>Latest Reviews</p>
                 <p>
                     ALEX: UTTER DOGSHIT SERVICE{" "}
                     <span>
-                        <button className="hover:cursor-pointer">
+                        <Button className="hover:cursor-pointer">
                             MESSAGE
-                        </button>
+                        </Button>
                     </span>
                 </p>
                 <div className="flex p-5 justify-between">
@@ -159,4 +234,4 @@ const Product = () => {
     );
 };
 
-export default Product;
+export default ProductView;
