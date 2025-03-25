@@ -15,11 +15,12 @@ import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, Product } from "@/lib/types/types";
+import { User, Product, Review } from "@/lib/types/types";
 
 const ProductView = () => {
     const rating = 4.1; //placeholder
 
+    // Users data (expanded from your example)
     const users: User[] = [
         {
             id: 1,
@@ -31,51 +32,47 @@ const ProductView = () => {
             username: "john",
             is_verified: false,
         },
-    ]; //placeholder
-
-    const exampleProduct: Product = {
-        id: 1,
-        user: {
-            id: 1,
-            username: "oscar",
+        {
+            id: 3,
+            username: "sarah",
             is_verified: true,
         },
+    ];
+
+    // Reviews data
+    const productReviews: Review[] = [
+        {
+            id: 101,
+            user: users[1], // john
+            product: {} as Product, // Will reference the product below
+            reviewText: "Great course! Learned a lot about SEO techniques.",
+            starRating: 5,
+            createdAt: new Date("2023-06-01T14:30:00Z"),
+        },
+        {
+            id: 102,
+            user: users[2], // sarah
+            product: {} as Product,
+            reviewText: "Good content but could use more practical examples.",
+            starRating: 4,
+            createdAt: new Date("2023-06-10T09:15:00Z"),
+        },
+    ];
+
+    // Product data
+    const exampleProduct: Product = {
+        id: 1,
+        user: users[0], // oscar
         productText:
             "This is a premium digital marketing course with comprehensive modules covering SEO, social media, and content marketing.",
         price: 99.99, // base price
         starRating: 4.7,
         createdAt: new Date("2023-05-15T10:00:00Z"),
-        reviews: [
-            {
-                id: 101,
-                user: {
-                    id: 2,
-                    username: "john",
-                    is_verified: false,
-                },
-                product: {} as Product, // This would circular reference the parent product
-                reviewText: "Great course! Learned a lot about SEO techniques.",
-                starRating: 5,
-                createdAt: new Date("2023-06-01T14:30:00Z"),
-            },
-            {
-                id: 102,
-                user: {
-                    id: 3,
-                    username: "sarah",
-                    is_verified: true,
-                },
-                product: {} as Product,
-                reviewText:
-                    "Good content but could use more practical examples.",
-                starRating: 4,
-                createdAt: new Date("2023-06-10T09:15:00Z"),
-            },
-        ],
+        reviews: productReviews,
         tiers: [
             {
                 id: 1001,
-                product: {} as Product,
+                product: {} as Product, // Will reference this product
                 price: 99.99,
                 name: "Basic",
             },
@@ -93,6 +90,12 @@ const ProductView = () => {
             },
         ],
     };
+
+    // Fix circular references
+    productReviews.forEach((review) => (review.product = exampleProduct));
+    exampleProduct.tiers.forEach((tier) => (tier.product = exampleProduct));
+
+    // Now all circular references are properly set
 
     const renderStars = (rating: number) => {
         switch (Math.floor(rating)) {
@@ -216,15 +219,31 @@ const ProductView = () => {
             </div>
             <hr />
             <div className="flex flex-col p-5">
-                <p>Latest Reviews</p>
-                <p>
-                    ALEX: UTTER DOGSHIT SERVICE{" "}
-                    <span>
-                        <Button className="hover:cursor-pointer">
-                            MESSAGE
-                        </Button>
-                    </span>
-                </p>
+                <p className="mb-3">Latest Reviews</p>
+                {productReviews.map((review) => (
+                    <div className="flex justify-between p-2" key={review.id}>
+                        <div className="flex p-2">
+                            <p>{review.user.username}</p>
+                            <p>{renderStars(review.starRating)} </p>
+                        </div>
+                        <p>{review.reviewText}</p>
+                        <div>
+                            <Button className="hover:cursor-pointer">
+                                <img
+                                    src="/assets/icons/ReplyIcon.png"
+                                    className="w-7 h-auto hover:cursor-pointer"
+                                />
+                            </Button>
+                            <Button className="hover:cursor-pointer">
+                                <img
+                                    src="/assets/icons/MessageIcon.png"
+                                    className="w-7 h-auto hover:cursor-pointer"
+                                />
+                            </Button>
+                        </div>
+                    </div>
+                ))}
+
                 <div className="flex p-5 justify-between">
                     <p>LOAD MORE...</p>
                     <p>LEAVE A REVIEW</p>
