@@ -263,16 +263,19 @@ const ProductView = () => {
                 <p className="mb-3">Latest Reviews</p>
                 {displayedReviews.map((review) => (
                     <div className="flex justify-between p-2" key={review.id}>
-                        <div className="flex p-2 gap-2">
+                        <div className="flex flex-col md:flex-row p-2 gap-2">
                             <Avatar>
                                 <AvatarImage src="https://github.com/shadcn.png" />
                                 <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
 
                             <p>{review.user.username}</p>
-                            <p>{renderStars(review.starRating)} </p>
+                            <p className="hidden xl:block">
+                                {renderStars(review.starRating)}{" "}
+                            </p>
+                            <p>{review.starRating}✨</p>
                         </div>
-                        <div className="max-w-2/3">
+                        <div className="max-w-2/4">
                             <p>{review.reviewText}</p>
                         </div>
                         <div className="flex gap-1">
