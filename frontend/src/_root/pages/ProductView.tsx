@@ -245,7 +245,7 @@ const ProductView = () => {
                     </ScrollArea>
 
                     <Button
-                        className="hover:cursor-pointer mt-auto mb-10 flex"
+                        className="cursor-pointer mt-auto mb-10 flex"
                         onClick={() => toast("Service Inquiry sent!")} //add send message logic
                     >
                         Send Service Inquiry{" "}
@@ -274,16 +274,16 @@ const ProductView = () => {
                         </div>
                         <p>{review.reviewText}</p>
                         <div className="flex gap-1">
-                            <Button className="hover:cursor-pointer">
+                            <Button className="cursor-pointer">
                                 <img
                                     src="/assets/icons/ReplyIcon.png"
-                                    className="w-7 h-auto hover:cursor-pointer"
+                                    className="w-7 h-auto"
                                 />
                             </Button>
-                            <Button className="hover:cursor-pointer">
+                            <Button className="cursor-pointer">
                                 <img
                                     src="/assets/icons/MessageIcon.png"
-                                    className="w-7 h-auto hover:cursor-pointer"
+                                    className="w-7 h-auto "
                                 />
                             </Button>
                         </div>
@@ -291,7 +291,7 @@ const ProductView = () => {
                 ))}
 
                 <div className="flex p-5 justify-between">
-                    <Button>Load More...</Button>
+                    <Button className="cursor-pointer">Load More...</Button>
                     <Drawer>
                         <DrawerTrigger>
                             <Button className="cursor-pointer">
@@ -348,7 +348,12 @@ const ProductView = () => {
                             </DrawerHeader>
                             <DrawerFooter>
                                 <DrawerClose>
-                                    <Button variant="outline">Cancel</Button>
+                                    <Button
+                                        variant="outline"
+                                        className="cursor-pointer"
+                                    >
+                                        Cancel
+                                    </Button>
                                 </DrawerClose>
                             </DrawerFooter>
                         </DrawerContent>
