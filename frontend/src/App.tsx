@@ -11,6 +11,7 @@ import ProductView from "./_root/pages/ProductView";
 import Profile from "@/_root/pages/Profile.tsx";
 import ProductListing from "./_root/pages/ProductListing";
 import { Toaster } from "./components/ui/sonner";
+import Products from "./_root/pages/Search";
 
 const App = () => {
     const location = useLocation();
@@ -29,6 +30,7 @@ const App = () => {
                     <Route element={<AuthLayout />}>
                         <Route path="/sign-in" element={<SignInForm />} />
                         <Route path="/sign-up" element={<SignUpForm />} />
+                        <Route path="/search" element={<Products />} />
                         <Route
                             path="/business-sign-up"
                             element={<BusinessSignUpForm />}
