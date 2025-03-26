@@ -179,6 +179,7 @@ const ProductView = () => {
     // Now all circular references are properly set
 
     const [visibleReviews, setVisibleReviews] = useState(2);
+    const [showReplies, setShowReplies] = useState<Record<number, boolean>>({});
     const displayedReviews = productReviews.slice(0, visibleReviews);
 
     const loadMoreReviews = () => {
@@ -187,6 +188,13 @@ const ProductView = () => {
 
     const loadLessReviews = () => {
         setVisibleReviews(2);
+    };
+
+    const toggleReplies = (reviewId: number) => {
+        setShowReplies((prev) => ({
+            ...prev,
+            [reviewId]: !prev[reviewId],
+        }));
     };
 
     const renderStars = (rating: number) => {
@@ -286,36 +294,84 @@ const ProductView = () => {
             <div className="flex flex-col p-5">
                 <p className="mb-3">Latest Reviews</p>
                 {displayedReviews.map((review) => (
-                    <div className="flex justify-between p-2" key={review.id}>
-                        <div className="flex flex-col md:flex-row p-2 gap-2">
-                            <Avatar>
-                                <AvatarImage src="https://github.com/shadcn.png" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
+                    <div key={review.id} className="border-b pb-4 mb-4">
+                        <div className="flex justify-between p-2">
+                            <div className="flex flex-col md:flex-row p-2 gap-2">
+                                <Avatar>
+                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
 
-                            <p>{review.user.username}</p>
-                            <p className="hidden xl:block">
-                                {renderStars(review.starRating)}{" "}
-                            </p>
-                            <p>{review.starRating}✨</p>
+                                <p>{review.user.username}</p>
+                                <p className="hidden xl:block">
+                                    {renderStars(review.starRating)}{" "}
+                                </p>
+                                <p>{review.starRating}✨</p>
+                            </div>
+                            <div className="max-w-2/4">
+                                <p>{review.reviewText}</p>
+                            </div>
+                            <div className="flex gap-1">
+                                <Button className="cursor-pointer">
+                                    <img
+                                        src="/assets/icons/ReplyIcon.png"
+                                        className="w-7 h-auto"
+                                    />
+                                </Button>
+                                <Button className="cursor-pointer">
+                                    <img
+                                        src="/assets/icons/MessageIcon.png"
+                                        className="w-7 h-auto "
+                                    />
+                                </Button>
+                            </div>
                         </div>
-                        <div className="max-w-2/4">
-                            <p>{review.reviewText}</p>
-                        </div>
-                        <div className="flex gap-1">
-                            <Button className="cursor-pointer">
-                                <img
-                                    src="/assets/icons/ReplyIcon.png"
-                                    className="w-7 h-auto"
-                                />
-                            </Button>
-                            <Button className="cursor-pointer">
-                                <img
-                                    src="/assets/icons/MessageIcon.png"
-                                    className="w-7 h-auto "
-                                />
-                            </Button>
-                        </div>
+
+                        {/* replies */}
+                        {review.replies.length > 0 && (
+                            <div className="pl-14">
+                                <Button
+                                    variant="ghost"
+                                    className="text-sm text-gray-500 hover:text-gray-700"
+                                    onClick={() => toggleReplies(review.id)}
+                                >
+                                    {showReplies[review.id]
+                                        ? "Hide replies"
+                                        : `Show replies (${review.replies.length})`}
+                                </Button>
+
+                                {showReplies[review.id] && (
+                                    <div className="mt-2 space-y-3 pl-4 border-l-2 border-gray-200">
+                                        {review.replies.map((reply) => (
+                                            <div
+                                                key={reply.id}
+                                                className="flex items-start gap-2"
+                                            >
+                                                <Avatar className="h-6 w-6">
+                                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                                    <AvatarFallback>
+                                                        CN
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="font-medium text-sm">
+                                                            {
+                                                                reply.user
+                                                                    .username
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-sm">
+                                                        {reply.replyText}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 ))}
 
