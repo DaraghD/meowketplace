@@ -2,6 +2,7 @@ package com.example.meowketplace.model;
 
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "reviews")
@@ -20,6 +21,9 @@ public class Review {
 
     @Column(nullable = false)
     private String reviewText;
+
+    @OneToMany(mappedBy = "review")
+    private List<Reply> replies;
 
     @Column(nullable = false)
     private int starRating;
@@ -57,6 +61,14 @@ public class Review {
 
     public void setReviewText(String reviewText) {
         this.reviewText = reviewText;
+    }
+
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Reply> replies) {
+        this.replies = replies;
     }
 
     public int getStarRating() {
