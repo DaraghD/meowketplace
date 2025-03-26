@@ -80,14 +80,28 @@ const ProductView = () => {
         },
     ];
 
-    // Reviews data
+    //test data
     const productReviews: Review[] = [
         {
             id: 101,
             user: users[1], // john
-            product: {} as Product, // Will reference the product below
+            product: {} as Product,
             reviewText:
-                "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis, rem ipsum? Aspernatur, veritatis reiciendis, ",
+                "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis, rem ipsum? Aspernatur, veritatis reiciendis",
+            replies: [
+                {
+                    id: 1001,
+                    user: users[0], // alex
+                    replyText: "I completely agree with this review!",
+                    createdAt: new Date("2023-06-02T10:00:00Z"),
+                },
+                {
+                    id: 1002,
+                    user: users[2], // sarah
+                    replyText: "Have you tried the salmon flavor?",
+                    createdAt: new Date("2023-06-03T11:30:00Z"),
+                },
+            ],
             starRating: 5,
             createdAt: new Date("2023-06-01T14:30:00Z"),
         },
@@ -96,24 +110,34 @@ const ProductView = () => {
             user: users[2], // sarah
             product: {} as Product,
             reviewText: "Good content but could use more practical examples.",
+            replies: [
+                {
+                    id: 1003,
+                    user: users[1], // john
+                    replyText: "This was helpful, thanks!",
+                    createdAt: new Date("2023-06-11T15:45:00Z"),
+                },
+            ],
             starRating: 4,
             createdAt: new Date("2023-06-10T09:15:00Z"),
         },
         {
             id: 103,
             user: users[1], // john
-            product: {} as Product, // Will reference the product below
+            product: {} as Product,
             reviewText: "nvm its shit",
+            replies: [], // No replies for negative review
             starRating: 1,
-            createdAt: new Date("2023-06-01T14:30:00Z"),
+            createdAt: new Date("2023-06-15T14:30:00Z"),
         },
         {
             id: 104,
             user: users[2], // sarah
             product: {} as Product,
             reviewText: "Loving it!",
+            replies: [], // No replies yet
             starRating: 5,
-            createdAt: new Date("2023-06-10T09:15:00Z"),
+            createdAt: new Date("2023-06-20T09:15:00Z"),
         },
     ];
 
