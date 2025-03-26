@@ -65,11 +65,19 @@ export interface Product {
     tiers: Tier[];
 }
 
+interface Reply {
+    id:number;
+    user: User;
+    replyText: string;
+    createdAt: Date;
+}
+
 export interface Review {
     id: number;
     user: User;
     product: Product;
     reviewText: string;
+    replies: Reply[];
     starRating: number;
     createdAt: Date;
 }
