@@ -1,4 +1,4 @@
-import {Routes, Route, useLocation, Navigate} from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./index.css";
 import SignInForm from "./_auth/forms/SignInForm";
 import Home from "./_root/pages/Home";
@@ -7,7 +7,7 @@ import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
 import BusinessSignUpForm from "./_auth/forms/BusinessSignUpForm";
 import Messages from "./_root/pages/Messages";
-import Product from "./_root/pages/Product";
+import ProductView from "./_root/pages/ProductView";
 import Profile from "@/_root/pages/Profile.tsx";
 import ProductListing from "./_root/pages/ProductListing";
 import { Toaster } from "./components/ui/sonner";
@@ -26,27 +26,34 @@ const App = () => {
                 <Routes>
                     {/* public routes */}
                     <Route path="*" element={<Navigate to="/" />} />
-                    <Route element={<AuthLayout/>}>
-                        <Route path="/sign-in" element={<SignInForm/>}/>
-                        <Route path="/sign-up" element={<SignUpForm/>}/>
+                    <Route element={<AuthLayout />}>
+                        <Route path="/sign-in" element={<SignInForm />} />
+                        <Route path="/sign-up" element={<SignUpForm />} />
                         <Route
                             path="/business-sign-up"
-                            element={<BusinessSignUpForm/>}/>
+                            element={<BusinessSignUpForm />}
+                        />
                     </Route>
                     {/* private routes */}
-                    <Route element={<RootLayout/>}>
-                        <Route index element={<Home/>}/>
-                        <Route path="/messages" element={<Messages/>}/>
-                        <Route path="/product" element={<Product/>}/>
-                        <Route path="/product/:id" element={<Product/>}/> {/* individual product*/}
-                        <Route path="/profile" element={<Profile/>}/>
+                    <Route element={<RootLayout />}>
+                        <Route index element={<Home />} />
+                        <Route path="/messages" element={<Messages />} />
+                        <Route path="/product" element={<ProductView />} />
+                        <Route
+                            path="/product/:id"
+                            element={<ProductView />}
+                        />{" "}
+                        {/* individual product*/}
+                        <Route path="/profile" element={<Profile />} />
                         <Route
                             path="/product-listing"
-                            element={<ProductListing/>}/>
+                            element={<ProductListing />}
+                        />
                     </Route>
                 </Routes>
             </main>
-            <Toaster/></>
+            <Toaster />
+        </>
     );
 };
 

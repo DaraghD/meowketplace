@@ -28,7 +28,7 @@ services:
     depends_on:
       - mariadb
     volumes:
-      - uploads:/uploads
+      - uploads:/app/uploads
 
   frontend:
     image: ghcr.io/daraghd/meowketplace_frontend:latest

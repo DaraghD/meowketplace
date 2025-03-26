@@ -36,3 +36,8 @@ export const ProductListingValidation = z.object({
     }),
   tiers: z.array(TierValidation).min(1, { message: "At least one tier is required" }),
 });
+
+export const ReviewValidation = z.object({
+  rating: z.number(),
+  text: z.string().min(1).max(2000),
+});
