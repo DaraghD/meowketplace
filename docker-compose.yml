@@ -3,10 +3,10 @@ services:
     image: mariadb:11.7
     container_name: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: 123
-      MYSQL_DATABASE: test
-      MYSQL_USER: meowdb
-      MYSQL_PASSWORD: 123
+      MARIADB_ROOT_PASSWORD: 123
+      MARIADB_DATABASE: test
+      MARIADB_USER: meowdb
+      MARIADB_PASSWORD: 123
     volumes:
       - mariadb_volume:/var/lib/mysql
     networks:
