@@ -38,7 +38,10 @@ const RootLayout = () => {
                     </div>
 
                     <div className="flex space-x-4 mr-5 items-center">
-                        <button className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer">
+                        <button
+                            onClick={() => navigate("/services")}
+                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+                        >
                             Services
                         </button>
                         <button
@@ -46,6 +49,12 @@ const RootLayout = () => {
                             className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
                         >
                             Messages
+                        </button>
+                        <button
+                            onClick={() => navigate("/about-us")}
+                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+                        >
+                            About us
                         </button>
                         <button className="cursor-pointer" onClick={() => navigate("/profile")}>
                             <Avatar onClick={() => navigate("/profile")}>

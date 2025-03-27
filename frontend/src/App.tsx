@@ -7,6 +7,7 @@ import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
 import BusinessSignUpForm from "./_auth/forms/BusinessSignUpForm";
 import Messages from "./_root/pages/Messages";
+import { AboutUs, Services } from "./_root/pages";
 import ProductView from "./_root/pages/ProductView";
 import Profile from "@/_root/pages/Profile.tsx";
 import ProductListing from "./_root/pages/ProductListing";
@@ -40,17 +41,15 @@ const App = () => {
                     <Route element={<RootLayout />}>
                         <Route index element={<Home />} />
                         <Route path="/messages" element={<Messages />} />
-                        <Route path="/product" element={<ProductView />} />
+                        <Route path="/product" element={<ProductView />} />{" "}
                         <Route
                             path="/product/:id"
                             element={<ProductView />}
-                        />{" "}
-                        {/* individual product*/}
+                        /> {/* individual product */}
                         <Route path="/profile" element={<Profile />} />
-                        <Route
-                            path="/product-listing"
-                            element={<ProductListing />}
-                        />
+                        <Route path="/product-listing"element={<ProductListing />} />
+                        <Route path="/services" element={<Services />} />
+                        <Route path="/about-us" element={<AboutUs />} />
                     </Route>
                 </Routes>
             </main>
