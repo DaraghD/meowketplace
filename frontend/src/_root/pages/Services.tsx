@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Services = () => {
-    const [userChoice, setUserChoice] = useState<string | null>(null);
+    const [, setUserChoice] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const handleChoice = (choice: string) => {
