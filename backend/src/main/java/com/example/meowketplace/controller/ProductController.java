@@ -31,7 +31,7 @@ public class ProductController {
     private final ProductService productService;
 
     @Autowired
-    public ProductController(ProductService productService,UserService userService, JwtUtil jwtUtil) {
+    public ProductController(ProductService productService, UserService userService, JwtUtil jwtUtil) {
         this.productService = productService;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
@@ -45,18 +45,20 @@ public class ProductController {
             System.out.println(products);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            return new ResponseEntity<>(objectMapper.writerWithView(Views.Public.class).writeValueAsString(products), HttpStatus.OK);
-        }catch(Exception e){
+            return new ResponseEntity<>(objectMapper.writerWithView(Views.Public.class).writeValueAsString(products),
+                    HttpStatus.OK);
+            // return new ResponseEntity<>(objectMapper.writeValueAsString(products),
+            // HttpStatus.OK);
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Problem serialising data ", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping(consumes={"multipart/form-data", "application/octet-stream"})
+    @PostMapping(consumes = { "multipart/form-data", "application/octet-stream" })
     public ResponseEntity<String> addProduct(@RequestParam String product,
-                                             @RequestHeader("Authorization") String authHeader,
-                                             @RequestParam List<MultipartFile> images)
-    {
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam List<MultipartFile> images) {
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -71,7 +73,7 @@ public class ProductController {
                 productService.addProduct(addProductRequest, user, images);
                 return ResponseEntity.status(HttpStatus.OK).body("Product successfully added");
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -81,7 +83,7 @@ public class ProductController {
     @GetMapping("/picture/{id}/{image}")
     public ResponseEntity<byte[]> getProductImage(@PathVariable Long id, @PathVariable Long image) {
         try {
-            Path filePath = Paths.get("uploads/products/"+id+"/"+image).normalize();
+            Path filePath = Paths.get("uploads/products/" + id + "/" + image).normalize();
             byte[] fileContent = Files.readAllBytes(filePath);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)

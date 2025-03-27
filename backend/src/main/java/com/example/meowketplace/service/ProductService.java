@@ -1,6 +1,7 @@
 package com.example.meowketplace.service;
 
 import com.example.meowketplace.dto.AddProductRequest;
+import com.example.meowketplace.dto.GetProductsResponse;
 import com.example.meowketplace.dto.UpdateProduct;
 import com.example.meowketplace.model.Product;
 import com.example.meowketplace.model.User;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,23 +31,29 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
+    public List<GetProductsResponse> getAllProducts() {
+        var x = productRepository.findAll();
+        List<GetProductsResponse> resp = new ArrayList<>();
+        for (var y : x) {
+            resp.add(new GetProductsResponse(y));
+        }
+        return resp;
     }
 
-    public void addProduct(AddProductRequest product, User user, List<MultipartFile> images) throws JsonProcessingException {
-        //if(!user.isIs_business()){ TODO uncomment this after testing
-        //    throw new IllegalArgumentException("User is not a business");
-        //}
-        Product newProduct = new Product(product,user);
+    public void addProduct(AddProductRequest product, User user, List<MultipartFile> images)
+            throws JsonProcessingException {
+        // if(!user.isIs_business()){ TODO uncomment this after testing
+        // throw new IllegalArgumentException("User is not a business");
+        // }
+        Product newProduct = new Product(product, user);
         productRepository.save(newProduct);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writeValueAsString(newProduct));
         newProduct.setImageCount(images.size());
 
-        //save images
-        String uploadDir = "uploads/product_images/"+newProduct.getId();
-        for(int i=0; i<images.size(); i++){
+        // save images
+        String uploadDir = "uploads/product_images/" + newProduct.getId();
+        for (int i = 0; i < images.size(); i++) {
             try {
                 Path uploadPath = Paths.get(uploadDir);
                 if (!Files.exists(uploadPath)) {
@@ -53,7 +61,7 @@ public class ProductService {
                 }
                 try (InputStream inputStream = images.get(i).getInputStream()) {
                     Path filePath = uploadPath.resolve(Integer.toString(i));
-                    System.out.println("Uploading to "+filePath);
+                    System.out.println("Uploading to " + filePath);
                     Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e) {
                     throw new Exception("Could not save image");
@@ -68,10 +76,10 @@ public class ProductService {
 
     public void modifyProduct(Long productId, UpdateProduct newProduct) throws Exception {
         Product existingProduct = productRepository.findById(productId).orElse(null);
-        if (existingProduct == null){
+        if (existingProduct == null) {
             throw new Exception("Product not found");
         }
-        //TODO: updating product logic
+        // TODO: updating product logic
 
     }
 
