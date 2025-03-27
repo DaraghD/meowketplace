@@ -19,6 +19,11 @@ const RootLayout = () => {
     const {user} = context;
 
     const navigate = useNavigate();
+
+    const handleLogoClick = () => {
+        navigate("/");
+    };
+
     return (
         <>
             <div className="hidden xl:block">
@@ -27,8 +32,9 @@ const RootLayout = () => {
                         <img
                             src="/assets/icons/logo.png"
                             className="pl-1 h-14 w-auto mr-2 cursor-pointer"
+                            onClick={handleLogoClick}
                         />
-                        <h1 className="cursor-pointer">Meowketplace</h1>
+                        <h1 className="cursor-pointer" onClick={handleLogoClick}>Meowketplace</h1>
                     </div>
 
                     <div className="flex space-x-4 mr-5 items-center">
@@ -73,13 +79,13 @@ const RootLayout = () => {
                             onClick={() => navigate("/product")}>
                                 Services
                             </MenubarItem>
-                            {user?.is_business ?
-                            <MenubarItem
-                                className="cursor-pointer"
-                                onClick={() => navigate("/product-listing")}>
-                                Add listing
-                            </MenubarItem>
-                            : <></>}
+                            {user?.is_business ? 
+                                <MenubarItem
+                                    className="cursor-pointer"
+                                    onClick={() => navigate("/product-listing")}>
+                                    Add listing
+                                </MenubarItem> 
+                                : <></>}
                             <MenubarSeparator />
                             <MenubarItem
                                 className="cursor-pointer"
