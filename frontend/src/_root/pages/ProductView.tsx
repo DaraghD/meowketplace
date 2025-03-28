@@ -82,15 +82,11 @@ const ProductView = () => {
                         className="w-full"
                     >
                         <CarouselContent>
-                            {[
-                                "/assets/images/cat-brushing.jpg",
-                                "/assets/images/CreateAccountImg.png",
-                                "/assets/images/LoginAccountImg.png",
-                            ].map((image, index) => (
+                            {Array.from({ length: product?.imageCount ?? 0 }, (_, index) => (
                                 <CarouselItem key={index}>
                                     <div className="aspect-square md:aspect-[4/3] w-full relative">
                                         <img
-                                            src={image}
+                                            src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
                                             alt={`Product image ${index + 1}`}
                                             className="w-full h-full object-contain rounded-lg"
                                         />
