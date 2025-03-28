@@ -9,9 +9,9 @@ const Services = () => {
         setUserChoice(choice);
 
         if (choice === 'advertise') {
-            navigate('/product-listing'); // PLACEHOLDER until services functionality exists lol
+            navigate('/product-listing');
         } else if (choice === 'browse') {
-            navigate('/product'); // PLACEHOLDER
+            navigate('/search'); // PLACEHOLDER
         }
     };
 

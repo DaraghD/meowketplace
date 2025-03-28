@@ -40,7 +40,7 @@ const App = () => {
                     <Route element={<RootLayout />}>
                         <Route index element={<Home />} />
                         <Route path="/messages" element={<Messages />} />
-                        <Route path="/product" element={<ProductView />} />{" "}
+                        <Route path="/product" element={<Navigate to="/search" />} />
                         <Route path="/search" element={<Products />} />
                         <Route
                             path="/product/:id"

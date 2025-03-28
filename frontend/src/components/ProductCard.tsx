@@ -8,6 +8,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const navigate = useNavigate();
+    const thumbnail = `http://localhost:8080/api/service/picture/${product.id}/0`
     return (
         <div
             onClick={() => {
@@ -15,7 +16,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             }}
             className="w-96 h-32 border rounded-lg shadow-md bg-white flex cursor-pointer">
             <img
-                src="http://localhost:8080/api/user/picture/1"
+                src={thumbnail}
                 alt={product.name}
                 className="h-full w-24 object-cover rounded-l-lg"
             />

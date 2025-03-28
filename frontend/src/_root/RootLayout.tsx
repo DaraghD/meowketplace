@@ -16,7 +16,7 @@ const RootLayout = () => {
     if (!context) {
         throw new Error("Context not found");
     }
-    const {user} = context;
+    const { user } = context;
 
     const navigate = useNavigate();
 
@@ -85,15 +85,15 @@ const RootLayout = () => {
                         </MenubarTrigger>
                         <MenubarContent>
                             <MenubarItem className="cursor-pointer"
-                            onClick={() => navigate("/product")}>
+                                onClick={() => navigate("/services")}>
                                 Services
                             </MenubarItem>
-                            {user?.is_business ? 
+                            {user?.is_business ?
                                 <MenubarItem
                                     className="cursor-pointer"
                                     onClick={() => navigate("/product-listing")}>
                                     Add listing
-                                </MenubarItem> 
+                                </MenubarItem>
                                 : <></>}
                             <MenubarSeparator />
                             <MenubarItem
