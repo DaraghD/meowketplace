@@ -12,7 +12,13 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold mb-4">Welcome to Meowketplace</h1>
+      <div className="header">
+      <img
+      src="/assets/images/Meowketplace header upscaled1.jpg"
+      alt="banner"
+      />
+      <div className="header-text">
+      <h1>Welcome to Meowketplace</h1>
       <p>Purr, Wag, Repeat - Find Pet Services with Ease</p>
       <p className="text-lg mb-6">Join us today!</p>
         {!user ? (
@@ -25,7 +31,8 @@ const Home: React.FC = () => {
         ) : (
           <p> Welcome {user.username}!</p>
         )}
-
+        </div>
+</div>
 
       <div className="section1">
         <div className="text1">
@@ -37,13 +44,13 @@ const Home: React.FC = () => {
           </p>
         </div>
         <img
-          src="https://th.bing.com/th/id/R.2fd6b4a3c983bfee63735c2f0d3fc556?rik=9gbeJtDoaAyTfA&riu=http%3a%2f%2fmedia.pluspets.com%2fwp-content%2fuploads%2f2018%2f01%2fCat-Brush.jpg&ehk=IPYsgC6ZpcNbMMLNiEpnt8Lqdoq7y7NQ6MtKKe3BYZg%3d&risl=&pid=ImgRaw&r=0"
+          src="/assets/images/cat-brushing.jpg"
           alt="Cat Brushing"
         />
       </div>
       <div className="section2">
         <img
-          src="https://th.bing.com/th/id/R.2fd6b4a3c983bfee63735c2f0d3fc556?rik=9gbeJtDoaAyTfA&riu=http%3a%2f%2fmedia.pluspets.com%2fwp-content%2fuploads%2f2018%2f01%2fCat-Brush.jpg&ehk=IPYsgC6ZpcNbMMLNiEpnt8Lqdoq7y7NQ6MtKKe3BYZg%3d&risl=&pid=ImgRaw&r=0"
+        src = "/assets/images/cat-working.jpg"
           alt="Cat Brushing"
         />
         <div className="text2">
@@ -64,7 +71,7 @@ const Home: React.FC = () => {
           </p>
         </div>
         <img
-          src="https://th.bing.com/th/id/R.2fd6b4a3c983bfee63735c2f0d3fc556?rik=9gbeJtDoaAyTfA&riu=http%3a%2f%2fmedia.pluspets.com%2fwp-content%2fuploads%2f2018%2f01%2fCat-Brush.jpg&ehk=IPYsgC6ZpcNbMMLNiEpnt8Lqdoq7y7NQ6MtKKe3BYZg%3d&risl=&pid=ImgRaw&r=0"
+          src="/assets/images/dog-lol.jpg"
           alt="Cat Brushing"
         />
       </div>

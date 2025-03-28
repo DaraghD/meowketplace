@@ -1,3 +1,24 @@
+h1{
+    font-size: xx-large;
+    font-weight: bold;
+}
+h2{
+    font-size: x-large;
+}
+
+.header{
+position: relative;
+text-align: center;
+
+}
+
+.header-text{
+    position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
 .section1 {
     display: block;
     text-align: left;
@@ -6,9 +27,9 @@
 
 .text1 {
     display: inline-block;
-    width: 50%;
+    width: 50%; 
     vertical-align: middle;
-    padding: 20px;
+    padding: 60px;
 }
 
 .text1 h2 {
@@ -20,13 +41,13 @@
 .section1 img {
     display: inline-block;
     width: 50%;
-    padding: 20px;
+    padding: 60px;
 }
 
 .section2 img {
     display: inline-block;
     width: 50%;
-    padding: 20px;
+    padding: 60px;
 }
 
 .section2{
@@ -40,6 +61,7 @@
     width: 50%;
     vertical-align: middle;
     padding: 20px;
+    padding: 60px;
 }
 
 .text2 h2 {
@@ -51,7 +73,7 @@
 .section3 img {
     display: inline-block;
     width: 50%;
-    padding: 20px;
+    padding: 60px;
 }
 
 .section3{
@@ -65,6 +87,7 @@
     width: 50%;
     vertical-align: middle;
     padding: 20px;
+    padding: 60px;
 }
 
 .text3 h2 {
@@ -75,10 +98,10 @@
 
 .section4{
     margin-top: 20px;
-    display: block;
+    
     text-align: left;
     padding: 20px;
-    width: 50%;
+float: left;
 }
 
 .section4 h2{

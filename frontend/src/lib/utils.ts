@@ -18,7 +18,7 @@ export const sendMessage = async (messageContent: string, sender_id: number | un
   console.log(message);
 
   try {
-    const response = await fetch("http://meowketplace.ie:8080/api/messages", {
+    const response = await fetch("http://localhost:8080/api/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json", //todo: add token

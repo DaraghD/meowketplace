@@ -28,7 +28,7 @@ const Messages = () => {
             try {
                 console.log("TOken : ", localStorage.getItem("token"));
                 const response = await fetch(
-                    "http://meowketplace.ie:8080/api/user/auth",
+                    "http://localhost:8080/api/user/auth",
                     {
                         method: "GET",
                         headers: {
@@ -62,7 +62,7 @@ const Messages = () => {
         const fetchMessages = async () => {
             try {
                 const response = await fetch(
-                    "http://meowketplace.ie:8080/api/messages",
+                    "http://localhost:8080/api/messages",
                     {
                         method: "GET",
                         headers: {
@@ -173,7 +173,7 @@ const Messages = () => {
                             >
                                 <Avatar>
                                     <AvatarImage
-                                        src={`http://meowketplace.ie:8080/api/user/picture/${user?.id}`}
+                                        src={`http://localhost:8080/api/user/picture/${user?.id}`}
                                     />
                                     <AvatarFallback>
                                         {user.username
