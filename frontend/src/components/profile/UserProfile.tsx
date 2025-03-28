@@ -35,7 +35,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user}) => {
             alert("No file selected");
         }
 
-        const response = await fetch("http://meowketplace.ie:8080/api/user/picture", {
+        const response = await fetch("http://localhost:8080/api/user/picture", {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -54,7 +54,7 @@ return (
     <div className="flex flex-col items-start justify-start bg-gray-100 ">
         <div className="bg-white p-6 w-full flex">
             <div className="w-1/3 flex flex-col items-start">
-                <img src={`http://meowketplace.ie:8080/api/user/picture/${user.id}`} alt="Profile" className="w-32 h-32 rounded-full mb-4"/>
+                <img src={`http://localhost:8080/api/user/picture/${user.id}`} alt="Profile" className="w-32 h-32 rounded-full mb-4"/>
                 <input
                     type="file"
                     className="mb-4"

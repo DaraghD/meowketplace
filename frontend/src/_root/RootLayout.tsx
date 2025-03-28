@@ -59,7 +59,7 @@ const RootLayout = () => {
                         <button className="cursor-pointer" onClick={() => navigate("/profile")}>
                             <Avatar onClick={() => navigate("/profile")}>
                                 <AvatarImage
-                                    src={`http://meowketplace.ie:8080/api/user/picture/${user?.id}`}
+                                    src={`http://localhost:8080/api/user/picture/${user?.id}`}
                                 />
                                 <AvatarFallback>Login</AvatarFallback>
                             </Avatar>
@@ -107,7 +107,7 @@ const RootLayout = () => {
                                 <span>Profile</span>{" "}
                                 <Avatar>
                                     <AvatarImage
-                                        src={`http://meowketplace.ie:8080/api/user/picture/${user?.id}`}
+                                        src={`http://localhost:8080/api/user/picture/${user?.id}`}
                                     />
                                     <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>
