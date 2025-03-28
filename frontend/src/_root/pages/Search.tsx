@@ -21,7 +21,7 @@ useEffect(() => {
         setProducts(data);     
     }
         catch(error){
-            console.error("Error fetching messages", error);
+            console.error("Error fetching products", error);
         }
     }
     fetchProducts();
