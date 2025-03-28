@@ -49,7 +49,7 @@ public class UserController {
     public ResponseEntity<byte[]> getProfilePicture(@PathVariable Long id) {
         try {
             User user = userService.getUserById(id);
-            Path filePath = Paths.get("uploads/profile_pictures/"+id).normalize();
+            Path filePath = Paths.get("uploads/profile_pictures/" + id).normalize();
             byte[] fileContent = Files.readAllBytes(filePath);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
@@ -62,7 +62,8 @@ public class UserController {
     }
 
     @PostMapping("/picture")
-    public ResponseEntity<String> uploadProfilePicture(@RequestParam("profile_picture") MultipartFile profile_picture, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<String> uploadProfilePicture(@RequestParam("profile_picture") MultipartFile profile_picture,
+            @RequestHeader("Authorization") String authHeader) {
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
@@ -92,8 +93,10 @@ public class UserController {
         try {
             boolean validUser = userService.authenticateUserPassword(loginRequest);
             if (validUser) {
-                String token = jwtUtil.generateToken(userService.getUserByEmail(loginRequest.getEmail()).getId().toString());
-                LoginResponse loginResponse = new LoginResponse(token, userService.getUserByEmail(loginRequest.getEmail()));
+                String token = jwtUtil
+                        .generateToken(userService.getUserByEmail(loginRequest.getEmail()).getId().toString());
+                LoginResponse loginResponse = new LoginResponse(token,
+                        userService.getUserByEmail(loginRequest.getEmail()));
                 ObjectMapper mapper = new ObjectMapper();
                 return ResponseEntity.ok(mapper.writerWithView(Views.Internal.class).writeValueAsString(loginResponse));
             }
@@ -103,10 +106,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
     }
 
-    @RequestMapping("/auth")// maybe move to /user get request
+    @RequestMapping("/auth") // maybe move to /user get request
     public ResponseEntity<String> authenticateUser(@RequestHeader("Authorization") String authHeader) {
         try {
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {//todo: make this a util function
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {// todo: make this a util function
                 String token = authHeader.substring(7);
                 System.out.println(token);
                 String id = jwtUtil.extractUserID(token);
@@ -120,7 +123,9 @@ public class UserController {
                 System.out.println(user);
 
                 ObjectMapper mapper = new ObjectMapper();
-                return ResponseEntity.ok(mapper.writeValueAsString(user)); // return all user data for frontend to parse and show logged in
+                // return ResponseEntity.ok(mapper.writeValueAsString(user)); // return all user
+                // data for frontend to parse and show logged in
+                return ResponseEntity.ok(mapper.writerWithView(Views.Exclude.class).writeValueAsString(user));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

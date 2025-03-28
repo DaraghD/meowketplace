@@ -31,13 +31,13 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<GetProductsResponse> getAllProducts() {
+    public List<Product> getAllProducts() {
         var x = productRepository.findAll();
-        List<GetProductsResponse> resp = new ArrayList<>();
-        for (var y : x) {
-            resp.add(new GetProductsResponse(y));
-        }
-        return resp;
+        // List<GetProductsResponse> resp = new ArrayList<>();
+        // for (var y : x) {
+        // resp.add(new GetProductsResponse(y));
+        // }
+        return x;
     }
 
     public void addProduct(AddProductRequest product, User user, List<MultipartFile> images)
@@ -85,8 +85,9 @@ public class ProductService {
 
     // TODO: this dto may have to be a bit different/ more detailed or the other one
     // less detailed for the preview
-    public GetProductsResponse getProductById(Long id) {
-        return (new GetProductsResponse(productRepository.findById(id).get()));
+    public Product getProductById(Long id) {
+        // return (new GetProductsResponse(productRepository.findById(id).get()));
+        return productRepository.findById(id).get();
     }
 
     public Product findProductById(Long id) {

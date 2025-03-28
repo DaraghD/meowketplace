@@ -1,6 +1,7 @@
 package com.example.meowketplace.controller;
 
 import com.example.meowketplace.Views;
+import com.example.meowketplace.model.Product;
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.AddProductRequest;
 import com.example.meowketplace.model.User;
@@ -61,7 +62,7 @@ public class ProductController {
     public ResponseEntity<String> getProducts() {
         try {
             System.out.println("Getting all products");
-            var products = productService.getAllProducts();
+            List<Product> products = productService.getAllProducts();
             System.out.println(products);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);

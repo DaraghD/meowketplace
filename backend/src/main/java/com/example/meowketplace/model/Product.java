@@ -3,6 +3,8 @@ package com.example.meowketplace.model;
 import com.example.meowketplace.dto.AddProductRequest;
 import com.example.meowketplace.dto.AddTierRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private User user;
 
     @Column(nullable = false)
