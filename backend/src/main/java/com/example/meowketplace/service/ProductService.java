@@ -83,4 +83,10 @@ public class ProductService {
 
     }
 
+    // TODO: this dto may have to be a bit different/ more detailed or the other one
+    // less detailed for the preview
+    public GetProductsResponse getProductById(Long id) {
+        return (new GetProductsResponse(productRepository.findById(id).get()));
+    }
+
 }

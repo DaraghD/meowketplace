@@ -37,7 +37,26 @@ public class ProductController {
         this.jwtUtil = jwtUtil;
     }
 
-    @RequestMapping
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getProduct(@PathVariable Long id) {
+        try {
+            System.out.println(id);
+            System.out.println("Getting product :" + id);
+
+            var product = productService.getProductById(id);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+            return new ResponseEntity<>(objectMapper.writerWithView(Views.Public.class).writeValueAsString(product),
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Problem serialising data ", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping
     public ResponseEntity<String> getProducts() {
         try {
             System.out.println("Getting all products");

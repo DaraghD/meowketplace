@@ -146,4 +146,12 @@ public class Product {
     public void setImageCount(int imageCount) {
         this.imageCount = imageCount;
     }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }
