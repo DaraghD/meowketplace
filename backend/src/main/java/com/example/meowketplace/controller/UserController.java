@@ -125,13 +125,14 @@ public class UserController {
                 ObjectMapper mapper = new ObjectMapper();
                 // return ResponseEntity.ok(mapper.writeValueAsString(user)); // return all user
                 // data for frontend to parse and show logged in
-                return ResponseEntity.ok(mapper.writerWithView(Views.Exclude.class).writeValueAsString(user));
+                // return
+                return ResponseEntity.ok(mapper.writerWithView(Views.Internal.class).writeValueAsString(user));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error");
     }
 
 }
