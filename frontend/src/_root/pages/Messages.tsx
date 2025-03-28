@@ -11,6 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Message, Message_User } from "@/lib/types/types";
 import { useNavigate } from "react-router-dom";
 import { sendMessage } from "@/lib/utils";
+import { toast } from "sonner";
+import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
 
 const Messages = () => {
     const [chatUsers, setChatUsers] = useState<Message_User[]>([]);
@@ -154,6 +156,22 @@ const Messages = () => {
             </div>
         );
     }
+
+    const handleServiceInquiryResponse = async (response: string) => {
+        if (!selectedUser || !currentUser) {
+            toast.error("No user selected or not logged in");
+            return;
+        }
+
+        try {
+            await sendMessage(response, currentUser.id, selectedUser.id);
+            toast.success("Response sent successfully");
+        } catch (error) {
+            console.error("Error sending response:", error);
+            toast.error("Failed to send response");
+        }
+    };
+
     return (
         <div className="flex h-[calc(100vh-4rem)] bg-gray-100">
             {/* Sidebar (1/4 width) */}
@@ -209,35 +227,28 @@ const Messages = () => {
                     <ChatMessageList>
                         {selectedUser ? (
                             filteredMessages.length > 0 ? (
-                                filteredMessages.map((message) => (
-                                    <ChatBubble
-                                        key={message.id}
-                                        variant={
-                                            message.sender_id ===
-                                            selectedUser.id
-                                                ? "sent"
-                                                : "received"
-                                        }
-                                    >
-                                        <ChatBubbleAvatar
-                                            src={
-                                                message.sender_id ===
-                                                selectedUser.id
-                                                    ? "1" // Selected user is the sender
-                                                    : "2" // Selected user is the receiver
-                                            }
-                                            fallback={
-                                                message.sender_id ===
-                                                selectedUser.id
-                                                    ? selectedUser.username
-                                                          .substring(0, 2)
-                                                          .toUpperCase()
-                                                    : message.receiver_username
-                                                          .substring(0, 2)
-                                                          .toUpperCase()
-                                            }
-                                        />
-                                        <ChatBubbleMessage
+                                filteredMessages.map((message) => {
+                                    if (
+                                        message.message_content ===
+                                        "--Service Inquiry--"
+                                    ) {
+                                        return (
+                                            <ServiceInquiryMessage
+                                                key={message.id}
+                                                message={message}
+                                                currentUserId={
+                                                    currentUser?.id || 0
+                                                }
+                                                onResponse={
+                                                    handleServiceInquiryResponse
+                                                }
+                                            />
+                                        );
+                                    }
+
+                                    return (
+                                        <ChatBubble
+                                            key={message.id}
                                             variant={
                                                 message.sender_id ===
                                                 selectedUser.id
@@ -245,10 +256,37 @@ const Messages = () => {
                                                     : "received"
                                             }
                                         >
-                                            {message.message_content}
-                                        </ChatBubbleMessage>
-                                    </ChatBubble>
-                                ))
+                                            <ChatBubbleAvatar
+                                                src={
+                                                    message.sender_id ===
+                                                    selectedUser.id
+                                                        ? "1" // Selected user is the sender
+                                                        : "2" // Selected user is the receiver
+                                                }
+                                                fallback={
+                                                    message.sender_id ===
+                                                    selectedUser.id
+                                                        ? selectedUser.username
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
+                                                        : message.receiver_username
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
+                                                }
+                                            />
+                                            <ChatBubbleMessage
+                                                variant={
+                                                    message.sender_id ===
+                                                    selectedUser.id
+                                                        ? "sent"
+                                                        : "received"
+                                                }
+                                            >
+                                                {message.message_content}
+                                            </ChatBubbleMessage>
+                                        </ChatBubble>
+                                    );
+                                })
                             ) : (
                                 <p>No messages found.</p>
                             )
