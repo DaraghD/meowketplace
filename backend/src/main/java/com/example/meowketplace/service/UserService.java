@@ -26,11 +26,12 @@ public class UserService {
     }
 
     public void addUser(SignupRequest signupRequest) throws Exception {
-        if (signupRequest.getUsername() == null || signupRequest.getPassword() == null || signupRequest.getEmail() == null) {
+        if (signupRequest.getUsername() == null || signupRequest.getPassword() == null
+                || signupRequest.getEmail() == null) {
             throw new Exception("Missing required fields");
         }
 
-        if (userRepository.findByUsername(signupRequest.getUsername()).isPresent() ){
+        if (userRepository.findByUsername(signupRequest.getUsername()).isPresent()) {
             throw new Exception("Username is taken");
         }
         if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
@@ -38,27 +39,28 @@ public class UserService {
         }
 
         User user = new User();
-        if(signupRequest.isIs_business()){
+        if (signupRequest.isIs_business()) {
             user.setIs_business(true);
             user.setBusiness_tags(signupRequest.getServices());
         }
         user.setUsername(signupRequest.getUsername());
         user.setPassword(signupRequest.getPassword());// TODO: hash password, validate on frontend
-        user.setEmail(signupRequest.getEmail()); //TODO: validate on frontend
+        user.setEmail(signupRequest.getEmail()); // TODO: validate on frontend
 
         userRepository.save(user);
     }
+
     public boolean authenticateUserPassword(LoginRequest loginRequest) throws Exception {
         if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
             throw new Exception("Missing required fields");
         }
 
-        if (userRepository.findByEmail(loginRequest.getEmail()).isEmpty()){
+        if (userRepository.findByEmail(loginRequest.getEmail()).isEmpty()) {
             throw new Exception("Email not found");
         }
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).get();
-        if(user.getPassword().equals(loginRequest.getPassword()) && user.getEmail().equals(loginRequest.getEmail())) {
+        if (user.getPassword().equals(loginRequest.getPassword()) && user.getEmail().equals(loginRequest.getEmail())) {
             return true;
         }
         return false;
@@ -72,28 +74,27 @@ public class UserService {
         return userRepository.findByEmail(email).get();
     }
 
-
     public String storeProfilePicture(MultipartFile file, User user) throws IOException {
-            String uploadDir = "uploads/profile_pictures/";
-            String fileName = user.getId().toString();
-            Path uploadPath = Paths.get(uploadDir);
+        String uploadDir = "uploads/profile_pictures/";
+        String fileName = user.getId().toString();
+        Path uploadPath = Paths.get(uploadDir);
 
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            try (InputStream inputStream = file.getInputStream()) {
-                Path filePath = uploadPath.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                user.setProfile_picture(filePath+fileName);
-                System.out.println(user.getProfile_picture());
-            } catch (IOException e) {
-                throw new IOException("Could not save profile picture: " + fileName, e);
-            }
-
-            userRepository.save(user);
-            return fileName;
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
         }
+
+        try (InputStream inputStream = file.getInputStream()) {
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            user.setProfile_picture(filePath + fileName);
+            System.out.println(user.getProfile_picture());
+        } catch (IOException e) {
+            throw new IOException("Could not save profile picture: " + fileName, e);
+        }
+
+        userRepository.save(user);
+        return fileName;
+    }
 
     public byte[] getProfilePicture(User user) {
         return user.getProfile_picture().getBytes();

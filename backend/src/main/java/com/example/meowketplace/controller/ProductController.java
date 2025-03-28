@@ -2,8 +2,12 @@ package com.example.meowketplace.controller;
 
 import com.example.meowketplace.Views;
 import com.example.meowketplace.model.Product;
+import com.example.meowketplace.model.Review;
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.AddProductRequest;
+import com.example.meowketplace.dto.GetProductResponse;
+import com.example.meowketplace.dto.GetProductsResponse;
+import com.example.meowketplace.dto.ReviewResponse;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.ProductService;
 import com.example.meowketplace.service.ReviewService;
@@ -21,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -45,12 +50,21 @@ public class ProductController {
             System.out.println(id);
             System.out.println("Getting product :" + id);
 
-            var product = productService.getProductById(id);
+            Product product = productService.getProductById(id);
+            List<Review> reviews = product.getReviews();
+
+            List<ReviewResponse> response_reviews = new ArrayList<ReviewResponse>();
+            for (Review r : reviews) {
+                response_reviews.add(new ReviewResponse(r));
+            }
+
+            GetProductResponse response_product = new GetProductResponse(product, response_reviews);
 
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-            return new ResponseEntity<>(objectMapper.writerWithView(Views.Public.class).writeValueAsString(product),
+            return new ResponseEntity<>(
+                    objectMapper.writerWithView(Views.Public.class).writeValueAsString(response_product),
                     HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
