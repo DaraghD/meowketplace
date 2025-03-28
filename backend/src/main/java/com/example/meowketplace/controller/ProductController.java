@@ -5,6 +5,7 @@ import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.AddProductRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.ProductService;
+import com.example.meowketplace.service.ReviewService;
 import com.example.meowketplace.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -102,7 +103,7 @@ public class ProductController {
     @GetMapping("/picture/{id}/{image}")
     public ResponseEntity<byte[]> getProductImage(@PathVariable Long id, @PathVariable Long image) {
         try {
-            Path filePath = Paths.get("uploads/products/" + id + "/" + image).normalize();
+            Path filePath = Paths.get("uploads/product_images/" + id + "/" + image).normalize();
             byte[] fileContent = Files.readAllBytes(filePath);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)

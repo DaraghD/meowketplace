@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.List;
 
+import com.example.meowketplace.dto.ReviewRequest;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "reviews")
 public class Review {
@@ -12,10 +15,12 @@ public class Review {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -30,6 +35,17 @@ public class Review {
 
     @Column(nullable = false)
     private Date createdAt;
+
+    public Review() {
+    }
+
+    public Review(ReviewRequest r, Product product, User user) {
+        this.user = user;
+        this.product = product;
+        this.reviewText = r.getReview_content();
+        this.createdAt = new Date(System.currentTimeMillis());
+        this.starRating = r.getStars();
+    }
 
     public Long getId() {
         return id;

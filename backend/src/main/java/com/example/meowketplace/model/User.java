@@ -1,7 +1,6 @@
 package com.example.meowketplace.model;
 
 import com.example.meowketplace.Views;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
@@ -58,7 +57,7 @@ public class User {
     private String business_tags;
 
     @JsonManagedReference
-    @JsonView(Views.Exclude.class)//exclude product list from user responses, might revert later
+    @JsonView(Views.Exclude.class) // exclude product list from user responses, might revert later
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
 

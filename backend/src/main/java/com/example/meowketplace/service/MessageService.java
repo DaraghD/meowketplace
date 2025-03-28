@@ -2,7 +2,7 @@ package com.example.meowketplace.service;
 
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.MessageRequest;
-import com.example.meowketplace.dto.MessageResponse;
+import com.example.meowketplace.dto.ReviewRequest;
 import com.example.meowketplace.model.Message;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.repository.MessageRepository;
@@ -30,7 +30,8 @@ public class MessageService {
     }
 
     public List<Message> getMessages(Long sender, Long receiver) {
-        return messageRepository.findAllBySenderAndReceiver(userService.getUserById(sender), userService.getUserById(receiver));
+        return messageRepository.findAllBySenderAndReceiver(userService.getUserById(sender),
+                userService.getUserById(receiver));
     }
 
     public Optional<Message> getMessageById(Long id) {
@@ -46,7 +47,8 @@ public class MessageService {
     }
 
     public List<Message> findAllBySenderAndReceiver(Long sender, Long receiver) {
-        return messageRepository.findAllBySenderAndReceiver(userService.getUserById(sender), userService.getUserById(receiver));
+        return messageRepository.findAllBySenderAndReceiver(userService.getUserById(sender),
+                userService.getUserById(receiver));
     }
 
     public void send(MessageRequest messageRequest, String authHeader) {
@@ -64,7 +66,7 @@ public class MessageService {
     public String getAllMessagesJSON(String jwtToken) {
         Long id = Long.parseLong(jwtUtil.extractUserID(jwtToken));
         boolean valid_token = jwtUtil.validateToken(jwtToken, id.toString());
-        if(!valid_token){
+        if (!valid_token) {
             throw new IllegalArgumentException("Invalid token");
         }
 
@@ -73,13 +75,13 @@ public class MessageService {
         User user = userService.getUserById(id);
         Optional<List<Message>> all_messages = messageRepository.findAllBySenderOrReceiver(user, user);
 
-        if(all_messages.isEmpty()){
+        if (all_messages.isEmpty()) {
             throw new IllegalArgumentException("No messages found");
         }
 
-        ArrayList<MessageResponse> message_response_list = new ArrayList<>();
+        ArrayList<ReviewRequest> message_response_list = new ArrayList<>();
         for (Message msg : all_messages.get()) {
-            message_response_list.add(new MessageResponse(msg));
+            message_response_list.add(new ReviewRequest(msg));
         }
 
         try {

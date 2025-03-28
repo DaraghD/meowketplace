@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import com.example.meowketplace.model.Tier;
 
 @Entity
 @Table(name = "products")
@@ -28,10 +27,10 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    //private String imagePath;// allow multiple images in future
+    // private String imagePath;// allow multiple images in future
     private int imageCount = 0;
 
-    @Column(columnDefinition = "DECIMAL(3,2) DEFAULT 0.0")//TODO: only update this when a review is added
+    @Column(columnDefinition = "DECIMAL(3,2) DEFAULT 0.0") // TODO: only update this when a review is added
     private Double starRating;
 
     @Column(nullable = false)
@@ -51,7 +50,7 @@ public class Product {
         this.createdAt = new Date(System.currentTimeMillis());
         this.user = user;
         List<Tier> tierList = new ArrayList<Tier>();
-        for(AddTierRequest tierDTO: product.getTiers()){
+        for (AddTierRequest tierDTO : product.getTiers()) {
             Tier newTier = new Tier(tierDTO);
             newTier.setProduct(this);
             tierList.add(newTier);
@@ -59,7 +58,8 @@ public class Product {
         this.tiers = tierList;
         this.tag = product.getTag();
     }
-    public Product(){
+
+    public Product() {
     }
 
     public Long getId() {
@@ -108,6 +108,10 @@ public class Product {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public void addReview(Review r) {
+        this.reviews.add(r);
     }
 
     public List<Tier> getTiers() {
