@@ -72,6 +72,7 @@ export interface Product {
     createdAt: Date;
     reviews: Review[];
     tiers: Tier[];
+    tag: string;
 }
 
 interface Reply {

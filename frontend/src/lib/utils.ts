@@ -1,10 +1,30 @@
-import {type ClassValue, clsx} from "clsx"
-import {twMerge} from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function renderStars(rating: number | null | undefined) {
+  if (rating === null || rating === undefined) {
+    return "no rating";
+  }
+
+  switch (Math.floor(rating)) {
+    case 1:
+      return "⭐☆☆☆☆";
+    case 2:
+      return "⭐⭐☆☆☆";
+    case 3:
+      return "⭐⭐⭐☆☆";
+    case 4:
+      return "⭐⭐⭐⭐☆";
+    case 5:
+      return "🌟🌟🌟🌟🌟";
+    default:
+      return "No rating";
+  }
+};
 export const sendMessage = async (messageContent: string, sender_id: number | undefined, receiver_id: number | undefined) => {
   console.log("Sending message: ", messageContent);
   //todo: remove this , if (!selectedUser) return;
@@ -18,7 +38,7 @@ export const sendMessage = async (messageContent: string, sender_id: number | un
   console.log(message);
 
   try {
-    const response = await fetch("http://meowketplace.ie:8080/api/messages", {
+    const response = await fetch("http://localhost:8080/api/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json", //todo: add token
