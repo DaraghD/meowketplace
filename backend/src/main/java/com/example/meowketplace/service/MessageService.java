@@ -2,7 +2,7 @@ package com.example.meowketplace.service;
 
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.MessageRequest;
-import com.example.meowketplace.dto.ReviewRequest;
+import com.example.meowketplace.dto.MessageResponse;
 import com.example.meowketplace.model.Message;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.repository.MessageRepository;
@@ -79,9 +79,9 @@ public class MessageService {
             throw new IllegalArgumentException("No messages found");
         }
 
-        ArrayList<ReviewRequest> message_response_list = new ArrayList<>();
+        ArrayList<MessageResponse> message_response_list = new ArrayList<>();
         for (Message msg : all_messages.get()) {
-            message_response_list.add(new ReviewRequest(msg));
+            message_response_list.add(new MessageResponse(msg));
         }
 
         try {
