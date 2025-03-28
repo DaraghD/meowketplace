@@ -25,6 +25,14 @@ export interface User {
     is_verified: boolean;
 }
 
+export interface publicUser {
+    id: number;
+    username: string;
+    bio: string;
+    business_rating: number;
+    business_tags: string;
+}
+
 export interface Message {
     id: number;
     sender_id: number;
@@ -56,7 +64,8 @@ export interface AddProduct {
 }
 export interface Product {
     id: number;
-    user: User;
+    name: string;
+    user: publicUser;
     productText: string;
     price: number;
     starRating: number;
@@ -66,7 +75,7 @@ export interface Product {
 }
 
 interface Reply {
-    id:number;
+    id: number;
     user: User;
     replyText: string;
     createdAt: Date;
