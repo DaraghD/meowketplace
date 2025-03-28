@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 const Products = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-    }
-
+    //
+    // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    //     event.preventDefault();
+    // }
+    //
     useEffect(() => {
         const fetchProducts = async () => {
             try {

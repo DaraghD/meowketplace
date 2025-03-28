@@ -73,6 +73,7 @@ export interface Product {
     reviews: Review[];
     tiers: Tier[];
     tag: string;
+    imageCount: number;
 }
 
 interface Reply {

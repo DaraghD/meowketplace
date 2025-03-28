@@ -4,6 +4,13 @@ import { AvatarImage, Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { renderStars } from "@/lib/utils";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "./ui/drawer";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Input } from "./ui/input";
+import { z } from "zod";
+import { ReviewValidation } from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 interface ReviewProps {
     reviews: Review[] | undefined;
@@ -11,9 +18,21 @@ interface ReviewProps {
 
 const Reviews: React.FC<ReviewProps> = ({ reviews }) => {
 
-    const [visibleReviews, setVisibleReviews] = useState(2);
+
+    const form = useForm<z.infer<typeof ReviewValidation>>({
+        resolver: zodResolver(ReviewValidation),
+        defaultValues: {
+            rating: 0,
+            text: "",
+        },
+    });
+
+    function onSubmit(values: z.infer<typeof ReviewValidation>) {
+        console.log(values);
+    }
+    const [, setVisibleReviews] = useState(2);
+    // const [visibleReviews, setVisibleReviews] = useState(2); //TODO: use this later
     const [showReplies, setShowReplies] = useState<Record<number, boolean>>({});
-    // const displayedReviews = reviews.slice(0, visibleReviews);
 
     const loadMoreReviews = () => {
         setVisibleReviews((prev) => prev + 3);

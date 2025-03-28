@@ -12,16 +12,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Product } from "@/lib/types/types";
-import { ReviewValidation } from "@/lib/validation";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Reviews from "@/components/Reviews";
