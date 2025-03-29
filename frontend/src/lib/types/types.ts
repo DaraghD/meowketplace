@@ -94,6 +94,6 @@ export interface Review {
     product: Product;
     review_content: string;
     replies: Reply[];
-    starRating: number;
+    stars: number;
     createdAt: Date;
 }

@@ -1,6 +1,5 @@
-
 import { Review } from "@/lib/types/types";
-import { AvatarImage, Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { renderStars } from "@/lib/utils";
