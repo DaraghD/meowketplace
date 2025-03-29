@@ -20,6 +20,8 @@ public class Tier {
 
     private String name;
 
+    private String description;
+
     public Tier(double price, String name) {
         this.price = price;
         this.name = name;
@@ -29,9 +31,18 @@ public class Tier {
 
     }
 
-    public Tier(AddTierRequest tier){
+    public Tier(AddTierRequest tier) {
         this.price = tier.getPrice();
         this.name = tier.getName();
+        this.description = tier.getDescription();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getId() {
