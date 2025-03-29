@@ -20,7 +20,7 @@ import { Product } from "@/lib/types/types";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Reviews from "@/components/Reviews";
-import { renderStars } from "@/lib/utils";
+import { renderStars, sendMessage } from "@/lib/utils";
 import { Context } from "@/context";
 
 const ProductView = () => {
@@ -61,29 +61,11 @@ const ProductView = () => {
         }
 
         try {
-            const response = await fetch(
-                "http://localhost:8080/sendServiceInquiry",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        sender_id: user.id,
-                        receiver_id: product.user.id,
-                        message_content: "--Service Inquiry--",
-                    }),
-                }
-            );
-
-            if (response.ok) {
-                toast.success("Service Inquiry sent!");
-            } else {
-                throw new Error("Failed to send message");
-            }
+            await sendMessage("--Service Inquiry--", user.id, product.user.id);
+            toast.success("Response sent successfully");
         } catch (error) {
-            console.error("Error sending message:", error);
-            toast.error("Failed to send Service Inquiry");
+            console.error("Error sending response:", error);
+            toast.error("Failed to send response");
         }
     };
 
