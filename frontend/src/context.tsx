@@ -1,11 +1,16 @@
-import {userData} from "@/lib/types/types.ts";
-import React, {useEffect, useState} from "react";
+import { userData } from "@/lib/types/types.ts";
+import React, { useEffect, useState } from "react";
 
 export const Context = React.createContext<
-    | { user: userData | null; setUser: React.Dispatch<React.SetStateAction<userData | null>>; isAuthenticated: boolean; setAuthentication: React.Dispatch<React.SetStateAction<boolean>> }
+    | {
+        user: userData | null;
+        setUser: React.Dispatch<React.SetStateAction<userData | null>>;
+        isAuthenticated: boolean;
+        setAuthentication: React.Dispatch<React.SetStateAction<boolean>>;
+        logout: () => void;  // Ensure logout is part of the context type
+    }
     | null
 >(null);
-
 const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<userData | null>(null);
     const [isAuthenticated, setAuthentication] = useState<boolean>(false);
@@ -42,9 +47,15 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
         checkAuth();
     }, []); // Only run once on mount
+    // Function to log out and reset context state
+    const logout = () => {
+        localStorage.removeItem("token"); // Remove stored token
+        setUser(null); // Reset user data
+        setAuthentication(false); // Reset authentication state
+    };
 
     return (
-        <Context.Provider value={{ user, setUser, isAuthenticated, setAuthentication }}>
+        <Context.Provider value={{ user, setUser, isAuthenticated, setAuthentication, logout }}>
             {children}
         </Context.Provider>
     );
