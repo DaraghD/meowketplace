@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { sendMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
+import { CheckCircle } from "lucide-react";
 
 const Messages = () => {
     const [chatUsers, setChatUsers] = useState<Message_User[]>([]);
@@ -283,17 +284,22 @@ const Messages = () => {
                             : "Select a user to start chatting"}
                     </h2>
 
-                    {currentUser?.is_business && selectedUser && (
-                        <Button
-                            onClick={verifyUser}
-                            className="bg-green-600 hover:bg-green-700 text-white"
-                        >
-                            Complete Transaction
-                        </Button>
-                    )}
+                    {currentUser?.is_business &&
+                        selectedUser &&
+                        !selectedUser.is_verified && (
+                            <Button
+                                onClick={verifyUser}
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                            >
+                                Complete Transaction
+                            </Button>
+                        )}
 
                     {selectedUser?.is_verified && (
-                        <span className="text-green-600">Verified</span>
+                        <span className="text-green-600 flex items-center">
+                            <CheckCircle className="w-5 h-5 mr-1" />
+                            Verified
+                        </span>
                     )}
                 </div>
 
