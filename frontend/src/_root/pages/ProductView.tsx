@@ -26,6 +26,7 @@ import { Context } from "@/context";
 const ProductView = () => {
     const [product, setProduct] = useState<Product | null>();
     const [productLoading, setProductLoading] = useState<boolean>(true);
+    const [selectedTier, setSelectedTier] = useState<String>("");
     const id = useParams();
 
     useEffect(() => {
@@ -61,7 +62,7 @@ const ProductView = () => {
         }
 
         try {
-            await sendMessage("--Service Inquiry--", user.id, product.user.id);
+            await sendMessage(`--Service Inquiry--\n ${selectedTier}`, user.id, product.user.id);
             toast.success("Response sent successfully");
         } catch (error) {
             console.error("Error sending response:", error);
@@ -109,9 +110,8 @@ const ProductView = () => {
                                         <div className="aspect-square md:aspect-[4/3] w-full relative">
                                             <img
                                                 src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
-                                                alt={`Product image ${
-                                                    index + 1
-                                                }`}
+                                                alt={`Product image ${index + 1
+                                                    }`}
                                                 className="w-full h-full object-contain rounded-lg"
                                             />
                                         </div>
@@ -138,7 +138,7 @@ const ProductView = () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 {product?.tiers.map((tier, index) => (
-                                    <DropdownMenuItem key={index}>
+                                    <DropdownMenuItem key={index} onClick={() => setSelectedTier(tier.name)}>
                                         {tier.name}
                                     </DropdownMenuItem>
                                 ))}
@@ -154,7 +154,7 @@ const ProductView = () => {
                         className="cursor-pointer mt-auto mb-10 flex"
                         onClick={sendServiceInquiry}
                     >
-                        Send Service Inquiry{" "}
+                        Send Service Inquiry {selectedTier == "" ? "" : `for ${selectedTier}`} {" "}
                         <span>
                             <img
                                 src="/assets/icons/MessageIcon.png"
