@@ -55,6 +55,10 @@ public class User {
     @JsonView(Views.Public.class)
     private double business_rating;
 
+    @Column
+    @JsonView(Views.Public.class)
+    private int review_count; // used to calculate avg business rating
+
     @JsonView(Views.Public.class)
     private String business_tags;
 
@@ -62,6 +66,14 @@ public class User {
     @JsonView(Views.Exclude.class) // exclude product list from user responses, might revert later
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
+
+    public int getReview_count() {
+        return review_count;
+    }
+
+    public void setReview_count(int review_count) {
+        this.review_count = review_count;
+    }
 
     public String getBusiness_tags() {
         return business_tags;
