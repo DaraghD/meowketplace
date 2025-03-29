@@ -8,11 +8,7 @@ const Products = () => {
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
     const [minStars, setMinStars] = useState("");
-    //
-    // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-    // }
-    //
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -26,38 +22,51 @@ const Products = () => {
         }
         fetchProducts();
     }, []);
+    const filteredProducts = products.filter((product) => {
+        const searchTermLower = searchTerm.toLowerCase();
 
-    const filteredProducts = products
-        .filter((product) => {
-            const nameMatch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const nameMatch = product.name.toLowerCase().includes(searchTermLower);
+        const descriptionMatch = product.productText.toLowerCase().includes(searchTermLower);
 
-            let productHasPriceInRange = true;
-
-            if (minPrice || maxPrice) {
-                productHasPriceInRange = false;
-                if (product.tiers && product.tiers.length > 0) {
-                    product.tiers.forEach((tier) => {
-                        const tierPrice = tier.price;
-                        if (
-                            (!minPrice || tierPrice >= parseFloat(minPrice)) &&
-                            (!maxPrice || tierPrice <= parseFloat(maxPrice))
-                        ) {
-                            productHasPriceInRange = true;
-                        }
-                    });
+        let tierMatch = false;
+        if (product.tiers && product.tiers.length > 0) {
+            product.tiers.forEach((tier) => {
+                if (
+                    tier.name.toLowerCase().includes(searchTermLower) ||
+                    (tier.description && tier.description.toLowerCase().includes(searchTermLower))
+                ) {
+                    tierMatch = true;
                 }
+            });
+        }
+
+        const nameDescriptionTierMatch = nameMatch || descriptionMatch || tierMatch;
+
+        let productHasPriceInRange = true;
+        if (minPrice || maxPrice) {
+            productHasPriceInRange = false;
+            if (product.tiers && product.tiers.length > 0) {
+                product.tiers.forEach((tier) => {
+                    const tierPrice = tier.price;
+                    if (
+                        (!minPrice || tierPrice >= parseFloat(minPrice)) &&
+                        (!maxPrice || tierPrice <= parseFloat(maxPrice))
+                    ) {
+                        productHasPriceInRange = true;
+                    }
+                });
             }
+        }
 
-            const ratingMatch = !minStars || product.starRating >= parseFloat(minStars);
+        const ratingMatch = !minStars || product.starRating >= parseFloat(minStars);
 
-            return nameMatch && productHasPriceInRange && ratingMatch;
-        })
-        .sort((a, b) => {
-            // Sort by business rating in descending order
-            return b.user.business_rating - a.user.business_rating;
-        });
+        return nameDescriptionTierMatch && productHasPriceInRange && ratingMatch;
+    }).sort((a, b) => {
+        // Sort by business rating in descending order
+        return b.user.business_rating - a.user.business_rating;
+    });
 
-    // component that takes in product as prop, loop over products and fill in components 
+    // component that takes in product as prop, loop over products and fill in components
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
             <div className="w-full max-w-lg">
