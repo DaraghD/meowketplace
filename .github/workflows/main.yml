@@ -17,7 +17,8 @@ jobs:
       - name: Checkout
         run: |
           docker login --username daraghd --password ${{ secrets.GCR_TOKEN }} ghcr.io
-          cd frontend 
+          cd frontend
+          find . -type f -exec sed -i 's|http://localhost:8080|http://meowketplace.ie:8080|g' {} +
           docker build . --tag ghcr.io/daraghd/meowketplace_frontend:latest
           docker push ghcr.io/daraghd/meowketplace_frontend:latest
           cd ../backend

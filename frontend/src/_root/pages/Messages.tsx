@@ -11,22 +11,54 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Message, Message_User } from "@/lib/types/types";
 import { useNavigate } from "react-router-dom";
 import { sendMessage } from "@/lib/utils";
+import { toast } from "sonner";
+import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
+import { CheckCircle } from "lucide-react";
 
 const Messages = () => {
     const [chatUsers, setChatUsers] = useState<Message_User[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
     const [selectedUser, setSelectedUser] = useState<Message_User | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [currentUser, setCurrentUser] = useState<Message_User | null>(null); //TODO: replace this with global state later
+    const [currentUser, setCurrentUser] = useState<Message_User | null>(null);
     const [messageContent, setMessageContent] = useState<string>("");
     const [loading, setLoading] = useState(true);
+    const [hasPendingInquiry, setHasPendingInquiry] = useState(false);
+
+    useEffect(() => {
+        if (selectedUser && currentUser) {
+            const hasUnrespondedInquiry = messages.some(
+                (message) =>
+                    (message.sender_id === selectedUser.id ||
+                        message.receiver_id === selectedUser.id) &&
+                    message.message_content === "--Service Inquiry--" &&
+                    !messages.some(
+                        (m) =>
+                            (m.sender_id === currentUser.id ||
+                                m.receiver_id === currentUser.id) &&
+                            (m.message_content === "Accepted" ||
+                                m.message_content === "Declined")
+                    )
+            );
+
+            const hasCompletedTransaction = messages.some(
+                (message) =>
+                    (message.sender_id === currentUser.id ||
+                        message.receiver_id === currentUser.id) &&
+                    message.message_content === "--Transaction Completed--"
+            );
+
+            setHasPendingInquiry(
+                hasUnrespondedInquiry || hasCompletedTransaction
+            );
+        }
+    }, [selectedUser, messages, currentUser]);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
             try {
-                console.log("TOken : ", localStorage.getItem("token"));
                 const response = await fetch(
                     "http://localhost:8080/api/user/auth",
                     {
@@ -39,13 +71,14 @@ const Messages = () => {
                     }
                 );
                 if (!response.ok) {
-                    navigate("/sign-in"); //token out of date relogin,
+                    navigate("/sign-in");
                 }
                 const data = await response.json();
                 const user: Message_User = {
                     id: data.id,
                     username: data.username,
                     is_verified: data.is_verified,
+                    is_business: data.is_business,
                 };
                 setCurrentUser(user);
             } catch (err) {
@@ -57,7 +90,6 @@ const Messages = () => {
         fetchCurrentUser();
     }, []);
 
-    // Fetch all messages from the backend
     useEffect(() => {
         const fetchMessages = async () => {
             try {
@@ -76,15 +108,10 @@ const Messages = () => {
                     throw new Error("Failed to fetch messages");
                 }
                 const data: Message[] = await response.json();
-                console.log(data);
 
                 const userMap = new Map<number, Message_User>();
                 data.forEach((message) => {
                     if (!userMap.has(message.sender_id)) {
-                        console.log(
-                            "Adding sender user to map: ",
-                            message.sender_id
-                        );
                         userMap.set(message.sender_id, {
                             id: message.sender_id,
                             username: message.sender_username,
@@ -92,15 +119,6 @@ const Messages = () => {
                         });
                     }
                     if (!userMap.has(message.receiver_id)) {
-                        console.log(message);
-                        console.log(
-                            "Adding receiver user to map: ",
-                            message.receiver_id
-                        );
-                        console.log(
-                            "Receiver username: ",
-                            message.receiver_username
-                        );
                         userMap.set(message.receiver_id, {
                             id: message.receiver_id,
                             username: message.receiver_username,
@@ -108,12 +126,7 @@ const Messages = () => {
                         });
                     }
                 });
-                console.log("UserMap: ");
-                userMap.forEach((user) => {
-                    console.log(user);
-                });
                 setChatUsers(Array.from(userMap.values()));
-                console.log("ChatUSRES: " + chatUsers);
                 setMessages(data);
                 setLoading(false);
             } catch (error) {
@@ -122,16 +135,10 @@ const Messages = () => {
         };
 
         fetchMessages();
-
-        // Start polling
-        const pollingInterval = setInterval(fetchMessages, 5000); // Poll every 5 seconds
-
-        // Cleanup polling on unmount
+        const pollingInterval = setInterval(fetchMessages, 5000);
         return () => clearInterval(pollingInterval);
     }, []);
 
-    console.log(selectedUser);
-    // Filter messages for the selected user
     const filteredMessages = selectedUser
         ? messages.filter(
               (message) =>
@@ -139,7 +146,6 @@ const Messages = () => {
                   message.receiver_id === selectedUser.id
           )
         : [];
-    console.log(filteredMessages);
 
     if (messages.length === 0 && !loading) {
         return (
@@ -154,9 +160,68 @@ const Messages = () => {
             </div>
         );
     }
+
+    const handleServiceInquiryResponse = async (response: string) => {
+        if (!selectedUser || !currentUser) {
+            toast.error("No user selected or not logged in");
+            return;
+        }
+
+        try {
+            await sendMessage(response, currentUser.id, selectedUser.id);
+            toast.success("Response sent successfully");
+        } catch (error) {
+            console.error("Error sending response:", error);
+            toast.error("Failed to send response");
+        }
+    };
+
+    const verifyUser = async () => {
+        if (!selectedUser || !currentUser) return;
+
+        try {
+            const response = await fetch(
+                `http://localhost:8080/api/user/verify/${selectedUser.id}`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (!response.ok) throw new Error("Failed to verify user");
+
+            setSelectedUser((prev) =>
+                prev ? { ...prev, is_verified: true } : null
+            );
+            setChatUsers((prev) =>
+                prev.map((user) =>
+                    user.id === selectedUser.id
+                        ? { ...user, is_verified: true }
+                        : user
+                )
+            );
+
+            await sendMessage(
+                "--Transaction Completed--",
+                currentUser.id,
+                selectedUser.id
+            );
+
+            toast.success("Transaction completed successfully!");
+        } catch (error) {
+            console.error("Error completing transaction:", error);
+            toast.error("Failed to complete transaction");
+        }
+    };
+
     return (
         <div className="flex h-[calc(100vh-4rem)] bg-gray-100">
-            {/* Sidebar (1/4 width) */}
+            {/* Sidebar */}
             <div className="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">Chats</h2>
                 {loading ? (
@@ -169,7 +234,7 @@ const Messages = () => {
                             <div
                                 key={user.id}
                                 className="p-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"
-                                onClick={() => setSelectedUser(user)} // Set selected user on click
+                                onClick={() => setSelectedUser(user)}
                             >
                                 <Avatar>
                                     <AvatarImage
@@ -193,51 +258,60 @@ const Messages = () => {
                 )}
             </div>
 
-            {/* Chat Area (3/4 width) */}
+            {/* Chat Area */}
             <div className="w-3/4 flex flex-col">
-                {/* Chat Header */}
-                <div className="p-4 bg-white border-b border-gray-200">
+                <div className="p-4 bg-white border-b border-gray-200 flex justify-between items-center">
                     <h2 className="text-lg font-semibold">
                         {selectedUser
                             ? selectedUser.username
                             : "Select a user to start chatting"}
                     </h2>
+
+                    {currentUser?.is_business &&
+                        selectedUser &&
+                        !selectedUser.is_verified && (
+                            <Button
+                                onClick={verifyUser}
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                            >
+                                Complete Transaction
+                            </Button>
+                        )}
+
+                    {selectedUser?.is_verified && (
+                        <span className="text-green-600 flex items-center">
+                            <CheckCircle className="w-5 h-5 mr-1" />
+                            Verified
+                        </span>
+                    )}
                 </div>
 
-                {/* Chat Messages */}
                 <div className="flex-1 p-4 overflow-y-auto">
                     <ChatMessageList>
                         {selectedUser ? (
                             filteredMessages.length > 0 ? (
-                                filteredMessages.map((message) => (
-                                    <ChatBubble
-                                        key={message.id}
-                                        variant={
-                                            message.sender_id ===
-                                            selectedUser.id
-                                                ? "sent"
-                                                : "received"
-                                        }
-                                    >
-                                        <ChatBubbleAvatar
-                                            src={
-                                                message.sender_id ===
-                                                selectedUser.id
-                                                    ? "1" // Selected user is the sender
-                                                    : "2" // Selected user is the receiver
-                                            }
-                                            fallback={
-                                                message.sender_id ===
-                                                selectedUser.id
-                                                    ? selectedUser.username
-                                                          .substring(0, 2)
-                                                          .toUpperCase()
-                                                    : message.receiver_username
-                                                          .substring(0, 2)
-                                                          .toUpperCase()
-                                            }
-                                        />
-                                        <ChatBubbleMessage
+                                filteredMessages.map((message) => {
+                                    if (
+                                        message.message_content ===
+                                        "--Service Inquiry--"
+                                    ) {
+                                        return (
+                                            <ServiceInquiryMessage
+                                                key={message.id}
+                                                message={message}
+                                                currentUserId={
+                                                    currentUser?.id || 0
+                                                }
+                                                onResponse={
+                                                    handleServiceInquiryResponse
+                                                }
+                                            />
+                                        );
+                                    }
+
+                                    return (
+                                        <ChatBubble
+                                            key={message.id}
                                             variant={
                                                 message.sender_id ===
                                                 selectedUser.id
@@ -245,10 +319,37 @@ const Messages = () => {
                                                     : "received"
                                             }
                                         >
-                                            {message.message_content}
-                                        </ChatBubbleMessage>
-                                    </ChatBubble>
-                                ))
+                                            <ChatBubbleAvatar
+                                                src={
+                                                    message.sender_id ===
+                                                    selectedUser.id
+                                                        ? "1"
+                                                        : "2"
+                                                }
+                                                fallback={
+                                                    message.sender_id ===
+                                                    selectedUser.id
+                                                        ? selectedUser.username
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
+                                                        : message.receiver_username
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
+                                                }
+                                            />
+                                            <ChatBubbleMessage
+                                                variant={
+                                                    message.sender_id ===
+                                                    selectedUser.id
+                                                        ? "sent"
+                                                        : "received"
+                                                }
+                                            >
+                                                {message.message_content}
+                                            </ChatBubbleMessage>
+                                        </ChatBubble>
+                                    );
+                                })
                             ) : (
                                 <p>No messages found.</p>
                             )
@@ -258,36 +359,45 @@ const Messages = () => {
                     </ChatMessageList>
                 </div>
 
-                {/* Chat Input with Submit Button */}
-                <div className="p-4 bg-white border-t border-gray-200 flex items-center gap-2">
-                    <ChatInput
-                        placeholder="Type your message here..."
-                        className="flex-1"
-                        value={messageContent}
-                        onChange={(e) => setMessageContent(e.target.value)}
-                    />
-                    <Button
-                        className="bg-blue-500 hover:bg-blue-600 text-white"
-                        onClick={async () => {
-                            try {
-                                console.log(
-                                    "Trying to send message : ",
-                                    messageContent
-                                );
-                                await sendMessage(
-                                    messageContent,
-                                    currentUser?.id,
-                                    selectedUser?.id
-                                );
-                                setMessageContent("");
-                            } catch (error) {
-                                console.error(error);
-                            }
-                        }}
-                    >
-                        Send
-                    </Button>
-                </div>
+                {hasPendingInquiry && (
+                    <div className="p-2 text-center text-sm text-gray-500 bg-gray-100">
+                        {messages.some(
+                            (m) =>
+                                m.message_content ===
+                                "--Transaction Completed--"
+                        )
+                            ? "Chat disabled - please initiate a new service inquiry"
+                            : "Please respond to the service inquiry to continue chatting"}
+                    </div>
+                )}
+
+                {!hasPendingInquiry && selectedUser && (
+                    <div className="p-4 bg-white border-t border-gray-200 flex items-center gap-2">
+                        <ChatInput
+                            placeholder="Type your message here..."
+                            className="flex-1"
+                            value={messageContent}
+                            onChange={(e) => setMessageContent(e.target.value)}
+                        />
+                        <Button
+                            className="bg-blue-500 hover:bg-blue-600 text-white"
+                            onClick={async () => {
+                                try {
+                                    await sendMessage(
+                                        messageContent,
+                                        currentUser?.id,
+                                        selectedUser?.id
+                                    );
+                                    setMessageContent("");
+                                } catch (error) {
+                                    console.error(error);
+                                }
+                            }}
+                        >
+                            Send
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     );

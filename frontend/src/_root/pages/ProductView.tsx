@@ -17,10 +17,11 @@ import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Product } from "@/lib/types/types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Reviews from "@/components/Reviews";
-import { renderStars } from "@/lib/utils";
+import { renderStars, sendMessage } from "@/lib/utils";
+import { Context } from "@/context";
 
 const ProductView = () => {
     const [product, setProduct] = useState<Product | null>();
@@ -30,19 +31,43 @@ const ProductView = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/service/${id.id}`);
+                const response = await fetch(
+                    `http://localhost:8080/api/service/${id.id}`
+                );
                 const product = await response.json();
                 setProduct(product);
                 console.log(product);
-            }
-            catch (error) {
+            } catch (error) {
                 console.error("Error fetching products", error);
             } finally {
                 setProductLoading(false);
             }
-        }
+        };
         fetchProduct();
     }, []);
+
+    const context = useContext(Context);
+    if (!context) {
+        throw new Error("Context not found");
+    }
+    const { user } = context;
+
+    const sendServiceInquiry = async () => {
+        if (!product) return;
+
+        if (!user) {
+            toast.error("You need to be logged in to send a service inquiry");
+            return;
+        }
+
+        try {
+            await sendMessage("--Service Inquiry--", user.id, product.user.id);
+            toast.success("Response sent successfully");
+        } catch (error) {
+            console.error("Error sending response:", error);
+            toast.error("Failed to send response");
+        }
+    };
 
     // const form = useForm<z.infer<typeof ReviewValidation>>({
     //     resolver: zodResolver(ReviewValidation),
@@ -58,7 +83,7 @@ const ProductView = () => {
     const rating = product?.starRating;
 
     if (productLoading) {
-        return <div> Loading... </div>
+        return <div> Loading... </div>;
     }
     if (product?.reviews === null) {
         return;
@@ -77,17 +102,22 @@ const ProductView = () => {
                         className="w-full"
                     >
                         <CarouselContent>
-                            {Array.from({ length: product?.imageCount ?? 0 }, (_, index) => (
-                                <CarouselItem key={index}>
-                                    <div className="aspect-square md:aspect-[4/3] w-full relative">
-                                        <img
-                                            src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
-                                            alt={`Product image ${index + 1}`}
-                                            className="w-full h-full object-contain rounded-lg"
-                                        />
-                                    </div>
-                                </CarouselItem>
-                            ))}
+                            {Array.from(
+                                { length: product?.imageCount ?? 0 },
+                                (_, index) => (
+                                    <CarouselItem key={index}>
+                                        <div className="aspect-square md:aspect-[4/3] w-full relative">
+                                            <img
+                                                src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
+                                                alt={`Product image ${
+                                                    index + 1
+                                                }`}
+                                                className="w-full h-full object-contain rounded-lg"
+                                            />
+                                        </div>
+                                    </CarouselItem>
+                                )
+                            )}
                         </CarouselContent>
                         <CarouselPrevious />
                         <CarouselNext />
@@ -107,11 +137,11 @@ const ProductView = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                {
-                                    product?.tiers.map((tier, index) => (
-                                        <DropdownMenuItem key={index}>{tier.name}</DropdownMenuItem>
-                                    ))
-                                }
+                                {product?.tiers.map((tier, index) => (
+                                    <DropdownMenuItem key={index}>
+                                        {tier.name}
+                                    </DropdownMenuItem>
+                                ))}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -122,7 +152,7 @@ const ProductView = () => {
 
                     <Button
                         className="cursor-pointer mt-auto mb-10 flex"
-                        onClick={() => toast("Service Inquiry sent!")} //add send message logic
+                        onClick={sendServiceInquiry}
                     >
                         Send Service Inquiry{" "}
                         <span>
