@@ -24,15 +24,23 @@ public class ReviewService {
     }
 
     public void addReview(ReviewRequest r, User user, Product product) throws Exception {
-        if (!user.isIs_verified()) {
+        if (!user.isIs_verified())
             throw new Exception("Only verified users can leave reviews");
-        }
+
+        if (r.getStars() > 5 || r.getStars() < 0)
+            throw new Exception("Stars must be between 0 and 5");
+
         // update business review count and rating score
         User business = product.getUser();
         business.setReview_count(business.getReview_count() + 1);
         Double rating = (business.getBusiness_rating() + r.getStars()) / business.getReview_count();
         business.setBusiness_rating(rating);
         userRepository.save(business);
+
+        // update product review count and rating score
+        product.setReview_count(product.getReview_count() + 1);
+        Double p_rating = (product.getStarRating() + r.getStars()) / product.getReview_count();
+        product.setStarRating(p_rating);
 
         Review review = new Review(r, product, user);
         review = reviewRepository.save(review);

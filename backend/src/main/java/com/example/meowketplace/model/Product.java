@@ -46,6 +46,16 @@ public class Product {
 
     private String tag;
 
+    private int review_count;
+
+    public int getReview_count() {
+        return review_count;
+    }
+
+    public void setReview_count(int review_count) {
+        this.review_count = review_count;
+    }
+
     public Product(AddProductRequest product, User user) {
         this.productText = product.getProductText();
         this.name = product.getName();
@@ -59,6 +69,8 @@ public class Product {
         }
         this.tiers = tierList;
         this.tag = product.getTag();
+        this.review_count = 0;
+        this.starRating = 0.0;
     }
 
     public Product() {
