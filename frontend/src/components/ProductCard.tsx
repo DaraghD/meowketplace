@@ -1,7 +1,7 @@
 import React from "react";
 import { Product } from "@/lib/types/types";
 import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface ProductCardProps {
     product: Product;
@@ -47,8 +47,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             <div className="flex flex-col justify-center p-4 w-60">
                 <div className="flex items-center">
-                    <p className="text-sm font-semibold p-5">{product.user.username}</p>
-                    <Avatar>
+                    <p className="text-sm font-semibold mr-2 max-w-[100px] truncate">{product.user.username}</p>
+                    <Avatar className="h-8 w-8 rounded-full">
                         <AvatarImage
                             src={`http://localhost:8080/api/user/picture/${product.user?.id}`}
                         />
