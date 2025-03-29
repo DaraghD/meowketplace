@@ -43,7 +43,6 @@ public class ReviewService {
         product.setStarRating(p_rating);
 
         Review review = new Review(r, product, user);
-        review = reviewRepository.save(review);
         product.addReview(review);
         productRepository.save(product);
     }
@@ -57,7 +56,6 @@ public class ReviewService {
         parent.addReply(reply);
 
         reviewRepository.save(parent);
-        reviewRepository.save(reply);
     }
 
 }
