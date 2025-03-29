@@ -51,18 +51,16 @@ public class UserService {
     }
 
     public boolean authenticateUserPassword(LoginRequest loginRequest) throws Exception {
-        if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+        if (loginRequest.getEmail() == null || loginRequest.getPassword() == null)
             throw new Exception("Missing required fields");
-        }
 
-        if (userRepository.findByEmail(loginRequest.getEmail()).isEmpty()) {
+        if (userRepository.findByEmail(loginRequest.getEmail()).isEmpty())
             throw new Exception("Email not found");
-        }
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).get();
-        if (user.getPassword().equals(loginRequest.getPassword()) && user.getEmail().equals(loginRequest.getEmail())) {
+        if (user.getPassword().equals(loginRequest.getPassword()) && user.getEmail().equals(loginRequest.getEmail()))
             return true;
-        }
+
         return false;
     }
 
@@ -79,9 +77,8 @@ public class UserService {
         String fileName = user.getId().toString();
         Path uploadPath = Paths.get(uploadDir);
 
-        if (!Files.exists(uploadPath)) {
+        if (!Files.exists(uploadPath))
             Files.createDirectories(uploadPath);
-        }
 
         try (InputStream inputStream = file.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
@@ -98,5 +95,16 @@ public class UserService {
 
     public byte[] getProfilePicture(User user) {
         return user.getProfile_picture().getBytes();
+    }
+
+    public void verifyUser(User user, User verify_user) throws Exception {
+        if (!user.isIs_business())
+            throw new Exception("Only businesses can verify user");
+
+        if (verify_user.isIs_verified())
+            throw new Exception("User already verified");
+
+        verify_user.setIs_verified(true);
+        userRepository.save(verify_user);
     }
 }

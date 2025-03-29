@@ -5,6 +5,7 @@ import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.LoginRequest;
 import com.example.meowketplace.dto.LoginResponse;
 import com.example.meowketplace.dto.SignupRequest;
+import com.example.meowketplace.dto.VerifyUserRequest;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -104,6 +105,32 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+    }
+
+    @PostMapping("/verify") // only businesses can verify users
+    public ResponseEntity<String> verifyUser(@RequestHeader("Authorization") String authHeader,
+            @RequestBody VerifyUserRequest verifyUserRequest) {
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {// todo: make this a util function
+                String token = authHeader.substring(7);
+                System.out.println(token);
+                String id = jwtUtil.extractUserID(token);
+                boolean valid = jwtUtil.validateToken(token, id);
+                if (!valid) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+                }
+
+                User user = userService.getUserById(Long.parseLong(id));
+                User verify_user = userService.getUserById(verifyUserRequest.getUser_id_to_verify());
+                userService.verifyUser(user, verify_user);
+
+                return ResponseEntity.ok("User verified");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error");
     }
 
     @RequestMapping("/auth") // maybe move to /user get request
