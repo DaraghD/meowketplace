@@ -6,11 +6,9 @@ import com.example.meowketplace.model.Review;
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.AddProductRequest;
 import com.example.meowketplace.dto.GetProductResponse;
-import com.example.meowketplace.dto.GetProductsResponse;
 import com.example.meowketplace.dto.ReviewResponse;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.ProductService;
-import com.example.meowketplace.service.ReviewService;
 import com.example.meowketplace.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -55,6 +53,8 @@ public class ProductController {
 
             List<ReviewResponse> response_reviews = new ArrayList<ReviewResponse>();
             for (Review r : reviews) {
+                var rr = new ReviewResponse(r);
+                System.out.println(rr.getUsername());
                 response_reviews.add(new ReviewResponse(r));
             }
 
@@ -77,13 +77,16 @@ public class ProductController {
         try {
             System.out.println("Getting all products");
             List<Product> products = productService.getAllProducts();
+            List<GetProductResponse> response_products = new ArrayList<>();
+            for (Product p : products) {
+                response_products.add(new GetProductResponse(p));
+            }
             System.out.println(products);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            return new ResponseEntity<>(objectMapper.writerWithView(Views.Public.class).writeValueAsString(products),
+            return new ResponseEntity<>(
+                    objectMapper.writerWithView(Views.Public.class).writeValueAsString(response_products),
                     HttpStatus.OK);
-            // return new ResponseEntity<>(objectMapper.writeValueAsString(products),
-            // HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Problem serialising data ", HttpStatus.BAD_REQUEST);

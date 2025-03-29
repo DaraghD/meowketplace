@@ -1,7 +1,6 @@
 package com.example.meowketplace.service;
 
 import com.example.meowketplace.dto.AddProductRequest;
-import com.example.meowketplace.dto.GetProductsResponse;
 import com.example.meowketplace.dto.UpdateProduct;
 import com.example.meowketplace.model.Product;
 import com.example.meowketplace.model.User;
@@ -18,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,19 +30,14 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        var x = productRepository.findAll();
-        // List<GetProductsResponse> resp = new ArrayList<>();
-        // for (var y : x) {
-        // resp.add(new GetProductsResponse(y));
-        // }
-        return x;
+        return productRepository.findAll();
     }
 
     public void addProduct(AddProductRequest product, User user, List<MultipartFile> images)
             throws JsonProcessingException {
-        // if(!user.isIs_business()){ TODO uncomment this after testing
-        // throw new IllegalArgumentException("User is not a business");
-        // }
+        if (!user.isIs_business())
+            throw new IllegalArgumentException("User is not a business");
+
         Product newProduct = new Product(product, user);
         productRepository.save(newProduct);
         ObjectMapper mapper = new ObjectMapper();

@@ -41,6 +41,19 @@ public class GetProductResponse {
         this.tag = product.getTag();
     }
 
+    public GetProductResponse(Product product) {
+        this.id = product.getId();
+        this.user = product.getUser();
+        this.productText = product.getProductText();
+        this.name = product.getName();
+        this.imageCount = product.getImageCount();
+        this.starRating = product.getStarRating();
+        this.createdAt = product.getCreatedAt();
+        this.tiers = product.getTiers();
+        this.tag = product.getTag();
+        this.reviews = product.getReviews().stream().map(ReviewResponse::new).toList();
+    }
+
     public Long getId() {
         return id;
     }
