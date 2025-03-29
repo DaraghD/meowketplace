@@ -31,7 +31,7 @@ const Messages = () => {
                 (message) =>
                     (message.sender_id === selectedUser.id ||
                         message.receiver_id === selectedUser.id) &&
-                    message.message_content === "--Service Inquiry--" &&
+                    message.message_content.startsWith("--Service Inquiry--") &&
                     !messages.some(
                         (m) =>
                             (m.sender_id === currentUser.id ||
@@ -302,8 +302,9 @@ const Messages = () => {
                             filteredMessages.length > 0 ? (
                                 filteredMessages.map((message) => {
                                     if (
-                                        message.message_content ===
-                                        "--Service Inquiry--"
+                                        message.message_content.startsWith(
+                                            "--Service Inquiry--"
+                                        )
                                     ) {
                                         return (
                                             <ServiceInquiryMessage
