@@ -181,7 +181,7 @@ const Messages = () => {
 
         try {
             const response = await fetch(
-                `http://localhost:8080/api/user/verify/${selectedUser.id}`,
+                `http://localhost:8080/api/user/verify`,
                 {
                     method: "POST",
                     headers: {
@@ -190,10 +190,16 @@ const Messages = () => {
                         )}`,
                         "Content-Type": "application/json",
                     },
+                    body: JSON.stringify({
+                        user_id_to_verify: selectedUser.id,
+                    }),
                 }
             );
 
-            if (!response.ok) throw new Error("Failed to verify user");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to verify user");
+            }
 
             setSelectedUser((prev) =>
                 prev ? { ...prev, is_verified: true } : null
@@ -212,10 +218,12 @@ const Messages = () => {
                 selectedUser.id
             );
 
-            toast.success("Transaction completed successfully!");
+            toast.success("User verified successfully!");
         } catch (error) {
-            console.error("Error completing transaction:", error);
-            toast.error("Failed to complete transaction");
+            console.error("Error verifying user:", error);
+            toast.error(
+                error instanceof Error ? error.message : "Failed to verify user"
+            );
         }
     };
 
