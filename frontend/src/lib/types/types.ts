@@ -2,6 +2,7 @@ export interface Message_User {
     id: number;
     username: string;
     is_verified: boolean;
+    is_business?: boolean;
 }
 
 export interface userData {
