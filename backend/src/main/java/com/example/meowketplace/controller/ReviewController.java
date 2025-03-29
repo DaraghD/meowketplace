@@ -46,15 +46,24 @@ public class ReviewController {
                 String id = jwtUtil.extractUserID(token);
                 System.out.println(id);
                 jwtUtil.validateToken(token, id);
+                System.out.println(review);
+                System.out.println(review);
+                System.out.println(review);
+                System.out.println(review);
+                System.out.println(review);
+                System.out.println(review);
 
                 User user = userService.getUserById(Long.parseLong(id));
 
-                Long product_id = review.getProduct_id();
-                Product product = productService.findProductById(product_id);
-
-                reviewService.addReview(review, user, product);
-
-                return ResponseEntity.status(HttpStatus.OK).body("Review successfully added");
+                if (review.getProduct_id() == null) {
+                    reviewService.addReply(review, user);
+                    return ResponseEntity.status(HttpStatus.OK).body("Reply successfully added");
+                } else {
+                    Long product_id = review.getProduct_id();
+                    Product product = productService.findProductById(product_id);
+                    reviewService.addReview(review, user, product);
+                    return ResponseEntity.status(HttpStatus.OK).body("Review successfully added");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
