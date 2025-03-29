@@ -36,8 +36,10 @@ const Messages = () => {
                         (m) =>
                             (m.sender_id === currentUser.id ||
                                 m.receiver_id === currentUser.id) &&
-                            (m.message_content === "Accepted" ||
-                                m.message_content === "Declined")
+                            (m.message_content ===
+                                "--Service Inquiry Accepted--" ||
+                                m.message_content ===
+                                    "--Service Inquiry Declined--")
                     )
             );
 
