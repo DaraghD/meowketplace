@@ -1,14 +1,25 @@
 package com.example.meowketplace.dto;
 
 import com.example.meowketplace.model.Review;
+import java.util.List;
 
 public class ReviewResponse {
     private String username;
     private String review_content;
     private int stars;
     private Long product_id;
+    private List<Review> replies;
+
+    public List<Review> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Review> replies) {
+        this.replies = replies;
+    }
 
     public ReviewResponse(Review r) {
+        this.replies = r.getReplies();
         this.username = r.getUser().getUsername();
         this.stars = r.getStarRating();
         this.product_id = r.getProduct().getId();

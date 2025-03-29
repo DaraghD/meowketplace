@@ -2,10 +2,12 @@ package com.example.meowketplace.model;
 
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.meowketplace.dto.ReviewRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "reviews")
@@ -21,20 +23,41 @@ public class Review {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(nullable = false)
     private String reviewText;
 
-    @OneToMany(mappedBy = "review")
-    private List<Reply> replies;
-
-    @Column(nullable = false)
+    @Column // only for top level reviews, replies are also reviews with no stars
     private int starRating;
 
     @Column(nullable = false)
     private Date createdAt;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "parent_review_id")
+    private Review parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> replies = new ArrayList<>();
+
+    public Review getParent() {
+        return parent;
+    }
+
+    public void setParent(Review parent) {
+        this.parent = parent;
+    }
+
+    public List<Review> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Review> replies) {
+        this.replies = replies;
+    }
 
     public Review() {
     }
@@ -79,14 +102,6 @@ public class Review {
         this.reviewText = reviewText;
     }
 
-    public List<Reply> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(List<Reply> replies) {
-        this.replies = replies;
-    }
-
     public int getStarRating() {
         return starRating;
     }
@@ -101,5 +116,9 @@ public class Review {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void addReply(Review r) {
+        this.replies.add(r);
     }
 }
