@@ -66,6 +66,7 @@ const Messages = () => {
                     id: data.id,
                     username: data.username,
                     is_verified: data.is_verified,
+                    is_business: data.is_business,
                 };
                 setCurrentUser(user);
             } catch (err) {
@@ -183,10 +184,53 @@ const Messages = () => {
 
         try {
             await sendMessage(response, currentUser.id, selectedUser.id);
+            if (response === "Accepted") {
+                setHasPendingInquiry(false);
+            }
             toast.success("Response sent successfully");
         } catch (error) {
             console.error("Error sending response:", error);
             toast.error("Failed to send response");
+        }
+    };
+
+    const verifyUser = async () => {
+        if (!selectedUser || !currentUser) return;
+
+        try {
+            const response = await fetch(
+                `http://localhost:8080/api/user/verify/${selectedUser.id}`, //todo
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to verify user");
+            }
+
+            setSelectedUser((prev) =>
+                prev ? { ...prev, is_verified: true } : null
+            );
+
+            setChatUsers((prev) =>
+                prev.map((user) =>
+                    user.id === selectedUser.id
+                        ? { ...user, is_verified: true }
+                        : user
+                )
+            );
+
+            toast.success("User verified successfully!");
+        } catch (error) {
+            console.error("Error verifying user:", error);
+            toast.error("Failed to verify user");
         }
     };
 
@@ -232,12 +276,25 @@ const Messages = () => {
             {/* Chat Area (3/4 width) */}
             <div className="w-3/4 flex flex-col">
                 {/* Chat Header */}
-                <div className="p-4 bg-white border-b border-gray-200">
+                <div className="p-4 bg-white border-b border-gray-200 flex justify-between items-center">
                     <h2 className="text-lg font-semibold">
                         {selectedUser
                             ? selectedUser.username
                             : "Select a user to start chatting"}
                     </h2>
+
+                    {currentUser?.is_business && selectedUser && (
+                        <Button
+                            onClick={verifyUser}
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                        >
+                            Complete Transaction
+                        </Button>
+                    )}
+
+                    {selectedUser?.is_verified && (
+                        <span className="text-green-600">Verified</span>
+                    )}
                 </div>
 
                 {/* Chat Messages */}
