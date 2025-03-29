@@ -13,6 +13,8 @@ public class ReviewResponse {
     private Integer stars;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long product_id;
+    private Long user_id;
+
     private List<ReviewResponse> replies;
 
     public List<ReviewResponse> getReplies() {
@@ -24,6 +26,7 @@ public class ReviewResponse {
     }
 
     public ReviewResponse(Review r) {
+        this.user_id = r.getUser().getId();
         this.username = r.getUser().getUsername();
         this.stars = r.getStarRating();
         this.product_id = r.getProduct().getId();
@@ -38,6 +41,7 @@ public class ReviewResponse {
             throw new IllegalArgumentException("This constructor should only be used for replies");
         }
         this.username = reply.getUser().getUsername();
+        this.user_id = reply.getUser().getId();
         this.stars = null;
         this.product_id = null;
         this.review_content = reply.getReviewText();
@@ -74,5 +78,13 @@ public class ReviewResponse {
 
     public void setStars(Integer stars) {
         this.stars = stars;
+    }
+
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 }
