@@ -22,6 +22,24 @@ const Messages = () => {
     const [currentUser, setCurrentUser] = useState<Message_User | null>(null); //TODO: replace this with global state later
     const [messageContent, setMessageContent] = useState<string>("");
     const [loading, setLoading] = useState(true);
+    const [hasPendingInquiry, setHasPendingInquiry] = useState(false);
+
+    useEffect(() => {
+        if (selectedUser && currentUser) {
+            const hasUnacceptedInquiry = messages.some(
+                (message) =>
+                    (message.sender_id === selectedUser.id ||
+                        message.receiver_id === selectedUser.id) &&
+                    message.message_content === "--Service Inquiry--" &&
+                    !messages.some(
+                        (m) =>
+                            m.message_content === "Accepted" ||
+                            m.message_content === "Declined"
+                    )
+            );
+            setHasPendingInquiry(hasUnacceptedInquiry);
+        }
+    }, [selectedUser, messages, currentUser]);
 
     const navigate = useNavigate();
 
@@ -297,35 +315,37 @@ const Messages = () => {
                 </div>
 
                 {/* Chat Input with Submit Button */}
-                <div className="p-4 bg-white border-t border-gray-200 flex items-center gap-2">
-                    <ChatInput
-                        placeholder="Type your message here..."
-                        className="flex-1"
-                        value={messageContent}
-                        onChange={(e) => setMessageContent(e.target.value)}
-                    />
-                    <Button
-                        className="bg-blue-500 hover:bg-blue-600 text-white"
-                        onClick={async () => {
-                            try {
-                                console.log(
-                                    "Trying to send message : ",
-                                    messageContent
-                                );
-                                await sendMessage(
-                                    messageContent,
-                                    currentUser?.id,
-                                    selectedUser?.id
-                                );
-                                setMessageContent("");
-                            } catch (error) {
-                                console.error(error);
-                            }
-                        }}
-                    >
-                        Send
-                    </Button>
-                </div>
+                {!hasPendingInquiry && selectedUser && (
+                    <div className="p-4 bg-white border-t border-gray-200 flex items-center gap-2">
+                        <ChatInput
+                            placeholder="Type your message here..."
+                            className="flex-1"
+                            value={messageContent}
+                            onChange={(e) => setMessageContent(e.target.value)}
+                        />
+                        <Button
+                            className="bg-blue-500 hover:bg-blue-600 text-white"
+                            onClick={async () => {
+                                try {
+                                    console.log(
+                                        "Trying to send message : ",
+                                        messageContent
+                                    );
+                                    await sendMessage(
+                                        messageContent,
+                                        currentUser?.id,
+                                        selectedUser?.id
+                                    );
+                                    setMessageContent("");
+                                } catch (error) {
+                                    console.error(error);
+                                }
+                            }}
+                        >
+                            Send
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     );
