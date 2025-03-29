@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             onClick={() => {
                 navigate(`/product/${product.id}`);
             }}
-            className="w-[600px] h-32 border rounded-lg shadow-md bg-white flex cursor-pointer"// make this relative ? mobile/small screens?
+            className="w-[50vw] h-32 border rounded-lg shadow-md bg-white flex cursor-pointer"// make this relative ? mobile/small screens?
         >
             <img
                 src={thumbnail}

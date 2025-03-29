@@ -41,7 +41,7 @@ public class ReviewResponse {
         this.stars = null;
         this.product_id = null;
         this.review_content = reply.getReviewText();
-        this.replies = List.of();
+        this.replies = reply.getReplies().stream().map(r -> new ReviewResponse(r, true)).toList();
     }
 
     public String getUsername() {
