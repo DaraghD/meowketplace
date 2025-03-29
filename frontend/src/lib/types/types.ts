@@ -52,6 +52,7 @@ export interface Tier {
     product: Product;
     price: number;
     name: string;
+    description: string;
 }
 export interface AddTier {
     price: number;
@@ -80,16 +81,18 @@ export interface Product {
 
 interface Reply {
     id: number;
-    user: User;
-    replyText: string;
+    username: String;
+    user_id: number;
+    review_content: string;
     createdAt: Date;
 }
 
 export interface Review {
     id: number;
-    user: User;
+    user_id: number;
+    username: String;
     product: Product;
-    reviewText: string;
+    review_content: string;
     replies: Reply[];
     starRating: number;
     createdAt: Date;

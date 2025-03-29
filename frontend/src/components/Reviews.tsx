@@ -55,7 +55,7 @@ const Reviews: React.FC<ReviewProps> = ({ reviews }) => {
 
     return (
         < div className="flex flex-col p-5" > <p className="mb-3">Latest Reviews</p> {
-            reviews?.map((review) => (<div key={review.id} className="border-b pb-4 mb-4"> <div className="flex justify-between p-2"> <div className="flex flex-col md:flex-row p-2 gap-2"> <Avatar> <AvatarImage src="https://github.com/shadcn.png" /> <AvatarFallback>CN</AvatarFallback> </Avatar> <p>{review.user.username}</p> <p className="hidden xl:block"> {renderStars(review.starRating)}{" "} </p> <p>{review.starRating}✨</p> </div> <div className="max-w-2/4"> <p>{review.reviewText}</p> </div> <div className="flex gap-1"> <Button className="cursor-pointer"> <img src="/assets/icons/ReplyIcon.png" className="w-7 h-auto" />
+            reviews?.map((review) => (<div key={review.id} className="border-b pb-4 mb-4"> <div className="flex justify-between p-2"> <div className="flex flex-col md:flex-row p-2 gap-2"> <Avatar> <AvatarImage src="https://github.com/shadcn.png" /> <AvatarFallback>CN</AvatarFallback> </Avatar> <p>{review.username}</p> <p className="hidden xl:block"> {renderStars(review.starRating)}{" "} </p> <p>{review.starRating}✨</p> </div> <div className="max-w-2/4"> <p>{review.review_content}</p> </div> <div className="flex gap-1"> <Button className="cursor-pointer"> <img src="/assets/icons/ReplyIcon.png" className="w-7 h-auto" />
             </Button>
                 <Button className="cursor-pointer">
                     <img
@@ -96,13 +96,12 @@ const Reviews: React.FC<ReviewProps> = ({ reviews }) => {
                                             <div className="flex items-center gap-1">
                                                 <span className="font-medium text-sm">
                                                     {
-                                                        reply.user
-                                                            .username
+                                                        reply.username
                                                     }
                                                 </span>
                                             </div>
                                             <p className="text-sm">
-                                                {reply.replyText}
+                                                {reply.review_content}
                                             </p>
                                         </div>
                                     </div>
@@ -200,10 +199,5 @@ const Reviews: React.FC<ReviewProps> = ({ reviews }) => {
         </div >
     )
 }
-
-
-
-
-
 
 export default Reviews
