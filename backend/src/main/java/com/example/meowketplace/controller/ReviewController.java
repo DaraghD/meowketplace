@@ -46,12 +46,6 @@ public class ReviewController {
                 String id = jwtUtil.extractUserID(token);
                 System.out.println(id);
                 jwtUtil.validateToken(token, id);
-                System.out.println(review);
-                System.out.println(review);
-                System.out.println(review);
-                System.out.println(review);
-                System.out.println(review);
-                System.out.println(review);
 
                 User user = userService.getUserById(Long.parseLong(id));
 

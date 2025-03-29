@@ -20,7 +20,10 @@ public class ReviewService {
         this.productRepository = productRepository;
     }
 
-    public void addReview(ReviewRequest r, User user, Product product) {
+    public void addReview(ReviewRequest r, User user, Product product) throws Exception {
+        if (!user.isIs_verified()) {
+            throw new Exception("Only verified users can leave reviews");
+        }
         Review review = new Review(r, product, user);
         review = reviewRepository.save(review);
         product.addReview(review);
