@@ -1,24 +1,24 @@
 import { z } from "zod";
 
 export const SignUpValidation = z.object({
-    username: z.string().min(1).max(50),
-    email: z.string().email(),
-    password: z.string().min(4, {message: "Must be at least 4 characters"})
-  });
+  username: z.string().min(1).max(50),
+  email: z.string().email(),
+  password: z.string().min(4, { message: "Must be at least 4 characters" })
+});
 
-  export const SignInValidation = z.object({
-    email: z.string().email(),
-    password: z.string().min(4, {message: "Must be at least 4 characters"})
-  });
+export const SignInValidation = z.object({
+  email: z.string().email(),
+  password: z.string().min(4, { message: "Must be at least 4 characters" })
+});
 
-  export const BusinessSignUpValidation = z.object({
-    username: z.string().min(1).max(50),
-    email: z.string().email(),
-    password: z.string().min(4, {message: "Must be at least 4 characters"}),
-    description: z.string().min(1).max(2000),
-    services: z.string().min(1).max(1000),
-    is_business: z.boolean(),
-  });
+export const BusinessSignUpValidation = z.object({
+  username: z.string().min(1).max(50),
+  email: z.string().email(),
+  password: z.string().min(4, { message: "Must be at least 4 characters" }),
+  description: z.string().min(1).max(2000),
+  services: z.string().min(1).max(1000),
+  is_business: z.boolean(),
+});
 
 const TierValidation = z.object({
   name: z.string().min(1, { message: "Title is required" }),
@@ -39,6 +39,6 @@ export const ProductListingValidation = z.object({
 });
 
 export const ReviewValidation = z.object({
-  rating: z.number(),
-  text: z.string().min(1).max(2000),
+  stars: z.number().min(1, { message: "Rating must be at least 1" }).max(5, { message: "Rating must be at most 5" }),
+  review_content: z.string().min(1).max(2000),
 });

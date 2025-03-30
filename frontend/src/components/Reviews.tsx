@@ -36,26 +36,30 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
     const form = useForm<z.infer<typeof ReviewValidation>>({
         resolver: zodResolver(ReviewValidation),
         defaultValues: {
-            rating: 0,
-            text: "",
+            stars: 1,
+            review_content: "",
         },
     });
 
     async function onSubmit(values: z.infer<typeof ReviewValidation>) {
+        console.log("submit!");
         try {
             const payload = {
                 ...values,
                 product_id: productID,
+                parent_review_id: null
             };
 
-            await fetch("http://localhost:8080/api/RANDOMASSSHIT", {
-                // make real endpoitn
+            const response = await fetch("http://localhost:8080/api/review", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(payload),
             });
+            if (response.status === 200) {
+                console.log("success");
+            }
         } catch (error) {
             console.log(error);
         }
@@ -104,14 +108,14 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
                             <Avatar>
                                 {" "}
                                 <AvatarImage src="http://localhost:8080/api/user/picture/${review.user.id}" />{" "}
-                                <AvatarFallback>0</AvatarFallback>{" "}
+                                <AvatarFallback>{review.username}</AvatarFallback>{" "}
                             </Avatar>{" "}
                             <p>{review.username}</p>{" "}
                             <p className="hidden xl:block">
                                 {" "}
-                                {renderStars(review.starRating)}{" "}
+                                {renderStars(review.stars)}{" "}
                             </p>{" "}
-                            <p>{review.starRating}✨</p>{" "}
+                            <p>{review.stars}✨</p>{" "}
                         </div>{" "}
                         <div className="max-w-2/4">
                             {" "}
@@ -210,14 +214,16 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
                                     >
                                         <FormField
                                             control={form.control}
-                                            name="rating"
+                                            name="stars"
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>
                                                         Star Rating
                                                     </FormLabel>
                                                     <FormControl>
-                                                        <Input {...field} />
+                                                        <Input {...field}
+                                                            type="number"
+                                                            onChange={(e) => field.onChange(Number(e.target.value))} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -225,11 +231,11 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
                                         />
                                         <FormField
                                             control={form.control}
-                                            name="text"
+                                            name="review_content"
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>
-                                                        Reasoning
+                                                        Review
                                                     </FormLabel>
                                                     <FormControl>
                                                         <Input {...field} />
