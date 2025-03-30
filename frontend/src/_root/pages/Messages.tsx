@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import { sendMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
-import { CheckCircle } from "lucide-react";
 
 const Messages = () => {
     const [chatUsers, setChatUsers] = useState<Message_User[]>([]);
@@ -24,6 +23,18 @@ const Messages = () => {
     const [messageContent, setMessageContent] = useState<string>("");
     const [loading, setLoading] = useState(true);
     const [hasPendingInquiry, setHasPendingInquiry] = useState(false);
+
+    const shouldDisableChat =
+        messages.some(
+            (m) =>
+                m.message_content.startsWith("--Service Inquiry--") &&
+                !messages.some(
+                    (m) =>
+                        m.message_content === "--Service Inquiry Accepted--" ||
+                        m.message_content === "--Service Inquiry Declined--"
+                )
+        ) ||
+        messages.some((m) => m.message_content === "--Transaction Completed--");
 
     useEffect(() => {
         if (selectedUser && currentUser) {
@@ -43,15 +54,23 @@ const Messages = () => {
                     )
             );
 
+            const hasAcceptedInquiry = messages.some(
+                (message) =>
+                    (message.sender_id === selectedUser.id ||
+                        message.receiver_id === selectedUser.id) &&
+                    message.message_content === "--Service Inquiry Accepted--"
+            );
+
             const hasCompletedTransaction = messages.some(
                 (message) =>
-                    (message.sender_id === currentUser.id ||
-                        message.receiver_id === currentUser.id) &&
+                    (message.sender_id === selectedUser.id ||
+                        message.receiver_id === selectedUser.id) &&
                     message.message_content === "--Transaction Completed--"
             );
 
             setHasPendingInquiry(
-                hasUnrespondedInquiry || hasCompletedTransaction
+                (hasUnrespondedInquiry && !hasAcceptedInquiry) ||
+                    hasCompletedTransaction
             );
         }
     }, [selectedUser, messages, currentUser]);
@@ -381,7 +400,7 @@ const Messages = () => {
                     </div>
                 )}
 
-                {!hasPendingInquiry && selectedUser && (
+                {!shouldDisableChat && selectedUser && (
                     <div className="p-4 bg-white border-t border-gray-200 flex items-center gap-2">
                         <ChatInput
                             placeholder="Type your message here..."
