@@ -9,6 +9,7 @@ import com.example.meowketplace.repository.MessageRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -21,9 +22,11 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository, JwtUtil jwtUtil, UserService userService) {
+    public MessageService(SimpMessagingTemplate messagingTemplate,MessageRepository messageRepository, JwtUtil jwtUtil, UserService userService) {
+        this.messagingTemplate = messagingTemplate;
         this.messageRepository = messageRepository;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
@@ -60,7 +63,13 @@ public class MessageService {
         message.setReceiver(userService.getUserById(messageRequest.getReceiver_id()));
         message.setCreated_at(new Date(System.currentTimeMillis()));
 
+        notifyUserNewMessage(messageRequest.getSender_id());
+        notifyUserNewMessage(messageRequest.getReceiver_id());
         messageRepository.save(message);
+    }
+
+    private void notifyUserNewMessage(Long userId) {
+        messagingTemplate.convertAndSend("/topic/messages/" + userId, "New message available");
     }
 
     public String getAllMessagesJSON(String jwtToken) {
