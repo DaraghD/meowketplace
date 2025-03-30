@@ -247,7 +247,7 @@ const Messages = () => {
                 selectedUser.id
             );
 
-            toast.success("Transaction completed successfully!");
+            toast.success("User verified successfully!");
         } catch (error) {
             console.error("Error verifying user:", error);
             toast.error(
@@ -304,13 +304,22 @@ const Messages = () => {
                             : "Select a user to start chatting"}
                     </h2>
 
-                    {currentUser?.is_business && selectedUser && (
-                        <Button
-                            onClick={verifyUser}
-                            className="bg-green-600 hover:bg-green-700 text-white"
-                        >
-                            Complete Transaction
-                        </Button>
+                    {currentUser?.is_business &&
+                        selectedUser &&
+                        !selectedUser.is_verified && (
+                            <Button
+                                onClick={verifyUser}
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                            >
+                                Complete Transaction
+                            </Button>
+                        )}
+
+                    {selectedUser?.is_verified && (
+                        <span className="text-green-600 flex items-center">
+                            <CheckCircle className="w-5 h-5 mr-1" />
+                            Verified
+                        </span>
                     )}
                 </div>
 
