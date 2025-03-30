@@ -1,8 +1,8 @@
 import { Review } from "@/lib/types/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./ui/button";
-import { useState } from "react";
-import { renderStars } from "@/lib/utils";
+import { useContext, useState } from "react";
+import { renderStars, sendMessage } from "@/lib/utils";
 import {
     Drawer,
     DrawerClose,
@@ -26,6 +26,8 @@ import { z } from "zod";
 import { ReviewValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Context } from "@/context";
 
 interface ReviewProps {
     reviews: Review[] | undefined;
@@ -83,6 +85,27 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
             ...prev,
             [reviewId]: !prev[reviewId],
         }));
+    };
+
+    const context = useContext(Context);
+    if (!context) {
+        throw new Error("Context not found");
+    }
+    const { user } = context;
+
+    const sendServiceInquiry = async (reviewUserId: number) => {
+        if (!user) {
+            toast.error("You need to be logged in to send a service inquiry");
+            return;
+        }
+
+        try {
+            await sendMessage(`--Service Inquiry--`, user.id, reviewUserId);
+            toast.success("Message sent successfully to the reviewer");
+        } catch (error) {
+            console.error("Error sending response:", error);
+            toast.error("Failed to send message");
+        }
     };
 
     if (reviews?.length === 0) {
@@ -212,7 +235,12 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
                                     className="w-7 h-auto"
                                 />
                             </Button>
-                            <Button className="cursor-pointer">
+                            <Button
+                                className="cursor-pointer"
+                                onClick={() =>
+                                    sendServiceInquiry(review.user_id)
+                                }
+                            >
                                 <img
                                     src="/assets/icons/MessageIcon.png"
                                     className="w-7 h-auto "
