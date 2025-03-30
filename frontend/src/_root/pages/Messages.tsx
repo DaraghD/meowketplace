@@ -29,13 +29,17 @@ const Messages = () => {
         if (selectedUser && currentUser) {
             const hasUnrespondedInquiry = messages.some(
                 (message) =>
-                    (message.sender_id === selectedUser.id ||
-                        message.receiver_id === selectedUser.id) &&
+                    ((message.sender_id === selectedUser.id &&
+                        message.receiver_id === currentUser.id) ||
+                        (message.receiver_id === selectedUser.id &&
+                            message.sender_id === currentUser.id)) &&
                     message.message_content.startsWith("--Service Inquiry--") &&
                     !messages.some(
                         (m) =>
-                            (m.sender_id === currentUser.id ||
-                                m.receiver_id === currentUser.id) &&
+                            ((m.sender_id === currentUser.id &&
+                                m.receiver_id === selectedUser.id) ||
+                                (m.receiver_id === currentUser.id &&
+                                    m.sender_id === selectedUser.id)) &&
                             (m.message_content ===
                                 "--Service Inquiry Accepted--" ||
                                 m.message_content ===
@@ -45,8 +49,10 @@ const Messages = () => {
 
             const hasCompletedTransaction = messages.some(
                 (message) =>
-                    (message.sender_id === currentUser.id ||
-                        message.receiver_id === currentUser.id) &&
+                    ((message.sender_id === currentUser.id &&
+                        message.receiver_id === selectedUser.id) ||
+                        (message.receiver_id === currentUser.id &&
+                            message.sender_id === selectedUser.id)) &&
                     message.message_content === "--Transaction Completed--"
             );
 
