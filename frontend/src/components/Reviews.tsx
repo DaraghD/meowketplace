@@ -29,9 +29,10 @@ import { useForm } from "react-hook-form";
 
 interface ReviewProps {
     reviews: Review[] | undefined;
+    productID: number | undefined;
 }
 
-const Reviews: React.FC<ReviewProps> = ({ reviews }) => {
+const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
     const form = useForm<z.infer<typeof ReviewValidation>>({
         resolver: zodResolver(ReviewValidation),
         defaultValues: {
@@ -40,9 +41,27 @@ const Reviews: React.FC<ReviewProps> = ({ reviews }) => {
         },
     });
 
-    function onSubmit(values: z.infer<typeof ReviewValidation>) {
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof ReviewValidation>) {
+        try {
+            const payload = {
+                ...values,
+                product_id: productID,
+            };
+
+            await fetch("http://localhost:8080/api/RANDOMASSSHIT", {
+                // make real endpoitn
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        console.log("Data sent to backend");
     }
+
     const [, setVisibleReviews] = useState(2);
     // const [visibleReviews, setVisibleReviews] = useState(2); //TODO: use this later
     const [showReplies, setShowReplies] = useState<Record<number, boolean>>({});
