@@ -128,7 +128,13 @@ const Messages = () => {
                         });
                     }
                 });
-                setChatUsers(Array.from(userMap.values()));
+
+                const usersArray = Array.from(userMap.values());
+                const filteredUsers = usersArray.filter(
+                    (user) => currentUser && user.id !== currentUser.id
+                );
+
+                setChatUsers(filteredUsers);
                 setMessages(data);
                 setLoading(false);
             } catch (error) {
@@ -136,10 +142,12 @@ const Messages = () => {
             }
         };
 
-        fetchMessages();
-        const pollingInterval = setInterval(fetchMessages, 5000);
-        return () => clearInterval(pollingInterval);
-    }, []);
+        if (currentUser) {
+            fetchMessages();
+            const pollingInterval = setInterval(fetchMessages, 5000);
+            return () => clearInterval(pollingInterval);
+        }
+    }, [currentUser]);
 
     const filteredMessages = selectedUser
         ? messages.filter(
