@@ -57,6 +57,7 @@ export interface Tier {
 export interface AddTier {
     price: number;
     name: string;
+    description: string;
 }
 
 export interface AddProduct {

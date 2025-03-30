@@ -23,6 +23,7 @@ export const SignUpValidation = z.object({
 const TierValidation = z.object({
   name: z.string().min(1, { message: "Title is required" }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number" }),
+  description: z.string().min(1).max(2000),
 });
 
 export const ProductListingValidation = z.object({
