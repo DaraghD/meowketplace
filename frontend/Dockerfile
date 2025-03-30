@@ -6,6 +6,8 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
+RUN npm install --save-dev @types/sockjs-client @types/stompjs
+
 RUN echo "VITE_API_URL=http://localhost:8080/api" > .env
 
 RUN cat .env
