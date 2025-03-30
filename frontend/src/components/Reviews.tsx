@@ -34,14 +34,23 @@ interface ReviewProps {
     productID: number | undefined;
 }
 
-const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
-    const form = useForm<z.infer<typeof ReviewValidation>>({
-        resolver: zodResolver(ReviewValidation),
-        defaultValues: {
-            stars: 1,
-            review_content: "",
-        },
-    });
+const Reviews: React.FC<ReviewProps> = ({
+    reviews: initialReviews,
+    productID,
+}) => {
+    const [reviews, setReviews] = useState(initialReviews);
+
+    const refreshReviews = async () => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/api/service/${productID}/reviews`
+            );
+            const data = await response.json();
+            setReviews(data);
+        } catch (error) {
+            console.error("Error refreshing reviews", error);
+        }
+    };
 
     async function onSubmit(values: z.infer<typeof ReviewValidation>) {
         console.log("submit!");
@@ -61,6 +70,7 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
             });
             if (response.status === 200) {
                 console.log("success");
+                await refreshReviews();
             }
         } catch (error) {
             console.log(error);
