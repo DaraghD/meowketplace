@@ -46,19 +46,6 @@ const Messages = () => {
                                     "--Service Inquiry Declined--")
                     )
             );
-
-            const hasCompletedTransaction = messages.some(
-                (message) =>
-                    ((message.sender_id === currentUser.id &&
-                        message.receiver_id === selectedUser.id) ||
-                        (message.receiver_id === currentUser.id &&
-                            message.sender_id === selectedUser.id)) &&
-                    message.message_content === "--Transaction Completed--"
-            );
-
-            setHasPendingInquiry(
-                hasUnrespondedInquiry || hasCompletedTransaction
-            );
         }
     }, [selectedUser, messages, currentUser]);
 
@@ -386,13 +373,8 @@ const Messages = () => {
 
                 {hasPendingInquiry && (
                     <div className="p-2 text-center text-sm text-gray-500 bg-gray-100">
-                        {messages.some(
-                            (m) =>
-                                m.message_content ===
-                                "--Transaction Completed--"
-                        )
-                            ? "Chat disabled - please initiate a new service inquiry"
-                            : "Please respond to the service inquiry to continue chatting"}
+                        Please respond to the service inquiry to continue
+                        chatting
                     </div>
                 )}
 
