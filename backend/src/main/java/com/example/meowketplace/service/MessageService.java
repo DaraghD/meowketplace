@@ -25,7 +25,8 @@ public class MessageService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public MessageService(SimpMessagingTemplate messagingTemplate,MessageRepository messageRepository, JwtUtil jwtUtil, UserService userService) {
+    public MessageService(SimpMessagingTemplate messagingTemplate, MessageRepository messageRepository, JwtUtil jwtUtil,
+            UserService userService) {
         this.messagingTemplate = messagingTemplate;
         this.messageRepository = messageRepository;
         this.jwtUtil = jwtUtil;
@@ -63,13 +64,14 @@ public class MessageService {
         message.setReceiver(userService.getUserById(messageRequest.getReceiver_id()));
         message.setCreated_at(new Date(System.currentTimeMillis()));
 
-        notifyUserNewMessage(messageRequest.getSender_id());
-        notifyUserNewMessage(messageRequest.getReceiver_id());
+        notifyUserNewMessage(messageRequest.getSender_id(), "Message sent!");
+        notifyUserNewMessage(messageRequest.getReceiver_id(),
+                "You have received a message from " + message.getSender().getUsername());
         messageRepository.save(message);
     }
 
-    private void notifyUserNewMessage(Long userId) {
-        messagingTemplate.convertAndSend("/topic/messages/" + userId, "New message available");
+    private void notifyUserNewMessage(Long userId, String message) {
+        messagingTemplate.convertAndSend("/topic/messages/" + userId, message);
     }
 
     public String getAllMessagesJSON(String jwtToken) {
