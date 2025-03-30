@@ -39,6 +39,8 @@ export const ProductListingValidation = z.object({
 });
 
 export const ReviewValidation = z.object({
-  stars: z.number().min(1, { message: "Rating must be at least 1" }).max(5, { message: "Rating must be at most 5" }),
+  stars: z.coerce.number()
+  .min(1, { message: "Rating must be at least 1" })
+  .max(5, { message: "Rating must be at most 5" }),
   review_content: z.string().min(1).max(2000),
 });
