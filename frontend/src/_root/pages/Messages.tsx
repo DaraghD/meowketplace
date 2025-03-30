@@ -340,16 +340,16 @@ const Messages = () => {
                                             variant={
                                                 message.sender_id ===
                                                 selectedUser.id
-                                                    ? "sent"
-                                                    : "received"
+                                                    ? "received"
+                                                    : "sent"
                                             }
                                         >
                                             <ChatBubbleAvatar
                                                 src={
                                                     message.sender_id ===
                                                     selectedUser.id
-                                                        ? "1"
-                                                        : "2"
+                                                        ? "2"
+                                                        : "1"
                                                 }
                                                 fallback={
                                                     message.sender_id ===
@@ -366,8 +366,8 @@ const Messages = () => {
                                                 variant={
                                                     message.sender_id ===
                                                     selectedUser.id
-                                                        ? "sent"
-                                                        : "received"
+                                                        ? "received"
+                                                        : "sent"
                                                 }
                                             >
                                                 {message.message_content}
