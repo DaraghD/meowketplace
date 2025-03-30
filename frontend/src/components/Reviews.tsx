@@ -52,6 +52,14 @@ const Reviews: React.FC<ReviewProps> = ({
         }
     };
 
+    const form = useForm<z.infer<typeof ReviewValidation>>({
+        resolver: zodResolver(ReviewValidation),
+        defaultValues: {
+            stars: 1,
+            review_content: "",
+        },
+    });
+
     async function onSubmit(values: z.infer<typeof ReviewValidation>) {
         console.log("submit!");
         try {
