@@ -46,6 +46,8 @@ const Messages = () => {
                                     "--Service Inquiry Declined--")
                     )
             );
+
+            setHasPendingInquiry(hasUnrespondedInquiry);
         }
     }, [selectedUser, messages, currentUser]);
 
