@@ -43,7 +43,7 @@ const Messages = () => {
                             (m.message_content ===
                                 "--Service Inquiry Accepted--" ||
                                 m.message_content ===
-                                    "--Service Inquiry Declined--")
+                                "--Service Inquiry Declined--")
                     )
             );
 
@@ -137,19 +137,22 @@ const Messages = () => {
             }
         };
 
-        if (currentUser) {
+        const handleNewMessage = () => {
             fetchMessages();
-            const pollingInterval = setInterval(fetchMessages, 5000);
-            return () => clearInterval(pollingInterval);
         }
+        window.addEventListener('newMessage', handleNewMessage);
+        return () => {
+            window.removeEventListener('newMessage', handleNewMessage);
+        };
+
     }, [currentUser]);
 
     const filteredMessages = selectedUser
         ? messages.filter(
-              (message) =>
-                  message.sender_id === selectedUser.id ||
-                  message.receiver_id === selectedUser.id
-          )
+            (message) =>
+                message.sender_id === selectedUser.id ||
+                message.receiver_id === selectedUser.id
+        )
         : [];
 
     if (messages.length === 0 && !loading) {
@@ -328,7 +331,7 @@ const Messages = () => {
                                             key={message.id}
                                             variant={
                                                 message.sender_id ===
-                                                selectedUser.id
+                                                    selectedUser.id
                                                     ? "received"
                                                     : "sent"
                                             }
@@ -336,25 +339,25 @@ const Messages = () => {
                                             <ChatBubbleAvatar
                                                 src={
                                                     message.sender_id ===
-                                                    selectedUser.id
+                                                        selectedUser.id
                                                         ? "2"
                                                         : "1"
                                                 }
                                                 fallback={
                                                     message.sender_id ===
-                                                    selectedUser.id
+                                                        selectedUser.id
                                                         ? selectedUser.username
-                                                              .substring(0, 2)
-                                                              .toUpperCase()
+                                                            .substring(0, 2)
+                                                            .toUpperCase()
                                                         : message.receiver_username
-                                                              .substring(0, 2)
-                                                              .toUpperCase()
+                                                            .substring(0, 2)
+                                                            .toUpperCase()
                                                 }
                                             />
                                             <ChatBubbleMessage
                                                 variant={
                                                     message.sender_id ===
-                                                    selectedUser.id
+                                                        selectedUser.id
                                                         ? "received"
                                                         : "sent"
                                                 }

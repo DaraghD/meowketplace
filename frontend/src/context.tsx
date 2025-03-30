@@ -19,10 +19,11 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     const [isAuthenticated, setAuthentication] = useState<boolean>(false);
     const [stompClient, setStompClient] = useState<Stomp.Client | null>(null);
 
-    const fetchMessages = async () => {
+    const sendMessageNotification = async () => {
         if (user) {
             console.log("Fetching new messages for user:", user.id);
             toast.success("You have a new message1");
+            window.dispatchEvent(new Event('newMessage'));
         }
     };
 
@@ -66,7 +67,7 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
             client.connect({}, () => {
                 client.subscribe(`/topic/messages/${user.id}`, () => {
-                    fetchMessages();
+                    sendMessageNotification();
                 });
                 setStompClient(client);
             });
