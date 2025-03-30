@@ -26,7 +26,10 @@ import { Context } from "@/context";
 const ProductView = () => {
     const [product, setProduct] = useState<Product | null>();
     const [productLoading, setProductLoading] = useState<boolean>(true);
-    const [selectedTier, setSelectedTier] = useState<String>("");
+    const [selectedTier, setSelectedTier] = useState<{
+        name: string;
+        description: string;
+    } | null>(null);
     const id = useParams();
 
     useEffect(() => {
@@ -145,9 +148,7 @@ const ProductView = () => {
                                 {product?.tiers.map((tier, index) => (
                                     <DropdownMenuItem
                                         key={index}
-                                        onClick={() =>
-                                            setSelectedTier(tier.name)
-                                        }
+                                        onClick={() => setSelectedTier(tier)}
                                     >
                                         {tier.name}
                                     </DropdownMenuItem>
@@ -157,7 +158,9 @@ const ProductView = () => {
                     </div>
                     <p>Tag: {product?.tag}</p>
                     <ScrollArea className="h-[300px] w-full rounded-md border p-4">
-                        {product?.productText}
+                        {selectedTier
+                            ? selectedTier.description
+                            : product?.productText}
                     </ScrollArea>
 
                     <Button
@@ -165,7 +168,7 @@ const ProductView = () => {
                         onClick={sendServiceInquiry}
                     >
                         Send Service Inquiry{" "}
-                        {selectedTier == "" ? "" : `for ${selectedTier}`}{" "}
+                        {selectedTier?.name == "" ? "" : `for ${selectedTier}`}{" "}
                         <span>
                             <img
                                 src="/assets/icons/MessageIcon.png"
