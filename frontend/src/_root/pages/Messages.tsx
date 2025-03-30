@@ -141,10 +141,10 @@ const Messages = () => {
             fetchMessages();
         }
         window.addEventListener('newMessage', handleNewMessage);
+        fetchMessages();
         return () => {
             window.removeEventListener('newMessage', handleNewMessage);
         };
-
     }, [currentUser]);
 
     const filteredMessages = selectedUser
