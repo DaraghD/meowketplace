@@ -22,6 +22,7 @@ jobs:
           docker build . --tag ghcr.io/daraghd/meowketplace_frontend:latest
           docker push ghcr.io/daraghd/meowketplace_frontend:latest
           cd ../backend
+          find . -type f -exec sed -i 's|http://localhost:5173|http://meowketplace.ie|g' {} +
           docker build . --tag ghcr.io/daraghd/meowketplace_backend:latest
           docker push ghcr.io/daraghd/meowketplace_backend:latest
 
