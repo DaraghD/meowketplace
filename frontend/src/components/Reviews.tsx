@@ -47,7 +47,7 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
             const payload = {
                 ...values,
                 product_id: productID,
-                parent_review_id: null
+                parent_review_id: null,
             };
 
             const response = await fetch("http://localhost:8080/api/review", {
@@ -88,12 +88,92 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
     if (reviews?.length === 0) {
         return (
             <div className="flex flex-col p-5">
-                {" "}
-                No reviews for this product
+                <div className="flex flex-col p-5">
+                    No reviews for this product
+                </div>
+                <div className="flex p-5 justify-end">
+                    <Drawer>
+                        <DrawerTrigger>
+                            <Button className="cursor-pointer">
+                                Leave a Review
+                            </Button>
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle>Leave a Review</DrawerTitle>
+                                <DrawerDescription>
+                                    <Form {...form}>
+                                        <form
+                                            onSubmit={form.handleSubmit(
+                                                onSubmit
+                                            )}
+                                            className="space-y-8 text-center"
+                                        >
+                                            <FormField
+                                                control={form.control}
+                                                name="stars"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Star Rating
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input
+                                                                {...field}
+                                                                type="number"
+                                                                onChange={(e) =>
+                                                                    field.onChange(
+                                                                        Number(
+                                                                            e
+                                                                                .target
+                                                                                .value
+                                                                        )
+                                                                    )
+                                                                }
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="review_content"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Review
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <Button type="submit">
+                                                Submit
+                                            </Button>
+                                        </form>
+                                    </Form>
+                                </DrawerDescription>
+                            </DrawerHeader>
+                            <DrawerFooter>
+                                <DrawerClose>
+                                    <Button
+                                        variant="outline"
+                                        className="cursor-pointer"
+                                    >
+                                        Cancel
+                                    </Button>
+                                </DrawerClose>
+                            </DrawerFooter>
+                        </DrawerContent>
+                    </Drawer>
+                </div>
             </div>
         );
     }
-
     return (
         <div className="flex flex-col p-5">
             {" "}
@@ -108,7 +188,9 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
                             <Avatar>
                                 {" "}
                                 <AvatarImage src="http://localhost:8080/api/user/picture/${review.user.id}" />{" "}
-                                <AvatarFallback>{review.username}</AvatarFallback>{" "}
+                                <AvatarFallback>
+                                    {review.username}
+                                </AvatarFallback>{" "}
                             </Avatar>{" "}
                             <p>{review.username}</p>{" "}
                             <p className="hidden xl:block">
@@ -221,9 +303,18 @@ const Reviews: React.FC<ReviewProps> = ({ reviews, productID }) => {
                                                         Star Rating
                                                     </FormLabel>
                                                     <FormControl>
-                                                        <Input {...field}
+                                                        <Input
+                                                            {...field}
                                                             type="number"
-                                                            onChange={(e) => field.onChange(Number(e.target.value))} />
+                                                            onChange={(e) =>
+                                                                field.onChange(
+                                                                    Number(
+                                                                        e.target
+                                                                            .value
+                                                                    )
+                                                                )
+                                                            }
+                                                        />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
