@@ -273,11 +273,15 @@ const Reviews: React.FC<ReviewProps> = ({
                                 onOpenChange={setIsDialogOpen}
                             >
                                 <DialogTrigger>
-                                    <img
-                                        src="/assets/icons/ReplyIcon.png"
-                                        className="w-7 h-auto"
+                                    <Button
+                                        className="cursor-pointer "
                                         onClick={() => setIsDialogOpen(true)}
-                                    />
+                                    >
+                                        <img
+                                            src="/assets/icons/ReplyIcon.png"
+                                            className="w-7 h-auto"
+                                        />
+                                    </Button>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
