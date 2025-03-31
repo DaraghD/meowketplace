@@ -127,7 +127,11 @@ const Reviews: React.FC<ReviewProps> = ({
     }
     const { user } = context;
 
-    const sendReply = async (reviewId: number) => {};
+    const sendReply = async (reviewId: number) => {
+        if (reviewId) {
+            toast("bruh");
+        }
+    };
 
     const sendServiceInquiry = async (reviewUserId: number) => {
         if (!user) {
