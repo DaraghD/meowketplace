@@ -19,10 +19,12 @@ public class JwtUtil {
     private int jwtExpirationMs;
 
     private SecretKey key;
+
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
+
     // Generate JWT token
     public String generateToken(String id) {
         return Jwts.builder()
@@ -63,5 +65,16 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public Long authAndGetUserId(String authHeader) throws Exception {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            String id = extractUserID(token);
+            System.out.println(id);
+            validateToken(token, id);
+            return Long.parseLong(id);
+        } else {
+            throw new Exception("Invalid authorization");
+        }
+    }
 
 }
