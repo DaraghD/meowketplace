@@ -235,7 +235,7 @@ const Messages = () => {
             );
 
             await sendMessage(
-                "--Transaction Completed--",
+                "--Transaction Completed, User verified, Leave a nice review!😺--",
                 currentUser.id,
                 selectedUser.id
             );
