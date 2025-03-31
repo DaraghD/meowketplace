@@ -31,20 +31,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <img
                 src={thumbnail}
                 alt={product.name}
-                className="h-full w-30 object-cover rounded-l-lg"
+                className="h-full w-32 flex-shrink-0 object-cover rounded-l-lg"
             />
 
             <div className="flex flex-col justify-center p-4 flex-grow">
-                <h2 className="text-lg font-bold">{product.name}</h2>
-                <p className="text-gray-700 text-sm">{product.productText}</p>
-                <p className="text-sm text-gray-500">
-                    ⭐ {product.starRating ?? "No rating"}
+                <h2 className="text-lg font-bold truncate">{product.name}</h2>
+                <p className="text-gray-700 text-sm line-clamp-2 break-words">
+                    {product.productText}
                 </p>
-                {product.tiers && product.tiers.length > 0 && (
-                    <p className="text-sm text-gray-600">
-                        Price: ${minPrice} - ${maxPrice}
+                <div className="flex flex-wrap gap-1 mt-1">
+                    <p className="text-sm text-gray-500">
+                        ⭐ {product.starRating ?? "No rating"}
                     </p>
-                )}
+                    {product.tiers && product.tiers.length > 0 && (
+                        <p className="text-sm text-gray-600">
+                            ${minPrice} - ${maxPrice}
+                        </p>
+                    )}
+                </div>
             </div>
 
             <div className="hidden md:flex flex-col justify-center p-4 w-60">
