@@ -36,6 +36,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Context } from "@/context";
+import ReportButton from "./Report";
 
 interface ReviewProps {
     reviews: Review[] | undefined;
@@ -347,6 +348,7 @@ const Reviews: React.FC<ReviewProps> = ({
                                     className="w-7 h-auto "
                                 />
                             </Button>
+                            <ReportButton type="review" id={review.id} />
                         </div>
                     </div>
                     {/* replies */}

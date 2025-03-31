@@ -14,6 +14,7 @@ import { sendMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
 import { CheckCircle } from "lucide-react";
+import ReportButton from "@/components/Report";
 
 const Messages = () => {
     const { id } = useParams();
@@ -290,7 +291,7 @@ const Messages = () => {
 
             {/* Chat Area */}
             <div className="w-3/4 flex flex-col">
-                <div className="p-4 bg-white border-b border-gray-200 flex justify-between items-center">
+                <div className="p-2 bg-white border-b border-gray-200 flex justify-between items-center">
                     <h2 className="text-lg font-semibold">
                         {selectedUser
                             ? selectedUser.username
@@ -314,6 +315,7 @@ const Messages = () => {
                             Verified
                         </span>
                     )}
+                    {selectedUser ? <ReportButton type="user" id={selectedUser.id} /> : ""}
                 </div>
 
                 <div className="flex-1 p-4 overflow-y-auto">

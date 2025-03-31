@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import Reviews from "@/components/Reviews";
 import { renderStars, sendMessage } from "@/lib/utils";
 import { Context } from "@/context";
+import ReportButton from "@/components/Report";
 
 const ProductView = () => {
     const [product, setProduct] = useState<Product | null>();
@@ -156,6 +157,9 @@ const ProductView = () => {
                                 ))}
                             </DropdownMenuContent>
                         </DropdownMenu>
+                    </div>
+                    <div>
+                        <ReportButton type="product" id={product?.id} />
                     </div>
                     <p>Tag: {product?.tag}</p>
                     <ScrollArea className="h-[300px] w-full rounded-md border p-4">

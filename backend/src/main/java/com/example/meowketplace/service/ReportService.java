@@ -1,6 +1,7 @@
 package com.example.meowketplace.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,21 @@ public class ReportService {
     }
 
     public void addReport(ReportRequest r, User user) throws Exception {
+        if (r.getReportReason().equals(""))
+            throw new Exception("Reports must have a reason");
+
+        // check if user already reported this
+        Optional<List<Report>> user_reports = reportRepository.findAllByUserId(user.getId());
+        if (user_reports.isPresent()) {
+            var reports = user_reports.get();
+            for (Report report : reports) {
+                if (report.getReportType() == getReportTypeFromString(r.getReportType())
+                        && report.getReportTypeId() == r.getReportTypeId()) {
+                    throw new Exception("Already reported this " + r.getReportType().toLowerCase());
+                }
+            }
+        }
+
         Report report = new Report();
         report.setUser(user);
 
