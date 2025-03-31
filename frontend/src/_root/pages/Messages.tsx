@@ -219,8 +219,19 @@ const Messages = () => {
             );
 
             if (!response.ok) {
+                await sendMessage(
+                    "--Transaction Completed, User verified, Leave a nice review!😺--",
+                    currentUser.id,
+                    selectedUser.id
+                );
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Failed to verify user");
+            } else {
+                await sendMessage(
+                    "--Transaction Completed, User verified, Leave a nice review!😺--",
+                    currentUser.id,
+                    selectedUser.id
+                );
             }
 
             setSelectedUser((prev) =>
@@ -232,12 +243,6 @@ const Messages = () => {
                         ? { ...user, is_verified: true }
                         : user
                 )
-            );
-
-            await sendMessage(
-                "--Transaction Completed, User verified, Leave a nice review!😺--",
-                currentUser.id,
-                selectedUser.id
             );
 
             toast.success("User verified successfully!");
