@@ -146,6 +146,10 @@ const Reviews: React.FC<ReviewProps> = ({
             });
             if (response.status === 200) {
                 console.log("success");
+                toast.success("Reply submitted successfully");
+                setReplyContent("");
+                setIsDialogOpen(false);
+                await refreshReviews();
             }
         } catch (error) {
             console.log(error);
