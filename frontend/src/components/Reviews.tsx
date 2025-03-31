@@ -14,6 +14,15 @@ import {
     DrawerTrigger,
 } from "./ui/drawer";
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import {
     Form,
     FormControl,
     FormField,
@@ -40,6 +49,8 @@ const Reviews: React.FC<ReviewProps> = ({
 }) => {
     const [reviews, setReviews] = useState(initialReviews);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [replyContent, setReplyContent] = useState("");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const refreshReviews = async () => {
         try {
@@ -116,6 +127,8 @@ const Reviews: React.FC<ReviewProps> = ({
         throw new Error("Context not found");
     }
     const { user } = context;
+
+    const sendReply = async (reviewId: number) => {};
 
     const sendServiceInquiry = async (reviewUserId: number) => {
         if (!user) {
@@ -252,13 +265,43 @@ const Reviews: React.FC<ReviewProps> = ({
                         </div>{" "}
                         <div className="flex gap-1">
                             {" "}
-                            <Button className="cursor-pointer">
-                                {" "}
-                                <img
-                                    src="/assets/icons/ReplyIcon.png"
-                                    className="w-7 h-auto"
-                                />
-                            </Button>
+                            <Dialog
+                                open={isDialogOpen}
+                                onOpenChange={setIsDialogOpen}
+                            >
+                                <DialogTrigger>
+                                    <img
+                                        src="/assets/icons/ReplyIcon.png"
+                                        className="w-7 h-auto"
+                                        onClick={() => setIsDialogOpen(true)}
+                                    />
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Reply to this message
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <Input
+                                        placeholder="Type your reply here..."
+                                        value={replyContent}
+                                        onChange={(e) =>
+                                            setReplyContent(e.target.value)
+                                        }
+                                    />
+                                    <DialogFooter>
+                                        <Button
+                                            className="cursor-pointer"
+                                            onClick={async () => {
+                                                await sendReply(review.id);
+                                                setIsDialogOpen(false);
+                                            }}
+                                        >
+                                            Send Reply
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
                             <Button
                                 className="cursor-pointer"
                                 onClick={() =>
