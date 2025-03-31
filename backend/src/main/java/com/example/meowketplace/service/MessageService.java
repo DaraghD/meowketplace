@@ -7,6 +7,8 @@ import com.example.meowketplace.model.Message;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.repository.MessageRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -64,9 +66,16 @@ public class MessageService {
         message.setReceiver(userService.getUserById(messageRequest.getReceiver_id()));
         message.setCreated_at(new Date(System.currentTimeMillis()));
 
-        notifyUserNewMessage(messageRequest.getSender_id(), "Message sent!");
-        notifyUserNewMessage(messageRequest.getReceiver_id(),
-                "You have received a message from " + message.getSender().getUsername());
+        JsonObject sender_message = new JsonObject();
+        sender_message.addProperty("id", messageRequest.getReceiver_id());
+        sender_message.addProperty("message", "Message sent!");
+        notifyUserNewMessage(messageRequest.getSender_id(), sender_message.toString());
+
+        JsonObject receiver_message = new JsonObject();
+        receiver_message.addProperty("id", messageRequest.getSender_id());
+        receiver_message.addProperty("message", "Message received from " + message.getSender().getUsername());
+        notifyUserNewMessage(messageRequest.getReceiver_id(), receiver_message.toString());
+
         messageRepository.save(message);
     }
 

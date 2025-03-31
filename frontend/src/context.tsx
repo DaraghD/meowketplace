@@ -1,8 +1,9 @@
-import { userData } from "@/lib/types/types.ts";
+import { MessageNotification, userData } from "@/lib/types/types.ts";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import { Link } from "react-router-dom";
 
 export const Context = React.createContext<
     | {
@@ -19,13 +20,28 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     const [isAuthenticated, setAuthentication] = useState<boolean>(false);
     const [stompClient, setStompClient] = useState<Stomp.Client | null>(null);
 
-    const sendMessageNotification = async (wsMessage: String) => {
+    const sendMessageNotification = async (notification: MessageNotification) => {
         if (user) {
-            console.log("Fetching new messages for user:", user.id);
-            toast.success(wsMessage);
-            window.dispatchEvent(new Event('newMessage'));
-        }
-    };
+            if (notification.message === "Message sent!") {
+                toast(notification.message, { duration: 5000 });
+            } else {
+                toast(
+                    <>
+                        {notification.message}
+                        <br />
+                        <Link to={`/messages/${notification.id}`} className="font-semibold text-blue-600">
+                            View Message
+                        </Link>
+                    </>,
+                    {
+                        duration: 5000, // Optional: Adjust duration
+                    }
+                );
+
+                window.dispatchEvent(new Event('newMessage'));
+            }
+        };
+    }
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -67,8 +83,8 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
             client.connect({}, () => {
                 client.subscribe(`/topic/messages/${user.id}`, (message: Stomp.Message) => {
-                    const wsMessage = message.body;
-                    sendMessageNotification(wsMessage);
+                    const notificiation: MessageNotification = JSON.parse(message.body);
+                    sendMessageNotification(notificiation);
                 });
                 setStompClient(client);
             });

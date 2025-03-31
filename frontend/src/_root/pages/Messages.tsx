@@ -9,13 +9,17 @@ import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Message, Message_User } from "@/lib/types/types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { sendMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
 import { CheckCircle } from "lucide-react";
 
 const Messages = () => {
+    const { id } = useParams();
+    const params_user_id = id ? parseInt(id, 10) : NaN;
+
+
     const [chatUsers, setChatUsers] = useState<Message_User[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
     const [selectedUser, setSelectedUser] = useState<Message_User | null>(null);
@@ -26,6 +30,16 @@ const Messages = () => {
     const [hasPendingInquiry, setHasPendingInquiry] = useState(false);
 
     useEffect(() => {
+        if (params_user_id && chatUsers) {
+            const params_user: Message_User | undefined = chatUsers.find((user) => {
+                return user.id === params_user_id;
+            })
+            if (params_user) {
+                setSelectedUser(params_user);
+            }
+
+        }
+
         if (selectedUser && currentUser) {
             const hasUnrespondedInquiry = messages.some(
                 (message) =>

@@ -98,3 +98,11 @@ export interface Review {
     stars: number;
     createdAt: Date;
 }
+
+
+export interface MessageNotification {
+    id: number;
+    message: String;
+    username: String;
+
+}
