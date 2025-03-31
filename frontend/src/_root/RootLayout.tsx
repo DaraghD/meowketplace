@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { Context } from "@/context.tsx";
+import Tooltip from "@/components/Tooltip";
 
 const RootLayout = () => {
     const context = useContext(Context);
@@ -25,7 +26,7 @@ const RootLayout = () => {
     };
 
     return (
-        <>
+        <div className="min-h-screen flex flex-col">
             <div className="hidden xl:block">
                 <div className="max-w-screen h-1/10 flex items-center justify-between pl-1">
                     <div className="flex items-center">
@@ -34,35 +35,31 @@ const RootLayout = () => {
                             className="pl-1 h-14 w-auto mr-2 cursor-pointer"
                             onClick={handleLogoClick}
                         />
-                        <h1 className="cursor-pointer" onClick={handleLogoClick}>Meowketplace</h1>
+                        <h2
+                            className="cursor-pointer"
+                            onClick={handleLogoClick}
+                        >
+                            Meowketplace
+                        </h2>
                     </div>
 
                     <div className="flex space-x-4 mr-5 items-center">
                         <button
-                            onClick={() => navigate("/search")}
-                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
-                        >
-                            Search
-                        </button>
-                        <button
                             onClick={() => navigate("/services")}
                             className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
                         >
-                            Services
+                            Services🦴
                         </button>
                         <button
                             onClick={() => navigate("/messages")}
-                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+                            className="text-black hover:text-white hover:bg-black px-4 pr-5 py-2 rounded transition-colors duration-200 cursor-pointer"
                         >
-                            Messages
+                            Messages✉
                         </button>
                         <button
-                            onClick={() => navigate("/about-us")}
-                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+                            className="cursor-pointer"
+                            onClick={() => navigate("/profile")}
                         >
-                            About us
-                        </button>
-                        <button className="cursor-pointer" onClick={() => navigate("/profile")}>
                             <Avatar onClick={() => navigate("/profile")}>
                                 <AvatarImage
                                     src={`http://localhost:8080/api/user/picture/${user?.id}`}
@@ -90,17 +87,22 @@ const RootLayout = () => {
                             </span>
                         </MenubarTrigger>
                         <MenubarContent>
-                            <MenubarItem className="cursor-pointer"
-                                onClick={() => navigate("/services")}>
+                            <MenubarItem
+                                className="cursor-pointer"
+                                onClick={() => navigate("/services")}
+                            >
                                 Services
                             </MenubarItem>
-                            {user?.is_business ?
+                            {user?.is_business ? (
                                 <MenubarItem
                                     className="cursor-pointer"
-                                    onClick={() => navigate("/product-listing")}>
+                                    onClick={() => navigate("/product-listing")}
+                                >
                                     Add listing
                                 </MenubarItem>
-                                : <></>}
+                            ) : (
+                                <></>
+                            )}
                             <MenubarSeparator />
                             <MenubarItem
                                 className="cursor-pointer"
@@ -121,59 +123,52 @@ const RootLayout = () => {
                         </MenubarContent>
                         <img
                             src="/assets/icons/logo.png"
-                            className="w-auto h-14 ml-auto pr-3"
+                            className="w-auto h-14 ml-auto pr-3 cursor-pointer"
+                            onClick={handleLogoClick}
                         />
                     </MenubarMenu>
                 </Menubar>
             </div>
 
-            <section>
+            <section className="flex-grow">
                 <Outlet />
             </section>
 
-            <footer className="bg-gray-200 p-6 border-t border-gray">
-                <ul className="flex">
-                    <li className="m-6 w-1/5 h-1/2">
-                        <img 
-                        className="w-44 h-auto"
-                            src="/assets/icons/logo.png"
-                        />
-                    </li>
-                    <li className="text-xs inline w-1/5 m-6">
-                        <h2 className="text-lg mb-4">About Us</h2>
-                        <span className="text-sm">All-in-one pet services with a personal touch. Whether it's grooming, sitting, or walking, we have everything your pet needs.
-                            Expert care that understands the bond you share with your furry friend!.</span>
-                    </li>
-                    <li className="text-xs inline w-1/5 m-6">
-                        <h2 className="text-lg mb-4">Contact Us</h2>
-                        <ul>
-                        <li className="text-sm mb-2">Address: Castletroy, Co. Limerick, V94 T9PX</li>
-                        <li className="text-sm mb-2">Email: contact@meowketplace.ie</li>
-                        <li className="text-sm mb-2">Phone: +353 061 202700</li>
+            <footer className="bg-gray-100 p-3 border-t border-gray">
+                <ul className="flex justify-center">
+                    <li className="text-xs w-1/5 m-6 text-center">
+                        <h2 className="text-lg mb-4">Contact</h2>
+                        <ul className="items-center">
+                            <li className="text-sm mb-2">
+                                Castletroy, Co. Limerick, V94 T9PX
+                            </li>
+                            <li className="text-sm mb-2">
+                                contact @ meowketplace.ie
+                            </li>
+                            <li className="text-sm mb-2">+353 061 202700</li>
                         </ul>
                     </li>
-                    <li className="text-xs inline w-1/5 m-6">
-                        <h2 className="text-lg mb-4" >Services</h2>
+                    <li className="text-xs inline w-1/5 m-6 text-center">
+                        <h2 className="text-lg mb-4">Company</h2>
                         <ul>
-                        <li className="text-sm mb-2">Pet Grooming</li>
-                        <li className="text-sm mb-2">Pet Sitting</li>
-                        <li className="text-sm mb-2">Dog Walking</li>
-                        <li className="text-sm mb-2">Pet Training</li>
+                            <a className="text-sm mb-2" href="/about-us">
+                                About
+                            </a>
+                            <li className="text-sm mb-2 pt-2">Careers</li>
+                            <li className="text-sm mb-2">Blog</li>
                         </ul>
                     </li>
-                    <li className="text-xs w-1/5 m-6">
-                        <h2 className="text-lg mb-4">Links</h2>
-                        <div className="flex flex-col">
-                        <a className="text-sm mb-2" href="/home">Home</a>
-                        <a className="text-sm mb-2" href="/search">Search</a>
-                        <a className="text-sm mb-2" href="/services">Services</a>
-                        <a className="text-sm mb-2" href="/about-us">About Us</a>
-                        </div>
+                    <li className="hidden md:inline text-xs w-1/5 m-6">
+                        <h2 className="text-lg mb-4 text-center">Socials</h2>
+                        <ul>
+                            <li>
+                                <Tooltip />
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </footer>
-        </>
-
+        </div>
     );
 };
 
