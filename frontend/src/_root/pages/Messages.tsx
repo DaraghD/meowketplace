@@ -20,7 +20,6 @@ const Messages = () => {
     const { id } = useParams();
     const params_user_id = id ? parseInt(id, 10) : NaN;
 
-
     const [chatUsers, setChatUsers] = useState<Message_User[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
     const [selectedUser, setSelectedUser] = useState<Message_User | null>(null);
@@ -32,13 +31,14 @@ const Messages = () => {
 
     useEffect(() => {
         if (params_user_id && chatUsers) {
-            const params_user: Message_User | undefined = chatUsers.find((user) => {
-                return user.id === params_user_id;
-            })
+            const params_user: Message_User | undefined = chatUsers.find(
+                (user) => {
+                    return user.id === params_user_id;
+                }
+            );
             if (params_user) {
                 setSelectedUser(params_user);
             }
-
         }
 
         if (selectedUser && currentUser) {
@@ -58,7 +58,7 @@ const Messages = () => {
                             (m.message_content ===
                                 "--Service Inquiry Accepted--" ||
                                 m.message_content ===
-                                "--Service Inquiry Declined--")
+                                    "--Service Inquiry Declined--")
                     )
             );
 
@@ -154,20 +154,20 @@ const Messages = () => {
 
         const handleNewMessage = () => {
             fetchMessages();
-        }
-        window.addEventListener('newMessage', handleNewMessage);
+        };
+        window.addEventListener("newMessage", handleNewMessage);
         fetchMessages();
         return () => {
-            window.removeEventListener('newMessage', handleNewMessage);
+            window.removeEventListener("newMessage", handleNewMessage);
         };
     }, [currentUser]);
 
     const filteredMessages = selectedUser
         ? messages.filter(
-            (message) =>
-                message.sender_id === selectedUser.id ||
-                message.receiver_id === selectedUser.id
-        )
+              (message) =>
+                  message.sender_id === selectedUser.id ||
+                  message.receiver_id === selectedUser.id
+          )
         : [];
 
     if (messages.length === 0 && !loading) {
@@ -298,16 +298,14 @@ const Messages = () => {
                             : "Select a user to start chatting"}
                     </h2>
 
-                    {currentUser?.is_business &&
-                        selectedUser &&
-                        !selectedUser.is_verified && (
-                            <Button
-                                onClick={verifyUser}
-                                className="bg-green-600 hover:bg-green-700 text-white"
-                            >
-                                Complete Transaction
-                            </Button>
-                        )}
+                    {currentUser?.is_business && selectedUser && (
+                        <Button
+                            onClick={verifyUser}
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                        >
+                            Complete Transaction
+                        </Button>
+                    )}
 
                     {selectedUser?.is_verified && (
                         <span className="text-green-600 flex items-center">
@@ -315,7 +313,11 @@ const Messages = () => {
                             Verified
                         </span>
                     )}
-                    {selectedUser ? <ReportButton type="user" id={selectedUser.id} /> : ""}
+                    {selectedUser ? (
+                        <ReportButton type="user" id={selectedUser.id} />
+                    ) : (
+                        ""
+                    )}
                 </div>
 
                 <div className="flex-1 p-4 overflow-y-auto">
@@ -347,7 +349,7 @@ const Messages = () => {
                                             key={message.id}
                                             variant={
                                                 message.sender_id ===
-                                                    selectedUser.id
+                                                selectedUser.id
                                                     ? "received"
                                                     : "sent"
                                             }
@@ -355,25 +357,25 @@ const Messages = () => {
                                             <ChatBubbleAvatar
                                                 src={
                                                     message.sender_id ===
-                                                        selectedUser.id
+                                                    selectedUser.id
                                                         ? "2"
                                                         : "1"
                                                 }
                                                 fallback={
                                                     message.sender_id ===
-                                                        selectedUser.id
+                                                    selectedUser.id
                                                         ? selectedUser.username
-                                                            .substring(0, 2)
-                                                            .toUpperCase()
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
                                                         : message.receiver_username
-                                                            .substring(0, 2)
-                                                            .toUpperCase()
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
                                                 }
                                             />
                                             <ChatBubbleMessage
                                                 variant={
                                                     message.sender_id ===
-                                                        selectedUser.id
+                                                    selectedUser.id
                                                         ? "received"
                                                         : "sent"
                                                 }
@@ -406,8 +408,10 @@ const Messages = () => {
                             className="flex-1"
                             value={messageContent}
                             onChange={(e) => setMessageContent(e.target.value)}
-                            onKeyDown={async (e) => { // Add onKeyDown handler
-                                if (e.key === 'Enter' && !e.shiftKey) { // Check for Enter key and not Shift+Enter
+                            onKeyDown={async (e) => {
+                                // Add onKeyDown handler
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                    // Check for Enter key and not Shift+Enter
                                     e.preventDefault(); // Prevent default newline behavior
                                     try {
                                         await sendMessage(
