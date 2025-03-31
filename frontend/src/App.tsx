@@ -13,6 +13,7 @@ import Profile from "@/_root/pages/Profile.tsx";
 import ProductListing from "./_root/pages/ProductListing";
 import { Toaster } from "./components/ui/sonner";
 import Products from "./_root/pages/Search";
+import Reports from "./_root/pages/Reports";
 
 const App = () => {
     const location = useLocation();
@@ -51,6 +52,7 @@ const App = () => {
                         <Route path="/product-listing" element={<ProductListing />} />
                         <Route path="/services" element={<Services />} />
                         <Route path="/about-us" element={<AboutUs />} />
+                        <Route path="/reports" element={<Reports />} />
                     </Route>
                 </Routes>
             </main>

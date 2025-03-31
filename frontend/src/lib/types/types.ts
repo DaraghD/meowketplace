@@ -80,7 +80,16 @@ export interface Product {
     imageCount: number;
 }
 
-interface Reply {
+export interface Report {
+    id: number;
+    reportStatus: 'PENDING' | 'RESOLVED' | 'IGNORED';
+    user: userData;
+    reportType: 'PRODUCT' | 'REVIEW' | 'USER';
+    reportTypeId: number;
+    reportReason: string;
+}
+
+export interface Reply {
     id: number;
     username: String;
     user_id: number;

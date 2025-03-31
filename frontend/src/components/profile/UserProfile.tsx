@@ -1,8 +1,12 @@
 import { userData } from "@/lib/types/types";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { useNavigate } from "react-router-dom";
 import { Context } from "@/context.tsx";
+import { Card, CardContent } from "../ui/card";
+import ReportCard from "../ReportCard";
+import { Report } from '@/lib/types/types.ts'
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 
 interface UserProfileProps {
     user: userData;
@@ -10,6 +14,7 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     const navigate = useNavigate();
+    const [reports, setReports] = useState<Report[] | null>(null);
     const context = useContext(Context);
     if (!context) return null;
     const { logout } = context;
@@ -29,6 +34,27 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         }
     };
 
+    useEffect(() => {
+        const fetchReports = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/report', {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data: Report[] = await response.json();
+                setReports(data);
+            } catch (err) {
+                console.log(err);
+            };
+
+        }
+        fetchReports();
+    }, []);
     const uploadPicture = async () => {
         const formData = new FormData();
 
@@ -73,6 +99,31 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                     <p className="text-lg mb-2 underline cursor-help" title={verification_hint}>
                         {user.is_verified ? "Verified" : "Not Verified"}
                     </p>
+                    <Drawer>
+                        <DrawerTrigger>
+                            <Button>View Reports</Button>
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle>User Reports</DrawerTitle>
+                                <DrawerDescription>
+                                    Reports for this user.
+                                </DrawerDescription>
+                            </DrawerHeader>
+                            <div className="p-4 overflow-y-auto">
+                                {reports && reports.map((report) => (
+                                    <ReportCard key={report.id} report={report} />
+                                ))}
+                                {reports && reports.length === 0 && (
+                                    <Card>
+                                        <CardContent>
+                                            <p>No reports found.</p>
+                                        </CardContent>
+                                    </Card>
+                                )}
+                            </div>
+                        </DrawerContent>
+                    </Drawer>
                     <Button onClick={() => {
                         logout();
                     }} className="bg-red-500 text-white rounded hover:bg-red-400"
@@ -100,6 +151,5 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             </div>
         </div>
     );
-}
-    ;
+};
 export default UserProfile;
