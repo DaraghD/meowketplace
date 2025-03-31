@@ -45,28 +45,16 @@ const RootLayout = () => {
 
                     <div className="flex space-x-4 mr-5 items-center">
                         <button
-                            onClick={() => navigate("/search")}
-                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
-                        >
-                            Search
-                        </button>
-                        <button
                             onClick={() => navigate("/services")}
                             className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
                         >
-                            Services
+                            Services🦴
                         </button>
                         <button
                             onClick={() => navigate("/messages")}
-                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+                            className="text-black hover:text-white hover:bg-black px-4 pr-5 py-2 rounded transition-colors duration-200 cursor-pointer"
                         >
-                            Messages
-                        </button>
-                        <button
-                            onClick={() => navigate("/about-us")}
-                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
-                        >
-                            About us
+                            Messages✉
                         </button>
                         <button
                             className="cursor-pointer"
@@ -135,7 +123,8 @@ const RootLayout = () => {
                         </MenubarContent>
                         <img
                             src="/assets/icons/logo.png"
-                            className="w-auto h-14 ml-auto pr-3"
+                            className="w-auto h-14 ml-auto pr-3 cursor-pointer"
+                            onClick={handleLogoClick}
                         />
                     </MenubarMenu>
                 </Menubar>
@@ -154,7 +143,7 @@ const RootLayout = () => {
                                 Castletroy, Co. Limerick, V94 T9PX
                             </li>
                             <li className="text-sm mb-2">
-                                contact@meowketplace.ie
+                                contact @ meowketplace.ie
                             </li>
                             <li className="text-sm mb-2">+353 061 202700</li>
                         </ul>
@@ -169,7 +158,7 @@ const RootLayout = () => {
                             <li className="text-sm mb-2">Blog</li>
                         </ul>
                     </li>
-                    <li className="text-xs inline w-1/5 m-6">
+                    <li className="hidden md:inline text-xs w-1/5 m-6">
                         <h2 className="text-lg mb-4 text-center">Socials</h2>
                         <ul>
                             <li>
