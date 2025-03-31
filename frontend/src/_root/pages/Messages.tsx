@@ -27,6 +27,7 @@ const Messages = () => {
     const [messageContent, setMessageContent] = useState<string>("");
     const [loading, setLoading] = useState(true);
     const [hasPendingInquiry, setHasPendingInquiry] = useState(false);
+    const [isVerify, setIsVerify] = useState(false);
 
     useEffect(() => {
         if (params_user_id && chatUsers) {
@@ -201,6 +202,8 @@ const Messages = () => {
     const verifyUser = async () => {
         if (!selectedUser || !currentUser) return;
 
+        setIsVerify(true);
+
         try {
             const response = await fetch(
                 `http://localhost:8080/api/user/verify`,
@@ -305,6 +308,7 @@ const Messages = () => {
                     {currentUser?.is_business && selectedUser && (
                         <Button
                             onClick={verifyUser}
+                            disabled={isVerify}
                             className="bg-green-600 hover:bg-green-700 text-white"
                         >
                             Complete Transaction
