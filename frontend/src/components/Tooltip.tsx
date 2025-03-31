@@ -78,7 +78,7 @@ const Tooltip = () => {
                 </li>
                 <li className="icon-content">
                     <a
-                        href="https://youtube.com/"
+                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
                         aria-label="Youtube"
                         data-social="youtube"
                     >
