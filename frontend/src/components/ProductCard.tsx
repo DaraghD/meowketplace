@@ -31,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <img
                 src={thumbnail}
                 alt={product.name}
-                className="h-full w-32 flex-shrink-0 object-cover rounded-l-lg"
+                className="h-full w-46 flex-shrink-0 object-cover rounded-l-lg"
             />
 
             <div className="flex flex-col justify-center p-4 flex-grow">
