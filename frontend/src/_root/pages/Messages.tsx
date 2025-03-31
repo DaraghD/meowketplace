@@ -355,19 +355,22 @@ const Messages = () => {
                                             }
                                         >
                                             <ChatBubbleAvatar
-                                                src={
+                                                src={`http://localhost:8080/api/user/picture/${
                                                     message.sender_id ===
                                                     selectedUser.id
-                                                        ? "2"
-                                                        : "1"
-                                                }
+                                                        ? selectedUser.id
+                                                        : currentUser?.id
+                                                }`}
                                                 fallback={
                                                     message.sender_id ===
                                                     selectedUser.id
                                                         ? selectedUser.username
                                                               .substring(0, 2)
                                                               .toUpperCase()
-                                                        : message.receiver_username
+                                                        : (
+                                                              currentUser?.username ||
+                                                              ""
+                                                          )
                                                               .substring(0, 2)
                                                               .toUpperCase()
                                                 }
