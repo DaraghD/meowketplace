@@ -266,13 +266,13 @@ const Reviews: React.FC<ReviewProps> = ({
                             {" "}
                             <p>{review.review_content}</p>{" "}
                         </div>{" "}
-                        <div className="flex gap-1">
+                        <div className="flex gap-1 items-center">
                             {" "}
                             <Dialog
                                 open={isDialogOpen}
                                 onOpenChange={setIsDialogOpen}
                             >
-                                <DialogTrigger>
+                                <DialogTrigger asChild>
                                     <Button
                                         className="cursor-pointer "
                                         onClick={() => setIsDialogOpen(true)}
