@@ -30,6 +30,10 @@ public class ReviewService {
         if (r.getStars() > 5 || r.getStars() < 0)
             throw new Exception("Stars must be between 0 and 5");
 
+        for (Review re : product.getReviews()) {
+            if (re.getUser().getId() == user.getId())
+                throw new Exception("You have already reviewed this product");
+        }
         // update business review count and rating score
         User business = product.getUser();
         business.setReview_count(business.getReview_count() + 1);
@@ -61,4 +65,11 @@ public class ReviewService {
     public Review getReviewById(Long id) {
         return reviewRepository.findById(id).get();
     }
+
+    public void deleteReview(User user, Review review) throws Exception {
+        if (user.getId() != review.getUser().getId() || !user.isIs_admin())
+            throw new Exception("User unauthorized to delete review");
+        reviewRepository.delete(review);
+    }
+
 }
