@@ -69,7 +69,7 @@ const Products = () => {
     // component that takes in product as prop, loop over products and fill in components
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
-            <div className="w-full max-w-lg">
+            <div className="w-full max-w-lg mt-8">
                 <input
                     type="text"
                     className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
@@ -78,37 +78,50 @@ const Products = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 mt-6 mb-6">
+                <div className="relative">
+                <div className="absolute text-gray-500 top-1/2 transform -translate-y-1/2 ml-1" >€</div>
                 <input
                     type="number"
-                    className="w-1/2 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
                     placeholder="Min Price"
                     value={minPrice}
+                    min="0"
                     onChange={(e) => setMinPrice(e.target.value)}
                 />
+                </div>
+                <div className="relative">
+                <div className="absolute text-gray-500 top-1/2 transform -translate-y-1/2 ml-1">€</div>
                 <input
                     type="number"
-                    className="w-1/2 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
                     placeholder="Max Price"
                     value={maxPrice}
+                    min="0"
                     onChange={(e) => setMaxPrice(e.target.value)}
                 />
+</div>
                 <input
                     type="number"
                     className="w-1/3 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
                     placeholder="Stars"
                     value={minStars}
+                    min="0"
+                    max="5"
                     onChange={(e) => setMinStars(e.target.value)}
                 />
             </div>
 
-            <ul className="flex flex-col items-center space-y-4 mt-6">
+            {filteredProducts.length === 0 ? (
+    <p className="text-gray-500 mt-8">No products found...</p>
+) : (
+            <ul className="flex flex-col items-center space-y-4 mt-8">
                 {filteredProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                 ))}
             </ul>
-        </div >
-    );
-};
-
+)}
+</div>
+)
+}
 export default Products;

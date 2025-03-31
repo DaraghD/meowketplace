@@ -1,3 +1,4 @@
 /.idea/*
 backend/build
 **/backend/uploads/
+.idea/dataSources.xml
