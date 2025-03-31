@@ -58,4 +58,7 @@ public class ReviewService {
         reviewRepository.save(parent);
     }
 
+    public Review getReviewById(Long id) {
+        return reviewRepository.findById(id).get();
+    }
 }

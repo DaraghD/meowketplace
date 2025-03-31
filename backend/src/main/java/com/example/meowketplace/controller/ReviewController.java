@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.ReviewRequest;
+import com.example.meowketplace.dto.DeleteReviewRequest;
 import com.example.meowketplace.model.Product;
+import com.example.meowketplace.model.Review;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.service.ProductService;
 import com.example.meowketplace.service.ReviewService;
@@ -35,6 +38,29 @@ public class ReviewController {
         this.userService = userService;
         this.productService = productService;
         this.jwtUtil = jwtUtil;
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteReview(@RequestBody DeleteReviewRequest review_req,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                String id = jwtUtil.extractUserID(token);
+                System.out.println(id);
+                jwtUtil.validateToken(token, id);
+
+                User user = userService.getUserById(Long.parseLong(id));
+                Review review = reviewService.getReviewById(review_req.getId());
+                reviewService.deleteReview(user, review);
+
+                return ResponseEntity.status(HttpStatus.OK).body("Review successfully deleted");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error");
     }
 
     @PostMapping
