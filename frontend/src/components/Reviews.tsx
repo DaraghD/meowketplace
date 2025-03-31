@@ -370,7 +370,7 @@ const Reviews: React.FC<ReviewProps> = ({
                                             className="flex items-start gap-2"
                                         >
                                             <Avatar className="h-6 w-6">
-                                                <AvatarImage src="http://localhost:8080/api/user/picture/${reply.user.id}" />
+                                                <AvatarImage src={`http://localhost:8080/api/user/picture/${review.user_id}`} />{" "}
                                                 <AvatarFallback>
                                                     0
                                                 </AvatarFallback>
