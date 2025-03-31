@@ -93,8 +93,7 @@ const Reviews: React.FC<ReviewProps> = ({
         console.log("Data sent to backend");
     }
 
-    const [, setVisibleReviews] = useState(2);
-    // const [visibleReviews, setVisibleReviews] = useState(2); //TODO: use this later
+    const [visibleReviews, setVisibleReviews] = useState(2); //TODO: use this later
     const [showReplies, setShowReplies] = useState<Record<number, boolean>>({});
 
     const loadMoreReviews = () => {
@@ -226,7 +225,7 @@ const Reviews: React.FC<ReviewProps> = ({
         <div className="flex flex-col p-5">
             {" "}
             <p className="mb-3">Latest Reviews</p>{" "}
-            {reviews?.map((review) => (
+            {reviews?.slice(0, visibleReviews).map((review) => (
                 <div key={review.id} className="border-b pb-4 mb-4">
                     {" "}
                     <div className="flex justify-between p-2">
