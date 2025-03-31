@@ -131,8 +131,7 @@ const RootLayout = () => {
                 <Outlet />
             </section>
 
-            <footer className="bg-200 p-6 border-t border-gray">
-
+            <footer className="bg-gray-200 p-6 border-t border-gray">
                 <ul className="flex">
                     <li className="m-6 w-1/5 t-1/2">
                         <img 
