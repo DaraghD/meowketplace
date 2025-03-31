@@ -39,6 +39,7 @@ const Reviews: React.FC<ReviewProps> = ({
     productID,
 }) => {
     const [reviews, setReviews] = useState(initialReviews);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const refreshReviews = async () => {
         try {
@@ -61,7 +62,6 @@ const Reviews: React.FC<ReviewProps> = ({
     });
 
     async function onSubmit(values: z.infer<typeof ReviewValidation>) {
-        console.log("submit!");
         try {
             const payload = {
                 ...values,
@@ -79,7 +79,13 @@ const Reviews: React.FC<ReviewProps> = ({
             });
             if (response.status === 200) {
                 console.log("success");
+                setIsDrawerOpen(false);
+                toast.success("Review made");
                 await refreshReviews();
+            } else {
+                setIsDrawerOpen(false);
+                const msg = await response.text();
+                toast.error(msg);
             }
         } catch (error) {
             console.log(error);
@@ -134,7 +140,7 @@ const Reviews: React.FC<ReviewProps> = ({
                     No reviews for this product
                 </div>
                 <div className="flex p-5 justify-end">
-                    <Drawer>
+                    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                         <DrawerTrigger>
                             <Button className="cursor-pointer">
                                 Leave a Review
@@ -326,7 +332,7 @@ const Reviews: React.FC<ReviewProps> = ({
                         Load More...
                     </Button>
                 </div>
-                <Drawer>
+                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <DrawerTrigger>
                         <Button className="cursor-pointer">
                             Leave a Review
