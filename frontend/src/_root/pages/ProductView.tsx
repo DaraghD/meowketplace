@@ -66,7 +66,7 @@ const ProductView = () => {
 
         try {
             await sendMessage(
-                `--Service Inquiry--\n ${selectedTier}`,
+                `--Service Inquiry--\n ${selectedTier?.name}`,
                 user.id,
                 product.user.id
             );
@@ -117,8 +117,9 @@ const ProductView = () => {
                                         <div className="aspect-square md:aspect-[4/3] w-full relative">
                                             <img
                                                 src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
-                                                alt={`Product image ${index + 1
-                                                    }`}
+                                                alt={`Product image ${
+                                                    index + 1
+                                                }`}
                                                 className="w-full h-full object-contain rounded-lg"
                                             />
                                         </div>
@@ -136,7 +137,9 @@ const ProductView = () => {
                 </div>
                 <div className="pl-10 flex flex-col p-5 gap-4 w-full md:w-1/2">
                     <div className="flex">
-                        <h1 className="text-3xl font-bold pt-5">{product?.name}</h1>
+                        <h1 className="text-3xl font-bold pt-5">
+                            {product?.name}
+                        </h1>
                         <DropdownMenu>
                             <DropdownMenuTrigger className="pl-5 pt-5">
                                 <Button className="cursor-pointer ">
@@ -167,7 +170,9 @@ const ProductView = () => {
                         onClick={sendServiceInquiry}
                     >
                         Send Service Inquiry{" "}
-                        {selectedTier?.name == "" ? "" : `for ${selectedTier}`}{" "}
+                        {selectedTier?.name == ""
+                            ? ""
+                            : `for ${selectedTier?.name}`}{" "}
                         <span>
                             <img
                                 src="/assets/icons/MessageIcon.png"
