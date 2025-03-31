@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Message } from "@/lib/types/types";
 
@@ -13,13 +14,19 @@ export const ServiceInquiryMessage = ({
     onResponse,
 }: ServiceInquiryMessageProps) => {
     const isReceiver = message.receiver_id === currentUserId;
+    const [isResponded, setIsResponded] = useState(false);
+
+    const handleResponse = async (response: string) => {
+        setIsResponded(true);
+        await onResponse(response);
+    };
 
     const handleAccept = async () => {
-        await onResponse("--Service Inquiry Accepted--");
+        await handleResponse("--Service Inquiry Accepted--");
     };
 
     const handleDecline = async () => {
-        await onResponse("--Service Inquiry Declined--");
+        await handleResponse("--Service Inquiry Declined--");
     };
 
     return (
@@ -30,12 +37,14 @@ export const ServiceInquiryMessage = ({
                     <Button
                         onClick={handleAccept}
                         className="bg-green-500 hover:bg-green-600 text-white"
+                        disabled={isResponded}
                     >
                         Accept
                     </Button>
                     <Button
                         onClick={handleDecline}
                         className="bg-red-500 hover:bg-red-600 text-white"
+                        disabled={isResponded}
                     >
                         Decline
                     </Button>
