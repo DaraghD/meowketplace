@@ -16,7 +16,7 @@ const Services = () => {
     };
 
     return (
-        <div className="max-w-screen-lg mx-auto px-4 py-8">
+        <div className="min-h-screen max-w-screen-lg mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold text-center text-blue-600 mb-4">Choose Your Option</h1>
             <p className="text-xl text-center mb-6">
                 Welcome to Meowketplace! What would you like to do today? 🐾
