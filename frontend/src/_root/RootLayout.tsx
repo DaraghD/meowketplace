@@ -133,7 +133,7 @@ const RootLayout = () => {
 
             <footer className="bg-gray-200 p-6 border-t border-gray">
                 <ul className="flex">
-                    <li className="m-6 w-1/5 t-1/2">
+                    <li className="m-6 w-1/5 h-1/2">
                         <img 
                         className="w-44 h-auto"
                             src="/assets/icons/logo.png"
