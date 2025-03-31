@@ -128,9 +128,29 @@ const Reviews: React.FC<ReviewProps> = ({
     const { user } = context;
 
     const sendReply = async (reviewId: number) => {
-        if (reviewId) {
-            toast("bruh");
+        try {
+            const payload = {
+                review_id: reviewId,
+                product_id: productID,
+                reply_content: replyContent,
+            };
+
+            const response = await fetch("http://localhost:8080/api/reply", {
+                //todo endpoint
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify(payload),
+            });
+            if (response.status === 200) {
+                console.log("success");
+            }
+        } catch (error) {
+            console.log(error);
         }
+        console.log("Data sent to backend");
     };
 
     const sendServiceInquiry = async (reviewUserId: number) => {
