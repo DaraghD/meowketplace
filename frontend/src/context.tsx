@@ -38,8 +38,8 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                     }
                 );
 
-                window.dispatchEvent(new Event('newMessage'));
             }
+            window.dispatchEvent(new Event('newMessage'));
         };
     }
 
