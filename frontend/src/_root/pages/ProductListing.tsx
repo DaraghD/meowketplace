@@ -148,7 +148,7 @@ const ProductListing = () => {
                 )}
             </div>
 
-            <div className="flex flex-col w-1/2 p-5 space-y-3">
+            <div className="flex flex-col w-full md:w-1/2 p-5 space-y-3">
                 <h2 className="text-xl font-bold">Add a Product to Sell!</h2>
                 <Form {...form}>
                     <form
