@@ -39,6 +39,12 @@ const RootLayout = () => {
 
                     <div className="flex space-x-4 mr-5 items-center">
                         <button
+                            onClick={() => navigate("/search")}
+                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+                        >
+                            Search
+                        </button>
+                        <button
                             onClick={() => navigate("/services")}
                             className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
                         >
@@ -124,7 +130,51 @@ const RootLayout = () => {
             <section>
                 <Outlet />
             </section>
+
+            <footer className="bg-200 p-6 border-t border-gray">
+
+                <ul className="flex">
+                    <li className="m-6 w-1/5 t-1/2">
+                        <img 
+                        className="w-44 h-auto"
+                            src="/assets/icons/logo.png"
+                        />
+                    </li>
+                    <li className="text-xs inline w-1/5 m-6">
+                        <h2 className="text-lg mb-4">About Us</h2>
+                        <span className="text-sm">All-in-one pet services with a personal touch. Whether it's grooming, sitting, or walking, we have everything your pet needs.
+                            Expert care that understands the bond you share with your furry friend!.</span>
+                    </li>
+                    <li className="text-xs inline w-1/5 m-6">
+                        <h2 className="text-lg mb-4">Contact Us</h2>
+                        <ul>
+                        <li className="text-sm mb-2">Address: Castletroy, Co. Limerick, V94 T9PX</li>
+                        <li className="text-sm mb-2">Email: contact@meowketplace.ie</li>
+                        <li className="text-sm mb-2">Phone: +353 061 202700</li>
+                        </ul>
+                    </li>
+                    <li className="text-xs inline w-1/5 m-6">
+                        <h2 className="text-lg mb-4" >Services</h2>
+                        <ul>
+                        <li className="text-sm mb-2">Pet Grooming</li>
+                        <li className="text-sm mb-2">Pet Sitting</li>
+                        <li className="text-sm mb-2">Dog Walking</li>
+                        <li className="text-sm mb-2">Pet Training</li>
+                        </ul>
+                    </li>
+                    <li className="text-xs w-1/5 m-6">
+                        <h2 className="text-lg mb-4">Links</h2>
+                        <div className="flex flex-col">
+                        <a className="text-sm mb-2" href="/home">Home</a>
+                        <a className="text-sm mb-2" href="/search">Search</a>
+                        <a className="text-sm mb-2" href="/services">Services</a>
+                        <a className="text-sm mb-2" href="/about-us">About Us</a>
+                        </div>
+                    </li>
+                </ul>
+            </footer>
         </>
+
     );
 };
 
