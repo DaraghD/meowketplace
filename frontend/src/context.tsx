@@ -1,5 +1,8 @@
 import { userData } from "@/lib/types/types.ts";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 export const Context = React.createContext<
     | {
@@ -14,6 +17,15 @@ export const Context = React.createContext<
 const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<userData | null>(null);
     const [isAuthenticated, setAuthentication] = useState<boolean>(false);
+    const [stompClient, setStompClient] = useState<Stomp.Client | null>(null);
+
+    const sendMessageNotification = async (wsMessage: String) => {
+        if (user) {
+            console.log("Fetching new messages for user:", user.id);
+            toast.success(wsMessage);
+            window.dispatchEvent(new Event('newMessage'));
+        }
+    };
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -47,6 +59,26 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
         checkAuth();
     }, []); // Only run once on mount
+
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            const socket = new SockJS('http://localhost:8080/ws');
+            const client = Stomp.over(socket);
+
+            client.connect({}, () => {
+                client.subscribe(`/topic/messages/${user.id}`, (message: Stomp.Message) => {
+                    const wsMessage = message.body;
+                    sendMessageNotification(wsMessage);
+                });
+                setStompClient(client);
+            });
+            return () => {
+                if (stompClient) {
+                    stompClient.disconnect(() => { console.log("disconnecting"); });
+                }
+            }
+        }
+    }, [isAuthenticated, user]);
     // Function to log out and reset context state
     const logout = () => {
         localStorage.removeItem("token"); // Remove stored token

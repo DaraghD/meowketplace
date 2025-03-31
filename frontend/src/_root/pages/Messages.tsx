@@ -29,30 +29,25 @@ const Messages = () => {
         if (selectedUser && currentUser) {
             const hasUnrespondedInquiry = messages.some(
                 (message) =>
-                    (message.sender_id === selectedUser.id ||
-                        message.receiver_id === selectedUser.id) &&
+                    ((message.sender_id === selectedUser.id &&
+                        message.receiver_id === currentUser.id) ||
+                        (message.receiver_id === selectedUser.id &&
+                            message.sender_id === currentUser.id)) &&
                     message.message_content.startsWith("--Service Inquiry--") &&
                     !messages.some(
                         (m) =>
-                            (m.sender_id === currentUser.id ||
-                                m.receiver_id === currentUser.id) &&
+                            ((m.sender_id === currentUser.id &&
+                                m.receiver_id === selectedUser.id) ||
+                                (m.receiver_id === currentUser.id &&
+                                    m.sender_id === selectedUser.id)) &&
                             (m.message_content ===
                                 "--Service Inquiry Accepted--" ||
                                 m.message_content ===
-                                    "--Service Inquiry Declined--")
+                                "--Service Inquiry Declined--")
                     )
             );
 
-            const hasCompletedTransaction = messages.some(
-                (message) =>
-                    (message.sender_id === currentUser.id ||
-                        message.receiver_id === currentUser.id) &&
-                    message.message_content === "--Transaction Completed--"
-            );
-
-            setHasPendingInquiry(
-                hasUnrespondedInquiry || hasCompletedTransaction
-            );
+            setHasPendingInquiry(hasUnrespondedInquiry);
         }
     }, [selectedUser, messages, currentUser]);
 
@@ -142,19 +137,22 @@ const Messages = () => {
             }
         };
 
-        if (currentUser) {
+        const handleNewMessage = () => {
             fetchMessages();
-            const pollingInterval = setInterval(fetchMessages, 5000);
-            return () => clearInterval(pollingInterval);
         }
+        window.addEventListener('newMessage', handleNewMessage);
+        fetchMessages();
+        return () => {
+            window.removeEventListener('newMessage', handleNewMessage);
+        };
     }, [currentUser]);
 
     const filteredMessages = selectedUser
         ? messages.filter(
-              (message) =>
-                  message.sender_id === selectedUser.id ||
-                  message.receiver_id === selectedUser.id
-          )
+            (message) =>
+                message.sender_id === selectedUser.id ||
+                message.receiver_id === selectedUser.id
+        )
         : [];
 
     if (messages.length === 0 && !loading) {
@@ -228,7 +226,7 @@ const Messages = () => {
                 selectedUser.id
             );
 
-            toast.success("Transaction completed successfully!");
+            toast.success("User verified successfully!");
         } catch (error) {
             console.error("Error verifying user:", error);
             toast.error(
@@ -285,13 +283,22 @@ const Messages = () => {
                             : "Select a user to start chatting"}
                     </h2>
 
-                    {currentUser?.is_business && selectedUser && (
-                        <Button
-                            onClick={verifyUser}
-                            className="bg-green-600 hover:bg-green-700 text-white"
-                        >
-                            Complete Transaction
-                        </Button>
+                    {currentUser?.is_business &&
+                        selectedUser &&
+                        !selectedUser.is_verified && (
+                            <Button
+                                onClick={verifyUser}
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                            >
+                                Complete Transaction
+                            </Button>
+                        )}
+
+                    {selectedUser?.is_verified && (
+                        <span className="text-green-600 flex items-center">
+                            <CheckCircle className="w-5 h-5 mr-1" />
+                            Verified
+                        </span>
                     )}
                 </div>
 
@@ -324,35 +331,35 @@ const Messages = () => {
                                             key={message.id}
                                             variant={
                                                 message.sender_id ===
-                                                selectedUser.id
-                                                    ? "sent"
-                                                    : "received"
+                                                    selectedUser.id
+                                                    ? "received"
+                                                    : "sent"
                                             }
                                         >
                                             <ChatBubbleAvatar
                                                 src={
                                                     message.sender_id ===
-                                                    selectedUser.id
-                                                        ? "1"
-                                                        : "2"
+                                                        selectedUser.id
+                                                        ? "2"
+                                                        : "1"
                                                 }
                                                 fallback={
                                                     message.sender_id ===
-                                                    selectedUser.id
+                                                        selectedUser.id
                                                         ? selectedUser.username
-                                                              .substring(0, 2)
-                                                              .toUpperCase()
+                                                            .substring(0, 2)
+                                                            .toUpperCase()
                                                         : message.receiver_username
-                                                              .substring(0, 2)
-                                                              .toUpperCase()
+                                                            .substring(0, 2)
+                                                            .toUpperCase()
                                                 }
                                             />
                                             <ChatBubbleMessage
                                                 variant={
                                                     message.sender_id ===
-                                                    selectedUser.id
-                                                        ? "sent"
-                                                        : "received"
+                                                        selectedUser.id
+                                                        ? "received"
+                                                        : "sent"
                                                 }
                                             >
                                                 {message.message_content}
@@ -371,13 +378,8 @@ const Messages = () => {
 
                 {hasPendingInquiry && (
                     <div className="p-2 text-center text-sm text-gray-500 bg-gray-100">
-                        {messages.some(
-                            (m) =>
-                                m.message_content ===
-                                "--Transaction Completed--"
-                        )
-                            ? "Chat disabled - please initiate a new service inquiry"
-                            : "Please respond to the service inquiry to continue chatting"}
+                        Please respond to the service inquiry to continue
+                        chatting
                     </div>
                 )}
 
