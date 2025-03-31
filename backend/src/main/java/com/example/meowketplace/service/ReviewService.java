@@ -36,14 +36,16 @@ public class ReviewService {
         }
         // update business review count and rating score
         User business = product.getUser();
+        var rating = (business.getBusiness_rating() * business.getReview_count() + r.getStars())
+                / (business.getReview_count() + 1);
         business.setReview_count(business.getReview_count() + 1);
-        Double rating = (business.getBusiness_rating() + r.getStars()) / business.getReview_count();
         business.setBusiness_rating(rating);
         userRepository.save(business);
 
         // update product review count and rating score
+        Double p_rating = (product.getStarRating() * product.getReview_count() + r.getStars())
+                / (product.getReview_count() + 1);
         product.setReview_count(product.getReview_count() + 1);
-        Double p_rating = (product.getStarRating() + r.getStars()) / product.getReview_count();
         product.setStarRating(p_rating);
 
         Review review = new Review(r, product, user);
