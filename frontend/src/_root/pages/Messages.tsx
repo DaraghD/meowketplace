@@ -13,7 +13,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { sendMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
-import { CheckCircle } from "lucide-react";
 import ReportButton from "@/components/Report";
 
 const Messages = () => {
@@ -307,12 +306,6 @@ const Messages = () => {
                         </Button>
                     )}
 
-                    {selectedUser?.is_verified && (
-                        <span className="text-green-600 flex items-center">
-                            <CheckCircle className="w-5 h-5 mr-1" />
-                            Verified
-                        </span>
-                    )}
                     {selectedUser ? (
                         <ReportButton type="user" id={selectedUser.id} />
                     ) : (
