@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class ReviewResponse {
+    private Long id;
     // @JsonProperty("username")
     private String username;
     private String review_content;
@@ -26,6 +27,7 @@ public class ReviewResponse {
     }
 
     public ReviewResponse(Review r) {
+        this.id = r.getId();
         this.user_id = r.getUser().getId();
         this.username = r.getUser().getUsername();
         this.stars = r.getStarRating();
@@ -40,12 +42,21 @@ public class ReviewResponse {
         if (!isReply) {
             throw new IllegalArgumentException("This constructor should only be used for replies");
         }
+        this.id = reply.getId();
         this.username = reply.getUser().getUsername();
         this.user_id = reply.getUser().getId();
         this.stars = null;
         this.product_id = null;
         this.review_content = reply.getReviewText();
         this.replies = reply.getReplies().stream().map(r -> new ReviewResponse(r, true)).toList();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {

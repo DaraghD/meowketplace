@@ -54,10 +54,10 @@ const Reviews: React.FC<ReviewProps> = ({
     const refreshReviews = async () => {
         try {
             const response = await fetch(
-                `http://localhost:8080/api/service/${productID}/reviews`
+                `http://localhost:8080/api/service/${productID}`
             );
             const data = await response.json();
-            setReviews(data);
+            setReviews(data.reviews);
         } catch (error) {
             console.error("Error refreshing reviews", error);
         }
@@ -129,13 +129,16 @@ const Reviews: React.FC<ReviewProps> = ({
 
     const sendReply = async (reviewId: number) => {
         try {
+            console.log("sending reply?");
+            console.log(reviews);
             const payload = {
-                review_id: reviewId,
-                product_id: productID,
-                reply_content: replyContent,
+                review_content: replyContent,
+                parent_review_id: reviewId,
+                product_id: null,
+                stars: null,
             };
 
-            const response = await fetch("http://localhost:8080/api/reply", {
+            const response = await fetch("http://localhost:8080/api/review", {
                 //todo endpoint
                 method: "POST",
                 headers: {
@@ -274,7 +277,7 @@ const Reviews: React.FC<ReviewProps> = ({
                             {" "}
                             <Avatar>
                                 {" "}
-                                <AvatarImage src="http://localhost:8080/api/user/picture/${review.user.id}" />{" "}
+                                <AvatarImage src={`http://localhost:8080/api/user/picture/${review.user_id}`} />{" "}
                                 <AvatarFallback>
                                     {review.username}
                                 </AvatarFallback>{" "}
