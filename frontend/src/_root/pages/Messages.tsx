@@ -404,6 +404,21 @@ const Messages = () => {
                             className="flex-1"
                             value={messageContent}
                             onChange={(e) => setMessageContent(e.target.value)}
+                            onKeyDown={async (e) => { // Add onKeyDown handler
+                                if (e.key === 'Enter' && !e.shiftKey) { // Check for Enter key and not Shift+Enter
+                                    e.preventDefault(); // Prevent default newline behavior
+                                    try {
+                                        await sendMessage(
+                                            messageContent,
+                                            currentUser?.id,
+                                            selectedUser?.id
+                                        );
+                                        setMessageContent("");
+                                    } catch (error) {
+                                        console.error(error);
+                                    }
+                                }
+                            }}
                         />
                         <Button
                             className="bg-blue-500 hover:bg-blue-600 text-white"
