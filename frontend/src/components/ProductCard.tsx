@@ -26,18 +26,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             onClick={() => {
                 navigate(`/product/${product.id}`);
             }}
-            className="w-[50vw] h-32 border rounded-lg shadow-md bg-white flex cursor-pointer"// make this relative ? mobile/small screens?
+            className="w-[50vw] h-32 border rounded-lg shadow-md bg-white flex cursor-pointer" // make this relative ? mobile/small screens?
         >
             <img
                 src={thumbnail}
                 alt={product.name}
-                className="h-full w-24 object-cover rounded-l-lg"
+                className="h-full w-30 object-cover rounded-l-lg"
             />
 
             <div className="flex flex-col justify-center p-4 flex-grow">
                 <h2 className="text-lg font-bold">{product.name}</h2>
                 <p className="text-gray-700 text-sm">{product.productText}</p>
-                <p className="text-sm text-gray-500">⭐ {product.starRating ?? "No rating"}</p>
+                <p className="text-sm text-gray-500">
+                    ⭐ {product.starRating ?? "No rating"}
+                </p>
                 {product.tiers && product.tiers.length > 0 && (
                     <p className="text-sm text-gray-600">
                         Price: ${minPrice} - ${maxPrice}
@@ -45,9 +47,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 )}
             </div>
 
-            <div className="flex flex-col justify-center p-4 w-60">
+            <div className="hidden md:flex flex-col justify-center p-4 w-60">
                 <div className="flex items-center">
-                    <p className="text-sm font-semibold mr-2 max-w-[100px] truncate">{product.user.username}</p>
+                    <p className="text-sm font-semibold mr-2 max-w-[100px] truncate">
+                        {product.user.username}
+                    </p>
                     <Avatar className="h-8 w-8 rounded-full">
                         <AvatarImage
                             src={`http://localhost:8080/api/user/picture/${product.user?.id}`}
@@ -56,7 +60,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     </Avatar>
                 </div>
                 <p className="text-sm text-gray-500">
-                    Business Rating: {product.user.business_rating?.toFixed(2) ?? "No rating"}
+                    Business Rating:{" "}
+                    {product.user.business_rating?.toFixed(2) ?? "No rating"}
                 </p>
             </div>
         </div>
