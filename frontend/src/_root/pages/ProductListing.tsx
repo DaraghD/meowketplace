@@ -122,9 +122,9 @@ const ProductListing = () => {
     };
 
     return (
-        <div className="flex h-screen max-w-screen p-5">
+        <div className="flex flex-col md:flex-row max-w-screen p-5">
             <div
-                className="flex flex-col h-4/5 w-1/2 justify-center items-center border border-dashed border-gray-400 cursor-pointer"
+                className="flex flex-col min-h-[375px] w-1/2 justify-center items-center border border-dashed border-gray-400 cursor-pointer"
                 onClick={handleDivClick} // Make the div clickable
             >
                 {selectedImages.length > 0 ? ( // Conditionally render the images or the button

@@ -26,12 +26,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             onClick={() => {
                 navigate(`/product/${product.id}`);
             }}
-            className="w-[50vw] h-32 border rounded-lg shadow-md bg-white flex cursor-pointer" // make this relative ? mobile/small screens?
+            className="w-[75vw] h-40 border rounded-lg shadow-md bg-white flex cursor-pointer" // make this relative ? mobile/small screens?
         >
             <img
                 src={thumbnail}
                 alt={product.name}
-                className="h-full w-32 flex-shrink-0 object-cover rounded-l-lg"
+                className="p-2 h-full w-40 flex-shrink-0 object-cover rounded-l-lg"
             />
 
             <div className="flex flex-col justify-center p-4 flex-grow">
