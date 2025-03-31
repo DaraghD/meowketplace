@@ -26,7 +26,7 @@ const RootLayout = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <>
             <div className="hidden xl:block">
                 <div className="max-w-screen h-1/10 flex items-center justify-between pl-1">
                     <div className="flex items-center">
@@ -130,7 +130,7 @@ const RootLayout = () => {
                 </Menubar>
             </div>
 
-            <section className="flex-grow">
+            <section>
                 <Outlet />
             </section>
 
@@ -168,7 +168,7 @@ const RootLayout = () => {
                     </li>
                 </ul>
             </footer>
-        </div>
+        </>
     );
 };
 
