@@ -117,9 +117,8 @@ const ProductView = () => {
                                         <div className="aspect-square md:aspect-[4/3] w-full relative">
                                             <img
                                                 src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
-                                                alt={`Product image ${
-                                                    index + 1
-                                                }`}
+                                                alt={`Product image ${index + 1
+                                                    }`}
                                                 className="w-full h-full object-contain rounded-lg"
                                             />
                                         </div>
@@ -169,10 +168,9 @@ const ProductView = () => {
                         className="cursor-pointer mt-auto mb-10 flex"
                         onClick={sendServiceInquiry}
                     >
-                        Send Service Inquiry{" "}
-                        {selectedTier?.name == ""
-                            ? ""
-                            : `for ${selectedTier?.name}`}{" "}
+                        {selectedTier?.name == "" || selectedTier == null
+                            ? "Send general service inquiry"
+                            : `Send service inquiry for ${selectedTier?.name}`}{" "}
                         <span>
                             <img
                                 src="/assets/icons/MessageIcon.png"
