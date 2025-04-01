@@ -25,6 +25,7 @@ import { Context } from "@/context";
 import ReportButton from "@/components/Report";
 
 const ProductView = () => {
+    const [hasSentInquiry, setHasSentInquiry] = useState(false);
     const [product, setProduct] = useState<Product | null>();
     const [productLoading, setProductLoading] = useState<boolean>(true);
     const [selectedTier, setSelectedTier] = useState<{
@@ -58,7 +59,7 @@ const ProductView = () => {
     const { user } = context;
 
     const sendServiceInquiry = async () => {
-        if (!product) return;
+        if (!product || hasSentInquiry) return;
 
         if (!user) {
             toast.error("You need to be logged in to send a service inquiry");
@@ -72,6 +73,7 @@ const ProductView = () => {
                 product.user.id
             );
             toast.success("Response sent successfully");
+            setHasSentInquiry(true);
         } catch (error) {
             console.error("Error sending response:", error);
             toast.error("Failed to send response");
@@ -118,8 +120,9 @@ const ProductView = () => {
                                         <div className="aspect-square md:aspect-[4/3] w-full relative">
                                             <img
                                                 src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
-                                                alt={`Product image ${index + 1
-                                                    }`}
+                                                alt={`Product image ${
+                                                    index + 1
+                                                }`}
                                                 className="w-full h-full object-contain rounded-lg"
                                             />
                                         </div>
@@ -171,6 +174,7 @@ const ProductView = () => {
                     <Button
                         className="cursor-pointer mt-auto mb-10 flex"
                         onClick={sendServiceInquiry}
+                        disabled={hasSentInquiry}
                     >
                         {selectedTier?.name == "" || selectedTier == null
                             ? "Send general service inquiry"
