@@ -45,10 +45,16 @@ const RootLayout = () => {
 
                     <div className="flex space-x-4 mr-5 items-center">
                         <button
-                            onClick={() => navigate("/services")}
+                            onClick={() => navigate("/product-listing")}
                             className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
                         >
-                            Services🦴
+                            List Service🦴
+                        </button>
+                        <button
+                            onClick={() => navigate("/search")}
+                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+                        >
+                            Browse Services⚾
                         </button>
                         <button
                             onClick={() => navigate("/messages")}
@@ -111,8 +117,10 @@ const RootLayout = () => {
                                 Messages
                             </MenubarItem>
                             <MenubarSeparator />
-                            <MenubarItem className="cursor-pointer"
-                                onClick={() => navigate("/profile")}>
+                            <MenubarItem
+                                className="cursor-pointer"
+                                onClick={() => navigate("/profile")}
+                            >
                                 <span>Profile</span>{" "}
                                 <Avatar>
                                     <AvatarImage
