@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import { Context } from "@/context.tsx";
 import SignUpButton from "@/components/SignUpButton";
-import { Button } from "@/components/ui/button";
 
 const Home: React.FC = () => {
     const context = useContext(Context);
