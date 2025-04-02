@@ -25,6 +25,7 @@ const ProductListing = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedImages, setSelectedImages] = useState<string[]>([]); // State to store the image URLs
     const [userTags, setUserTags] = useState<string[]>([]); // State to store the user's tags
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
         const fetchUserTags = async () => {
@@ -76,6 +77,7 @@ const ProductListing = () => {
     });
 
     async function onSubmit(values: z.infer<typeof ProductListingValidation>) {
+        setIsSubmitted(true);
         const formData = new FormData();
 
         const product: AddProduct = {
@@ -299,7 +301,11 @@ const ProductListing = () => {
                             >
                                 Add Tier
                             </Button>
-                            <Button className="cursor-pointer" type="submit">
+                            <Button
+                                className="cursor-pointer"
+                                type="submit"
+                                disabled={isSubmitted}
+                            >
                                 Submit
                             </Button>
                         </div>
