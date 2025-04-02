@@ -298,7 +298,7 @@ const Messages = () => {
             </div>
 
             {/* Chat Area */}
-            <div className="sm:w-3/4 w-full flex flex-col">
+            <div className="md:w-3/4 w-full flex flex-col">
                 <div className="p-2 bg-white border-b border-gray-200 flex justify-between items-center">
                     <h2 className="text-lg font-semibold">
                         {selectedUser
@@ -307,7 +307,7 @@ const Messages = () => {
                     </h2>
                     <Drawer>
                         <DrawerTrigger className="block sm:hidden">
-                            Select
+                            <Button>Select</Button>
                         </DrawerTrigger>
                         <DrawerContent>
                             <div className="w-full bg-white border-r border-gray-200 p-4 overflow-y-auto">
