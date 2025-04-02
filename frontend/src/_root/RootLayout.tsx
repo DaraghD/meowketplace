@@ -111,7 +111,8 @@ const RootLayout = () => {
                                 Messages
                             </MenubarItem>
                             <MenubarSeparator />
-                            <MenubarItem className="cursor-pointer">
+                            <MenubarItem className="cursor-pointer"
+                                onClick={() => navigate("/profile")}>
                                 <span>Profile</span>{" "}
                                 <Avatar>
                                     <AvatarImage
