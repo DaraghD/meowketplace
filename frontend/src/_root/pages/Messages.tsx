@@ -260,7 +260,7 @@ const Messages = () => {
     return (
         <div className="flex h-[calc(100vh-4rem)] bg-gray-100">
             {/* Sidebar */}
-            <div className="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
+            <div className="hidden md:block w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">Chats</h2>
                 {loading ? (
                     <p>Loading...</p>
