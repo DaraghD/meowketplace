@@ -14,6 +14,15 @@ import { sendMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
 import ReportButton from "@/components/Report";
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer";
 
 const Messages = () => {
     const { id } = useParams();
@@ -297,14 +306,62 @@ const Messages = () => {
             </div>
 
             {/* Chat Area */}
-            <div className="w-3/4 flex flex-col">
+            <div className="sm:w-3/4 w-full flex flex-col">
                 <div className="p-2 bg-white border-b border-gray-200 flex justify-between items-center">
                     <h2 className="text-lg font-semibold">
                         {selectedUser
                             ? selectedUser.username
                             : "Select a user to start chatting"}
                     </h2>
-
+                    <Drawer>
+                        <DrawerTrigger className="block sm:hidden">
+                            Select
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <div className="w-full bg-white border-r border-gray-200 p-4 overflow-y-auto">
+                                <h2 className="text-lg font-semibold mb-4">
+                                    Chats
+                                </h2>
+                                {loading ? (
+                                    <p>Loading...</p>
+                                ) : error ? (
+                                    <p className="text-red-500">{error}</p>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {chatUsers.map((user) => (
+                                            <div
+                                                key={user.id}
+                                                className="p-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"
+                                                onClick={() =>
+                                                    setSelectedUser(user)
+                                                }
+                                            >
+                                                <Avatar>
+                                                    <AvatarImage
+                                                        src={`http://localhost:8080/api/user/picture/${user?.id}`}
+                                                    />
+                                                    <AvatarFallback>
+                                                        {user.username
+                                                            .split(" ")
+                                                            .map(
+                                                                (part) =>
+                                                                    part[0]
+                                                            )
+                                                            .join("")}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="pl-3">
+                                                    <p className="font-medium">
+                                                        {user.username}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </DrawerContent>
+                    </Drawer>
                     {currentUser?.is_business && selectedUser && (
                         <Button
                             onClick={verifyUser}
