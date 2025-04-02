@@ -306,7 +306,7 @@ const Messages = () => {
                             : "Select a user to start chatting"}
                     </h2>
                     <Drawer>
-                        <DrawerTrigger className="block sm:hidden">
+                        <DrawerTrigger className="block md:hidden">
                             <Button>Select</Button>
                         </DrawerTrigger>
                         <DrawerContent>
