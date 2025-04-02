@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { AddProduct } from "@/lib/types/types.ts";
+import { toast } from "sonner";
 
 const ProductListing = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -78,6 +79,7 @@ const ProductListing = () => {
 
     async function onSubmit(values: z.infer<typeof ProductListingValidation>) {
         setIsSubmitted(true);
+        toast("Product Listed");
         const formData = new FormData();
 
         const product: AddProduct = {
