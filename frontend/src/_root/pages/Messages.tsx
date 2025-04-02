@@ -14,15 +14,7 @@ import { sendMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { ServiceInquiryMessage } from "@/components/ServiceInquiryMessage";
 import ReportButton from "@/components/Report";
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 
 const Messages = () => {
     const { id } = useParams();
