@@ -25,7 +25,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     const [reports, setReports] = useState<Report[] | null>(null);
     const context = useContext(Context);
     const [products, setProducts] = useState<Product[]>([]);
-    const [transactions] = useState<Transaction[]>([]);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
     if (!context) return null;
     const { logout } = context;
 
@@ -43,42 +43,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             setFile(image);
         }
     };
-
-    useEffect(() => {
-        const fetchProductsForTransactions = async () => {
-            if (transactions.length === 0) return;
-
-            try {
-                // Get unique product IDs from transactions
-                const productIds = [
-                    ...new Set(transactions.map((t) => t.productId)),
-                ];
-                const response = await fetch(
-                    `http://localhost:8080/api/service?ids=${productIds.join(
-                        ","
-                    )}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem(
-                                "token"
-                            )}`,
-                        },
-                    }
-                );
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data: Product[] = await response.json();
-                setProducts(data);
-            } catch (err) {
-                console.log("Error fetching products:", err);
-            }
-        };
-
-        fetchProductsForTransactions();
-    }, [transactions]);
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -115,6 +79,57 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             console.log("No file selected");
             alert("No file selected");
         }
+
+        useEffect(() => {
+            const fetchTransactions = async () => {
+                try {
+                    const response = await fetch(
+                        `http://localhost:8080/api/transactions/customer/${user.id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem(
+                                    "token"
+                                )}`,
+                            },
+                        }
+                    );
+                    const data: Transaction[] = await response.json();
+                    setTransactions(data);
+                } catch (err) {
+                    console.error("Error fetching transactions:", err);
+                }
+            };
+
+            fetchTransactions();
+        }, [user.id]);
+
+        useEffect(() => {
+            const fetchProductsForTransactions = async () => {
+                if (transactions.length === 0) return;
+
+                try {
+                    const productPromises = transactions.map((t) =>
+                        fetch(
+                            `http://localhost:8080/api/service/${t.productId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem(
+                                        "token"
+                                    )}`,
+                                },
+                            }
+                        ).then((res) => res.json())
+                    );
+
+                    const products = await Promise.all(productPromises);
+                    setProducts(products);
+                } catch (err) {
+                    console.error("Error fetching products:", err);
+                }
+            };
+
+            fetchProductsForTransactions();
+        }, [transactions]);
 
         const response = await fetch("http://localhost:8080/api/user/picture", {
             method: "POST",
