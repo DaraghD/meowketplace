@@ -78,6 +78,24 @@ const ProductView = () => {
             console.error("Error sending response:", error);
             toast.error("Failed to send response");
         }
+
+        const transactionResponse = await fetch(
+            `http://localhost:8080/api/transactions`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    customerId: user.id,
+                    productId: product.id,
+                }),
+            }
+        );
+        if (!transactionResponse.ok) {
+            throw new Error("Failed to create transaction record");
+        }
     };
 
     // const form = useForm<z.infer<typeof ReviewValidation>>({

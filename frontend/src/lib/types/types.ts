@@ -115,3 +115,9 @@ export interface MessageNotification {
     username: String;
 
 }
+
+export interface Transaction {
+    id: number;
+    userId: number;
+    productId: number;
+}
