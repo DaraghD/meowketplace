@@ -36,6 +36,56 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     }
     const [file, setFile] = useState<File | null>(null);
 
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/api/transactions/customer/${user.id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    }
+                );
+                const data: Transaction[] = await response.json();
+                setTransactions(data);
+                console.log("fucking piece of shit");
+            } catch (err) {
+                console.error("Error fetching transactions:", err);
+            }
+        };
+
+        fetchTransactions();
+    }, [user.id]);
+
+    useEffect(() => {
+        const fetchProductsForTransactions = async () => {
+            if (transactions.length === 0) return;
+
+            try {
+                const productPromises = transactions.map((t) =>
+                    fetch(`http://localhost:8080/api/service/${t.productId}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    }).then((res) => res.json())
+                );
+
+                const products = await Promise.all(productPromises);
+                setProducts(products);
+                console.log("ay boss");
+            } catch (err) {
+                console.error("Error fetching products:", err);
+            }
+        };
+
+        fetchProductsForTransactions();
+    }, [transactions]);
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
@@ -79,59 +129,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             console.log("No file selected");
             alert("No file selected");
         }
-
-        useEffect(() => {
-            const fetchTransactions = async () => {
-                try {
-                    const response = await fetch(
-                        `http://localhost:8080/api/transactions/customer/${user.id}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem(
-                                    "token"
-                                )}`,
-                            },
-                        }
-                    );
-                    const data: Transaction[] = await response.json();
-                    setTransactions(data);
-                    console.log("fucking piece of shit");
-                } catch (err) {
-                    console.error("Error fetching transactions:", err);
-                }
-            };
-
-            fetchTransactions();
-        }, [user.id]);
-
-        useEffect(() => {
-            const fetchProductsForTransactions = async () => {
-                if (transactions.length === 0) return;
-
-                try {
-                    const productPromises = transactions.map((t) =>
-                        fetch(
-                            `http://localhost:8080/api/service/${t.productId}`,
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${localStorage.getItem(
-                                        "token"
-                                    )}`,
-                                },
-                            }
-                        ).then((res) => res.json())
-                    );
-
-                    const products = await Promise.all(productPromises);
-                    setProducts(products);
-                    console.log("ay boss");
-                } catch (err) {
-                    console.error("Error fetching products:", err);
-                }
-            };
-
-            fetchProductsForTransactions();
-        }, [transactions]);
 
         const response = await fetch("http://localhost:8080/api/user/picture", {
             method: "POST",
