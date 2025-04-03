@@ -95,6 +95,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                     );
                     const data: Transaction[] = await response.json();
                     setTransactions(data);
+                    console.log("fucking piece of shit");
                 } catch (err) {
                     console.error("Error fetching transactions:", err);
                 }
@@ -123,6 +124,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
 
                     const products = await Promise.all(productPromises);
                     setProducts(products);
+                    console.log("ay boss");
                 } catch (err) {
                     console.error("Error fetching products:", err);
                 }
