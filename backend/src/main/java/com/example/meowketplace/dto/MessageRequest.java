@@ -7,7 +7,7 @@ public class MessageRequest {
     Long sender_id;
     Long receiver_id;
     Date created_at;
-    //maybe take usernames over ids and then find id from username?
+    // maybe take usernames over ids and then find id from username?
 
     public MessageRequest(String message_content, Long sender_id, Long receiver_id) {
         this.created_at = new Date(System.currentTimeMillis());
@@ -31,6 +31,7 @@ public class MessageRequest {
     public Date getCreated_at() {
         return created_at;
     }
+
     @Override
     public String toString() {
         return "MessageRequest{" +
