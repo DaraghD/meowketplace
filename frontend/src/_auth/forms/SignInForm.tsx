@@ -54,12 +54,14 @@ const SignInForm = () => {
 
     return (
         <Form {...form}>
-            <img
-                className="absolute top-0 right-0 m-4 w-16 h-16"
-                src="/assets/icons/logo.png"
-                onClick={() => navigate("/")}
-                style={{ cursor: "pointer" }}
-            />
+            <Link to="/">
+                <img
+                    className="absolute top-0 right-0 m-4 w-16 h-16"
+                    src="/assets/icons/logo.png"
+                    style={{ cursor: "pointer" }}
+                    alt="Home"
+                />
+            </Link>
             <div className="flex-center flex-col pl-10 pr-10 pb-10">
                 <h1 className="text-3xl font-bold pt-5 sm:pt-12">
                     Welcome Back!
