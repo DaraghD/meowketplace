@@ -26,7 +26,7 @@ const Services = () => {
                 What would you like to do today?
             </p>
 
-            <div className="flex justify-center gap-12">
+            <div className="flex justify-center gap-10">
                 <Card
                     title="Advertise a Service 🐕"
                     onClick={() => handleChoice("advertise")}
