@@ -23,10 +23,10 @@ const Services = () => {
             </h1>
 
             <p className="text-xl text-center mb-6">
-                Welcome to Meowketplace! What would you like to do today?
+                What would you like to do today?
             </p>
 
-            <div className="flex justify-center gap-16">
+            <div className="flex justify-center gap-12">
                 <Card
                     title="Advertise a Service 🐕"
                     onClick={() => handleChoice("advertise")}
