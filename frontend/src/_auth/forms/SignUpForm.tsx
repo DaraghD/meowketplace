@@ -48,7 +48,7 @@ const SignUpForm = () => {
             alert(data);
 
             if (response.ok) {
-                navigate("/signin");
+                navigate("/sign-in");
             }
         } catch (error) {
             console.log(error);
