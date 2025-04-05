@@ -1,7 +1,7 @@
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useForm} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -10,20 +10,20 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
-import {SignInValidation} from "@/lib/validation";
-import {z} from "zod";
-import {Link} from "react-router-dom";
-import {useContext} from "react";
+import { Input } from "@/components/ui/input";
+import { SignInValidation } from "@/lib/validation";
+import { z } from "zod";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
 import { Context } from "@/context.tsx";
-import {userData} from "@/lib/types/types.ts";
+import { userData } from "@/lib/types/types.ts";
 
 const SignInForm = () => {
     const context = useContext(Context);
     if (!context) {
         throw new Error("Context not found");
     }
-    const {user, setUser} = context;
+    const { user, setUser } = context;
     const form = useForm<z.infer<typeof SignInValidation>>({
         resolver: zodResolver(SignInValidation),
         defaultValues: {
@@ -57,9 +57,13 @@ const SignInForm = () => {
             <img
                 className="absolute top-0 right-0 m-4 w-16 h-16"
                 src="/assets/icons/logo.png"
+                onClick={() => navigate("/")}
+                style={{ cursor: "pointer" }}
             />
             <div className="flex-center flex-col pl-10 pr-10 pb-10">
-                <h1 className="text-3xl font-bold pt-5 sm:pt-12">Welcome Back!</h1>
+                <h1 className="text-3xl font-bold pt-5 sm:pt-12">
+                    Welcome Back!
+                </h1>
                 <p className="text-base text-gray-600">
                     Don't have an Account?{" "}
                     <Link
@@ -77,26 +81,34 @@ const SignInForm = () => {
                     <FormField
                         control={form.control}
                         name="email"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input type="email" className="shad-input" {...field} />
+                                    <Input
+                                        type="email"
+                                        className="shad-input"
+                                        {...field}
+                                    />
                                 </FormControl>
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
                         name="password"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input type="password" className="shad-input" {...field} />
+                                    <Input
+                                        type="password"
+                                        className="shad-input"
+                                        {...field}
+                                    />
                                 </FormControl>
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
