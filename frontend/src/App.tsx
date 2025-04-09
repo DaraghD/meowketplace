@@ -33,7 +33,6 @@ const App = () => {
                     <Route element={<AuthLayout />}>
                         <Route path="/sign-in" element={<SignInForm />} />
                         <Route path="/sign-up" element={<SignUpForm />} />
-                        <Route path="/admin" element={<Admin />} />
                         <Route
                             path="/business-sign-up"
                             element={<BusinessSignUpForm />}
@@ -55,6 +54,7 @@ const App = () => {
                         <Route path="/services" element={<Services />} />
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/reports" element={<Reports />} />
+                        <Route path="/admin" element={<Admin />} />
                     </Route>
                 </Routes>
             </main>

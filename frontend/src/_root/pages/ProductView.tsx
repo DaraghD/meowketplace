@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Product } from "@/lib/types/types";
+import { Product, Tier } from "@/lib/types/types";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Reviews from "@/components/Reviews";
@@ -28,10 +28,7 @@ const ProductView = () => {
     const [hasSentInquiry, setHasSentInquiry] = useState(false);
     const [product, setProduct] = useState<Product | null>();
     const [productLoading, setProductLoading] = useState<boolean>(true);
-    const [selectedTier, setSelectedTier] = useState<{
-        name: string;
-        description: string;
-    } | null>(null);
+    const [selectedTier, setSelectedTier] = useState<Tier | null>()
     const id = useParams();
 
     useEffect(() => {
@@ -110,6 +107,13 @@ const ProductView = () => {
     // }
 
     const rating = product?.starRating;
+    const priceSorted = product?.tiers.slice().sort((a, b) => a.price - b.price);
+    let highestPrice = null;
+    let lowestPrice = null;
+    if (priceSorted) {
+        highestPrice = priceSorted[priceSorted?.length - 1].price;
+        lowestPrice = priceSorted[0].price;
+    }
 
     if (productLoading) {
         return <div> Loading... </div>;
@@ -138,9 +142,8 @@ const ProductView = () => {
                                         <div className="aspect-square md:aspect-[4/3] w-full relative">
                                             <img
                                                 src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
-                                                alt={`Product image ${
-                                                    index + 1
-                                                }`}
+                                                alt={`Product image ${index + 1
+                                                    }`}
                                                 className="w-full h-full object-contain rounded-lg"
                                             />
                                         </div>
@@ -161,6 +164,7 @@ const ProductView = () => {
                         <h1 className="text-3xl font-bold pt-5">
                             {product?.name}
                         </h1>
+
                         <DropdownMenu>
                             <DropdownMenuTrigger className="pl-5 pt-5">
                                 <Button className="cursor-pointer ">
@@ -173,12 +177,13 @@ const ProductView = () => {
                                         key={index}
                                         onClick={() => setSelectedTier(tier)}
                                     >
-                                        {tier.name}
+                                        {tier.name} : €{tier.price}
                                     </DropdownMenuItem>
                                 ))}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
+                    €{lowestPrice} - €{highestPrice}
                     <div>
                         <ReportButton type="product" id={product?.id} />
                     </div>
@@ -188,6 +193,7 @@ const ProductView = () => {
                             ? selectedTier.description
                             : product?.productText}
                     </ScrollArea>
+                    <p> {selectedTier ? `${selectedTier.name} : €${selectedTier.price}` : "Select a tier to see prices"}</p>
 
                     <Button
                         className="cursor-pointer mt-auto mb-10 flex"

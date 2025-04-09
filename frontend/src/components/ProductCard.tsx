@@ -39,15 +39,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <p className="text-gray-700 text-sm line-clamp-2 break-words">
                     {product.productText}
                 </p>
-                <div className="flex flex-wrap gap-1 mt-1">
+                <div className="flex flex-col gap-1 mt-1">
                     <p className="text-sm text-gray-500">
                         ⭐ {product.starRating ?? "No rating"}
                     </p>
-                    {product.tiers && product.tiers.length > 0 && (
-                        <p className="text-sm text-gray-600">
-                            ${minPrice} - ${maxPrice}
-                        </p>
-                    )}
+                    <div>
+                        {product.tiers && product.tiers.length > 0 && (
+                            <p className="text-sm text-gray-600">
+                                €{minPrice} - €{maxPrice}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
 
