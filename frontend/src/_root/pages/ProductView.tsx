@@ -29,7 +29,7 @@ const ProductView = () => {
     const [product, setProduct] = useState<Product | null>();
     const [productLoading, setProductLoading] = useState<boolean>(true);
     const [selectedTier, setSelectedTier] = useState<Tier | null>();
-    const [transactions, setTransactions] = useState(null);
+    const [setTransactions] = useState(null);
     const [hasPendingWithBusiness, setHasPendingWithBusiness] = useState(false);
     const id = useParams();
 
@@ -43,7 +43,6 @@ const ProductView = () => {
                 setTransactions(transactions);
             } catch (error) {
                 console.error("Error fetching transactions", error);
-                console.log(transactions);
             }
         };
         fetchTransactions();
