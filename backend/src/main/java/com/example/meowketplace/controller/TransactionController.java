@@ -38,4 +38,12 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactions);
     }
+
+    @GetMapping("/customer/{customerId}/pending/{businessId}")
+    public ResponseEntity<Boolean> hasPendingTransactionWithBusiness(
+            @PathVariable long customerId,
+            @PathVariable long businessId) {
+        boolean hasPending = transactionService.hasPendingTransactionWithBusiness(customerId, businessId);
+        return ResponseEntity.ok(hasPending);
+    }
 }

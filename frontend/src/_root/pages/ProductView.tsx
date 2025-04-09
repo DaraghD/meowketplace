@@ -28,8 +28,25 @@ const ProductView = () => {
     const [hasSentInquiry, setHasSentInquiry] = useState(false);
     const [product, setProduct] = useState<Product | null>();
     const [productLoading, setProductLoading] = useState<boolean>(true);
-    const [selectedTier, setSelectedTier] = useState<Tier | null>()
+    const [selectedTier, setSelectedTier] = useState<Tier | null>();
+    const [transactions, setTransactions] = useState(null);
+    const [hasPendingWithBusiness, setHasPendingWithBusiness] = useState(false);
     const id = useParams();
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/api/allTransactions`
+                );
+                const transactions = await response.json();
+                setTransactions(transactions);
+            } catch (error) {
+                console.error("Error fetching transactions", error);
+            }
+        };
+        fetchTransactions();
+    }, []);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -55,8 +72,39 @@ const ProductView = () => {
     }
     const { user } = context;
 
+    useEffect(() => {
+        const checkPendingTransaction = async () => {
+            if (!user?.id || !product?.user?.id) return;
+
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/api/transactions/customer/${user.id}/pending/${product.user.id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    }
+                );
+                const hasPending = await response.json();
+                setHasPendingWithBusiness(hasPending);
+                setHasSentInquiry(hasPending);
+            } catch (error) {
+                console.error("Error checking pending transactions:", error);
+            }
+        };
+
+        checkPendingTransaction();
+    }, [user?.id, product?.user?.id]);
+
     const sendServiceInquiry = async () => {
-        if (!product || hasSentInquiry) return;
+        if (!product || hasPendingWithBusiness) {
+            toast.error(
+                "You already have a pending inquiry with this business"
+            );
+            return;
+        }
 
         if (!user) {
             toast.error("You need to be logged in to send a service inquiry");
@@ -87,6 +135,8 @@ const ProductView = () => {
                 body: JSON.stringify({
                     customerId: user.id,
                     productId: product.id,
+                    businessId: product.user.id,
+                    status: "pending",
                 }),
             }
         );
@@ -107,7 +157,9 @@ const ProductView = () => {
     // }
 
     const rating = product?.starRating;
-    const priceSorted = product?.tiers.slice().sort((a, b) => a.price - b.price);
+    const priceSorted = product?.tiers
+        .slice()
+        .sort((a, b) => a.price - b.price);
     let highestPrice = null;
     let lowestPrice = null;
     if (priceSorted) {
@@ -142,8 +194,9 @@ const ProductView = () => {
                                         <div className="aspect-square md:aspect-[4/3] w-full relative">
                                             <img
                                                 src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
-                                                alt={`Product image ${index + 1
-                                                    }`}
+                                                alt={`Product image ${
+                                                    index + 1
+                                                }`}
                                                 className="w-full h-full object-contain rounded-lg"
                                             />
                                         </div>
@@ -193,12 +246,16 @@ const ProductView = () => {
                             ? selectedTier.description
                             : product?.productText}
                     </ScrollArea>
-                    <p> {selectedTier ? `${selectedTier.name} : €${selectedTier.price}` : "Select a tier to see prices"}</p>
-
+                    <p>
+                        {" "}
+                        {selectedTier
+                            ? `${selectedTier.name} : €${selectedTier.price}`
+                            : "Select a tier to see prices"}
+                    </p>
                     <Button
                         className="cursor-pointer mt-auto mb-10 flex"
                         onClick={sendServiceInquiry}
-                        disabled={hasSentInquiry}
+                        disabled={hasPendingWithBusiness || hasSentInquiry}
                     >
                         {selectedTier?.name == "" || selectedTier == null
                             ? "Send general service inquiry"
