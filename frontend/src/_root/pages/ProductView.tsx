@@ -177,13 +177,13 @@ const ProductView = () => {
                                         key={index}
                                         onClick={() => setSelectedTier(tier)}
                                     >
-                                        {tier.name} : ${tier.price}
+                                        {tier.name} : €{tier.price}
                                     </DropdownMenuItem>
                                 ))}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    ${lowestPrice} - ${highestPrice}
+                    €{lowestPrice} - €{highestPrice}
                     <div>
                         <ReportButton type="product" id={product?.id} />
                     </div>
@@ -193,7 +193,7 @@ const ProductView = () => {
                             ? selectedTier.description
                             : product?.productText}
                     </ScrollArea>
-                    <p> {selectedTier ? `${selectedTier.name} : $${selectedTier.price}` : "Select a tier to see prices"}</p>
+                    <p> {selectedTier ? `${selectedTier.name} : €${selectedTier.price}` : "Select a tier to see prices"}</p>
 
                     <Button
                         className="cursor-pointer mt-auto mb-10 flex"
