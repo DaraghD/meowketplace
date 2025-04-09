@@ -32,4 +32,10 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.getTransactionsByCustomerId(customerId);
         return ResponseEntity.ok(transactions);
     }
+
+    @GetMapping("/allTransactions")
+    public ResponseEntity<List<Transaction>> getAllTransactions() {
+        List<Transaction> transactions = transactionService.getAllTransactions();
+        return ResponseEntity.ok(transactions);
+    }
 }

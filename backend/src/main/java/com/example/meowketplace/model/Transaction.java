@@ -18,6 +18,28 @@ public class Transaction {
     @Column(nullable = false)
     private long productId;
 
+    @Column(nullable = false)
+    private String status;
+
+    @Column(nullable = false)
+    private long businessId;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public long getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(long businessId) {
+        this.businessId = businessId;
+    }
+
     public Long getId() {
         return id;
     }

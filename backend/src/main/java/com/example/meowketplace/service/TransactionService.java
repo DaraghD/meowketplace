@@ -22,6 +22,10 @@ public class TransactionService {
         Transaction transaction = new Transaction();
         transaction.setCustomerId(transactionRequest.getCustomerId());
         transaction.setProductId(transactionRequest.getProductId());
+        transaction.setStatus(transactionRequest.getStatus());
+        transaction.setBusinessId(transactionRequest.getBusinessId()
+
+        );
 
         return transactionRepository.save(transaction);
     }
