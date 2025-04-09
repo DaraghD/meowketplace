@@ -28,8 +28,53 @@ const ProductView = () => {
     const [hasSentInquiry, setHasSentInquiry] = useState(false);
     const [product, setProduct] = useState<Product | null>();
     const [productLoading, setProductLoading] = useState<boolean>(true);
-    const [selectedTier, setSelectedTier] = useState<Tier | null>()
+    const [selectedTier, setSelectedTier] = useState<Tier | null>();
     const id = useParams();
+    const [isActiveServiceInquiry, setIsActiveServiceInquiry] = useState(false);
+
+    const context = useContext(Context);
+    if (!context) {
+        throw new Error("Context not found");
+    }
+    const { user } = context;
+
+    useEffect(() => {
+        const fetchRelTrans = async () => {
+            try {
+                if (!user || !product) return;
+
+                const response = await fetch(
+                    `http://localhost:8080/api/transactions/customer/${user.id}/business/${product.user.id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch transactions");
+                }
+
+                const transactions = await response.json();
+                const sortedTransactions = transactions.sort(
+                    (a: any, b: any) => b.id - a.id
+                );
+
+                const hasPendingTransaction =
+                    sortedTransactions.length > 0 &&
+                    sortedTransactions[0].status === "pending";
+
+                setIsActiveServiceInquiry(hasPendingTransaction);
+                console.log(transactions);
+            } catch (error) {
+                console.error("Error fetching transactions", error);
+            }
+        };
+        fetchRelTrans();
+    }, []);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -49,13 +94,14 @@ const ProductView = () => {
         fetchProduct();
     }, []);
 
-    const context = useContext(Context);
-    if (!context) {
-        throw new Error("Context not found");
-    }
-    const { user } = context;
-
     const sendServiceInquiry = async () => {
+        if (isActiveServiceInquiry) {
+            toast.error(
+                "You already have a active service inquiry with this seller"
+            );
+            return;
+        }
+
         if (!product || hasSentInquiry) return;
 
         if (!user) {
@@ -87,6 +133,8 @@ const ProductView = () => {
                 body: JSON.stringify({
                     customerId: user.id,
                     productId: product.id,
+                    businessId: product.user.id,
+                    status: "pending",
                 }),
             }
         );
@@ -107,7 +155,9 @@ const ProductView = () => {
     // }
 
     const rating = product?.starRating;
-    const priceSorted = product?.tiers.slice().sort((a, b) => a.price - b.price);
+    const priceSorted = product?.tiers
+        .slice()
+        .sort((a, b) => a.price - b.price);
     let highestPrice = null;
     let lowestPrice = null;
     if (priceSorted) {
@@ -142,8 +192,9 @@ const ProductView = () => {
                                         <div className="aspect-square md:aspect-[4/3] w-full relative">
                                             <img
                                                 src={`http://localhost:8080/api/service/picture/${product?.id}/${index}`}
-                                                alt={`Product image ${index + 1
-                                                    }`}
+                                                alt={`Product image ${
+                                                    index + 1
+                                                }`}
                                                 className="w-full h-full object-contain rounded-lg"
                                             />
                                         </div>
@@ -193,8 +244,12 @@ const ProductView = () => {
                             ? selectedTier.description
                             : product?.productText}
                     </ScrollArea>
-                    <p> {selectedTier ? `${selectedTier.name} : €${selectedTier.price}` : "Select a tier to see prices"}</p>
-
+                    <p>
+                        {" "}
+                        {selectedTier
+                            ? `${selectedTier.name} : €${selectedTier.price}`
+                            : "Select a tier to see prices"}
+                    </p>
                     <Button
                         className="cursor-pointer mt-auto mb-10 flex"
                         onClick={sendServiceInquiry}
