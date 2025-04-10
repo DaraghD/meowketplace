@@ -256,7 +256,7 @@ const Messages = () => {
 
         fetchRelTrans();
 
-        const interval = setInterval(fetchRelTrans, 5000);
+        const interval = setInterval(fetchRelTrans, 3000);
 
         return () => clearInterval(interval);
     }, [currentUser, selectedUser]);
