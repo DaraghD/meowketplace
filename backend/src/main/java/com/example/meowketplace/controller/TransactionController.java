@@ -33,6 +33,15 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
+    @GetMapping("/customer/{customerId}/business/{businessId}")
+    public ResponseEntity<List<Transaction>> getTransactionsByCustomerAndBusiness(
+            @PathVariable long customerId,
+            @PathVariable long businessId) {
+        List<Transaction> transactions = transactionService.getTransactionsByCustomerAndBusiness(customerId,
+                businessId);
+        return ResponseEntity.ok(transactions);
+    }
+
     @GetMapping("/allTransactions")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> transactions = transactionService.getAllTransactions();

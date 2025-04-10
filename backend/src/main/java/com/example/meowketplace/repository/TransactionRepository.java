@@ -13,4 +13,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             long customerId,
             long businessId,
             String status);
+
+    List<Transaction> findByCustomerIdAndBusinessId(long customerId, long businessId);
 }

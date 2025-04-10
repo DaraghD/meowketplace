@@ -47,5 +47,8 @@ public class TransactionService {
                 customerId,
                 businessId,
                 "pending");
+
+    public List<Transaction> getTransactionsByCustomerAndBusiness(long customerId, long businessId) {
+        return transactionRepository.findByCustomerIdAndBusinessId(customerId, businessId);
     }
 }
