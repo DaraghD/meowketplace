@@ -62,6 +62,27 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{request_id}")
+    public ResponseEntity<String> getUser(@PathVariable Long request_id,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Long user_id = jwtUtil.authAndGetUserId(authHeader);
+            User user = userService.getUserById(user_id);
+            User finding_user = userService.getUserById(request_id);
+            if (!request_id.equals(user_id)) {
+                return ResponseEntity.ok()
+                        .body(mapper.writerWithView(Views.Public.class).writeValueAsString(finding_user));
+            } else {
+                return ResponseEntity.ok()
+                        .body(mapper.writerWithView(Views.Internal.class).writeValueAsString(user));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/picture")
     public ResponseEntity<String> uploadProfilePicture(@RequestParam("profile_picture") MultipartFile profile_picture,
             @RequestHeader("Authorization") String authHeader) {

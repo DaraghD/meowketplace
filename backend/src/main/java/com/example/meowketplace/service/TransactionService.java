@@ -42,6 +42,13 @@ public class TransactionService {
         transactionRepository.deleteById(id);
     }
 
+    public boolean hasPendingTransactionWithBusiness(long customerId, long businessId) {
+        return transactionRepository.existsByCustomerIdAndBusinessIdAndStatus(
+                customerId,
+                businessId,
+                "pending");
+    }
+
     public List<Transaction> getTransactionsByCustomerAndBusiness(long customerId, long businessId) {
         return transactionRepository.findByCustomerIdAndBusinessId(customerId, businessId);
     }
