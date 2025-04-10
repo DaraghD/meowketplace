@@ -39,6 +39,9 @@ const ProductView = () => {
     const { user } = context;
 
     useEffect(() => {
+        console.log("user", user);
+        console.log("product", product);
+
         const fetchRelTrans = async () => {
             try {
                 if (!user || !product) return;
@@ -58,6 +61,8 @@ const ProductView = () => {
                     throw new Error("Failed to fetch transactions");
                 }
 
+                console.log("helo");
+
                 const transactions = await response.json();
                 const sortedTransactions = transactions.sort(
                     (a: any, b: any) => b.id - a.id
@@ -67,14 +72,17 @@ const ProductView = () => {
                     sortedTransactions.length > 0 &&
                     sortedTransactions[0].status === "pending";
 
+                console.log(sortedTransactions);
+
                 setIsActiveServiceInquiry(hasPendingTransaction);
                 console.log(transactions);
+                console.log(isActiveServiceInquiry);
             } catch (error) {
                 console.error("Error fetching transactions", error);
             }
         };
         fetchRelTrans();
-    }, []);
+    }, [user, product]);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -95,6 +103,7 @@ const ProductView = () => {
     }, []);
 
     const sendServiceInquiry = async () => {
+        console.log("isActiveServiceInquiry", isActiveServiceInquiry);
         if (isActiveServiceInquiry) {
             toast.error(
                 "You already have a active service inquiry with this seller"

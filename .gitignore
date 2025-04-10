@@ -2,3 +2,4 @@
 backend/build
 **/backend/uploads/
 .idea/dataSources.xml
+backend/src/main/resources/application.properties
