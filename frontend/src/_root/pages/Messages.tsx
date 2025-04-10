@@ -224,8 +224,6 @@ const Messages = () => {
     const [recentTranId, setRecentTranId] = useState(0);
 
     useEffect(() => {
-        console.log("user", currentUser);
-
         const fetchRelTrans = async () => {
             try {
                 if (!currentUser || !selectedUser) return;
@@ -246,19 +244,21 @@ const Messages = () => {
                 }
 
                 const transactions = await response.json();
-                console.log(transactions);
                 const sortedTransactions = transactions.sort(
                     (a: any, b: any) => b.id - a.id
                 );
 
-                setRecentTranId(sortedTransactions[0].id);
-
-                console.log(sortedTransactions);
+                setRecentTranId(sortedTransactions[0]?.id);
             } catch (error) {
                 console.error("Error fetching transactions", error);
             }
         };
+
         fetchRelTrans();
+
+        const interval = setInterval(fetchRelTrans, 5000);
+
+        return () => clearInterval(interval);
     }, [currentUser, selectedUser]);
 
     const verifyUser = async () => {
