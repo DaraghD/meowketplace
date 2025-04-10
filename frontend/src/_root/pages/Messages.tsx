@@ -191,6 +191,27 @@ const Messages = () => {
             return;
         }
 
+        if (response == "--Service Inquiry Declined--") {
+            const updateTransactionResponse = await fetch(
+                `http://localhost:8080/api/transactions/${recentTranId}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify("declined"),
+                }
+            );
+            if (!updateTransactionResponse.ok) {
+                throw new Error(
+                    "Failed to update transaction status to completed"
+                );
+            }
+        }
+
         try {
             await sendMessage(response, currentUser.id, selectedUser.id);
             toast.success("Response sent successfully");
@@ -199,6 +220,46 @@ const Messages = () => {
             toast.error("Failed to send response");
         }
     };
+
+    const [recentTranId, setRecentTranId] = useState(0);
+
+    useEffect(() => {
+        console.log("user", currentUser);
+
+        const fetchRelTrans = async () => {
+            try {
+                if (!currentUser || !selectedUser) return;
+
+                const response = await fetch(
+                    `http://localhost:8080/api/transactions/customer/${selectedUser.id}/business/${currentUser.id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch transactions");
+                }
+
+                const transactions = await response.json();
+                console.log(transactions);
+                const sortedTransactions = transactions.sort(
+                    (a: any, b: any) => b.id - a.id
+                );
+
+                setRecentTranId(sortedTransactions[0].id);
+
+                console.log(sortedTransactions);
+            } catch (error) {
+                console.error("Error fetching transactions", error);
+            }
+        };
+        fetchRelTrans();
+    }, [currentUser, selectedUser]);
 
     const verifyUser = async () => {
         if (!selectedUser || !currentUser) return;
@@ -228,13 +289,36 @@ const Messages = () => {
                     currentUser.id,
                     selectedUser.id
                 );
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to verify user");
             } else {
                 await sendMessage(
                     "--Transaction Completed, User verified, Leave a nice review!😺--",
                     currentUser.id,
                     selectedUser.id
+                );
+            }
+
+            console.log("beforeooooooooooooo");
+
+            const updateTransactionResponse = await fetch(
+                `http://localhost:8080/api/transactions/${recentTranId}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify("completed"),
+                }
+            );
+
+            console.log(recentTranId);
+            console.log("EOWAUFHOHOAFHIOEFHOEWFAOIH");
+
+            if (!updateTransactionResponse.ok) {
+                throw new Error(
+                    "Failed to update transaction status to completed"
                 );
             }
 

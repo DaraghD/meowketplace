@@ -120,4 +120,6 @@ export interface Transaction {
     id: number;
     userId: number;
     productId: number;
+    status: String;
+    businessId: number;
 }

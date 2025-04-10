@@ -24,8 +24,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     const navigate = useNavigate();
     const [reports, setReports] = useState<Report[] | null>(null);
     const context = useContext(Context);
-    const [products, setProducts] = useState<Product[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [productWithTransaction, setProductWithTransaction] = useState<
+        { product: Product; transaction: Transaction }[]
+    >([]);
     if (!context) return null;
     const { logout } = context;
 
@@ -75,9 +77,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                     }).then((res) => res.json())
                 );
 
-                const products = await Promise.all(productPromises);
-                setProducts(products);
-                console.log("ay boss");
+                const fetchedProducts = await Promise.all(productPromises);
+                const combined = fetchedProducts.map((product, idx) => ({
+                    product,
+                    transaction: transactions[idx],
+                }));
+
+                setProductWithTransaction(combined.reverse());
             } catch (err) {
                 console.error("Error fetching products:", err);
             }
@@ -259,8 +265,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             </div>
             <div className="w-full flex flex-col items-center mt-4">
                 <ul className="flex flex-col items-center space-y-4 mt-6">
-                    {products.map((product) => (
-                        <ProductCard key={product.id} product={product} />
+                    {productWithTransaction.map(({ product, transaction }) => (
+                        <div key={product.id} className="w-full">
+                            <ProductCard product={product} />
+                            <p className="text-sm text-gray-600 mt-1 ml-4">
+                                Status: {transaction.status}
+                            </p>
+                        </div>
                     ))}
                 </ul>
             </div>

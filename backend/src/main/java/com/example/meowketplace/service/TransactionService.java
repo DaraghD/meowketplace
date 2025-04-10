@@ -45,4 +45,15 @@ public class TransactionService {
     public List<Transaction> getTransactionsByCustomerAndBusiness(long customerId, long businessId) {
         return transactionRepository.findByCustomerIdAndBusinessId(customerId, businessId);
     }
+
+    public Transaction updateTransactionStatus(long transactionId, String status) {
+        Transaction transaction = transactionRepository.findById(transactionId).orElse(null);
+
+        if (transaction != null) {
+            transaction.setStatus(status);
+            return transactionRepository.save(transaction);
+        }
+
+        return null;
+    }
 }

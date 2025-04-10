@@ -47,4 +47,13 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactions);
     }
+
+    @PatchMapping("/{transactionId}")
+    public ResponseEntity<Transaction> updateTransactionStatus(
+            @PathVariable long transactionId,
+            @RequestBody String status) {
+        Transaction updatedTransaction = transactionService.updateTransactionStatus(transactionId, status);
+
+        return ResponseEntity.ok(updatedTransaction);
+    }
 }
