@@ -62,7 +62,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         <AvatarImage
                             src={`http://localhost:8080/api/user/picture/${product.user?.id}`}
                         />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback>
+                            {product.user.username
+                                .split(" ")
+                                .map((part) => part[0])
+                                .join("")}
+                        </AvatarFallback>
                     </Avatar>
                 </div>
                 <p className="text-sm text-gray-500">
