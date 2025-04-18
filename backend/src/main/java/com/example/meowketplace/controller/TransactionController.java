@@ -32,4 +32,36 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.getTransactionsByCustomerId(customerId);
         return ResponseEntity.ok(transactions);
     }
+
+    @GetMapping("/customer/{customerId}/business/{businessId}")
+    public ResponseEntity<List<Transaction>> getTransactionsByCustomerAndBusiness(
+            @PathVariable long customerId,
+            @PathVariable long businessId) {
+        List<Transaction> transactions = transactionService.getTransactionsByCustomerAndBusiness(customerId,
+                businessId);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/allTransactions")
+    public ResponseEntity<List<Transaction>> getAllTransactions() {
+        List<Transaction> transactions = transactionService.getAllTransactions();
+        return ResponseEntity.ok(transactions);
+    }
+
+    @PatchMapping("/{transactionId}")
+    public ResponseEntity<Transaction> updateTransactionStatus(
+            @PathVariable long transactionId,
+            @RequestBody String status) {
+        Transaction updatedTransaction = transactionService.updateTransactionStatus(transactionId, status);
+
+        return ResponseEntity.ok(updatedTransaction);
+    }
+
+    @GetMapping("/customer/{customerId}/pending/{businessId}")
+    public ResponseEntity<Boolean> hasPendingTransactionWithBusiness(
+            @PathVariable long customerId,
+            @PathVariable long businessId) {
+        boolean hasPending = transactionService.hasPendingTransactionWithBusiness(customerId, businessId);
+        return ResponseEntity.ok(hasPending);
+    }
 }

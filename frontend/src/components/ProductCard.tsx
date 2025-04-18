@@ -39,15 +39,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <p className="text-gray-700 text-sm line-clamp-2 break-words">
                     {product.productText}
                 </p>
-                <div className="flex flex-wrap gap-1 mt-1">
+                <div className="flex flex-col gap-1 mt-1">
                     <p className="text-sm text-gray-500">
                         ⭐ {product.starRating ?? "No rating"}
                     </p>
-                    {product.tiers && product.tiers.length > 0 && (
-                        <p className="text-sm text-gray-600">
-                            ${minPrice} - ${maxPrice}
-                        </p>
-                    )}
+                    <div>
+                        {product.tiers && product.tiers.length > 0 && (
+                            <p className="text-sm text-gray-600">
+                                €{minPrice} - €{maxPrice}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -60,7 +62,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         <AvatarImage
                             src={`http://localhost:8080/api/user/picture/${product.user?.id}`}
                         />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback>
+                            {product.user.username
+                                .split(" ")
+                                .map((part) => part[0])
+                                .join("")}
+                        </AvatarFallback>
                     </Avatar>
                 </div>
                 <p className="text-sm text-gray-500">

@@ -70,7 +70,12 @@ const RootLayout = () => {
                                 <AvatarImage
                                     src={`http://localhost:8080/api/user/picture/${user?.id}`}
                                 />
-                                <AvatarFallback>Login</AvatarFallback>
+                                <AvatarFallback>
+                                    {user?.username
+                                        .split(" ")
+                                        .map((part) => part[0])
+                                        .join("")}
+                                </AvatarFallback>
                             </Avatar>
                         </button>
                     </div>
@@ -126,7 +131,12 @@ const RootLayout = () => {
                                     <AvatarImage
                                         src={`http://localhost:8080/api/user/picture/${user?.id}`}
                                     />
-                                    <AvatarFallback>CN</AvatarFallback>
+                                    <AvatarFallback>
+                                        {user?.username
+                                            .split(" ")
+                                            .map((part) => part[0])
+                                            .join("")}
+                                    </AvatarFallback>
                                 </Avatar>
                             </MenubarItem>
                         </MenubarContent>
