@@ -45,8 +45,14 @@ const SignUpForm = () => {
                     body: JSON.stringify(values),
                 }
             );
+
             const data = await response.text();
-            toast(data);
+            if (response.ok) {
+                toast(data);
+            }
+            else {
+                toast.error(data)
+            }
 
             if (response.ok) {
                 navigate("/sign-in");
