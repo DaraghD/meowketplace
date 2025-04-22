@@ -15,6 +15,7 @@ import {
     DrawerTrigger,
 } from "../ui/drawer";
 import ProductCard from "../ProductCard";
+import { toast } from "sonner";
 
 interface UserProfileProps {
     user: userData;
@@ -133,7 +134,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             formData.append("profile_picture", file);
         } else {
             console.log("No file selected");
-            alert("No file selected");
+            toast("No file selected");
         }
 
         const response = await fetch("http://localhost:8080/api/user/picture", {

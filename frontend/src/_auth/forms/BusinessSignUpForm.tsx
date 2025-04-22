@@ -22,6 +22,7 @@ import { BusinessSignUpValidation } from "@/lib/validation";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const BusinessSignUpForm = () => {
     // 1. Define your form.
@@ -56,7 +57,7 @@ const BusinessSignUpForm = () => {
                 }
             );
             const data = await response.text();
-            alert(data);
+            toast(data);
             if (response.ok) {
                 navigate("/sign-in");
             }
@@ -165,7 +166,7 @@ const BusinessSignUpForm = () => {
                     <FormField
                         control={form.control}
                         name="services"
-                        render={({}) => (
+                        render={({ }) => (
                             <FormItem>
                                 <FormLabel>
                                     <DropdownMenu>

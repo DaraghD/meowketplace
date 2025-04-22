@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { SignUpValidation } from "@/lib/validation";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const SignUpForm = () => {
     const form = useForm<z.infer<typeof SignUpValidation>>({
@@ -45,7 +46,7 @@ const SignUpForm = () => {
                 }
             );
             const data = await response.text();
-            alert(data);
+            toast(data);
 
             if (response.ok) {
                 navigate("/sign-in");
