@@ -44,12 +44,15 @@ const RootLayout = () => {
                     </div>
 
                     <div className="flex space-x-4 mr-5 items-center">
-                        <button
-                            onClick={() => navigate("/product-listing")}
-                            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
-                        >
-                            List Service🦴
-                        </button>
+                        {user?.is_business && (
+                            <button
+                                onClick={() => navigate("/product-listing")}
+                                className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
+                            >
+                                List Service🦴
+                            </button>
+                        )}
+
                         <button
                             onClick={() => navigate("/search")}
                             className="text-black hover:text-white hover:bg-black px-4 py-2 rounded transition-colors duration-200 cursor-pointer"
@@ -98,13 +101,20 @@ const RootLayout = () => {
                             </span>
                         </MenubarTrigger>
                         <MenubarContent>
-                            <MenubarItem
-                                className="cursor-pointer"
-                                onClick={() => navigate("/product-listing")}
-                            >
-                                List Service
-                            </MenubarItem>
-                            <MenubarSeparator />
+                            {user?.is_business && (
+                                <>
+                                    <MenubarItem
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                            navigate("/product-listing")
+                                        }
+                                    >
+                                        List Service
+                                    </MenubarItem>
+                                    <MenubarSeparator />
+                                </>
+                            )}
+
                             <MenubarItem
                                 className="cursor-pointer"
                                 onClick={() => navigate("/search")}
