@@ -3,7 +3,11 @@ import { z } from "zod";
 export const SignUpValidation = z.object({
   username: z.string().min(1).max(50),
   email: z.string().email(),
-  password: z.string().min(4, { message: "Must be at least 4 characters" })
+  password: z.string().min(4, { message: "Must be at least 4 characters" }),
+  confirmPassword: z.string().min(1, { message: "Please confirm your password" })
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"]
 });
 
 export const SignInValidation = z.object({
@@ -18,6 +22,10 @@ export const BusinessSignUpValidation = z.object({
   description: z.string().min(1).max(2000),
   services: z.string().min(1).max(1000),
   is_business: z.boolean(),
+  confirmPassword: z.string().min(1, { message: "Please confirm your password" })
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"]
 });
 
 const TierValidation = z.object({

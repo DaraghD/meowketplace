@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -23,15 +22,20 @@ import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
 
 const BusinessSignUpForm = () => {
-    // 1. Define your form.
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const form = useForm<z.infer<typeof BusinessSignUpValidation>>({
         resolver: zodResolver(BusinessSignUpValidation),
         defaultValues: {
             username: "",
             email: "",
             password: "",
+            confirmPassword: "",
             description: "",
             services: "",
             is_business: true,
@@ -40,12 +44,10 @@ const BusinessSignUpForm = () => {
 
     const navigate = useNavigate();
 
-    // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof BusinessSignUpValidation>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(9999);
         try {
+            const { confirmPassword, ...userData } = values;
+
             const response = await fetch(
                 "http://localhost:8080/api/user/signup",
                 {
@@ -53,22 +55,23 @@ const BusinessSignUpForm = () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(values),
+                    body: JSON.stringify(userData),
                 }
             );
+
             const data = await response.text();
-            toast(data);
             if (response.ok) {
+                toast(data);
                 navigate("/sign-in");
+            } else {
+                toast.error(data);
             }
         } catch (error) {
             console.log(error);
+            toast.error("An error occurred during sign up");
         }
-        console.log(values);
-        // TO DO: PASS DATA TO BACK END
     }
 
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const tags = [
         "Grooming",
         "Walking",
@@ -89,7 +92,7 @@ const BusinessSignUpForm = () => {
     };
 
     const handleTagDelete = (tag: string) => {
-        const updatedTags = selectedTags.filter((t) => t !== tag); // Remove the tag
+        const updatedTags = selectedTags.filter((t) => t !== tag);
         setSelectedTags(updatedTags);
         form.setValue("services", updatedTags.join(", "));
     };
@@ -156,23 +159,7 @@ const BusinessSignUpForm = () => {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Description</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="text"
-                                        className="shad-input"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+
                     <FormField
                         control={form.control}
                         name="services"
@@ -206,7 +193,6 @@ const BusinessSignUpForm = () => {
                                             readOnly
                                             value={selectedTags.join(", ")}
                                             onChange={(e) => {
-                                                // Prevent manual changes (optional, since `readOnly` is already set)
                                                 e.preventDefault();
                                             }}
                                         />
@@ -238,15 +224,70 @@ const BusinessSignUpForm = () => {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        type="password"
-                                        className="shad-input"
-                                        {...field}
-                                    />
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="Password must be at least 4 characters long"
+                                            type={
+                                                showPassword
+                                                    ? "text"
+                                                    : "password"
+                                            }
+                                            className="shad-input pr-10"
+                                            {...field}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                        >
+                                            {showPassword ? (
+                                                <EyeOff size={18} />
+                                            ) : (
+                                                <Eye size={18} />
+                                            )}
+                                        </button>
+                                    </div>
                                 </FormControl>
-                                <FormDescription>
-                                    Password must be at least 4 characters
-                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Confirm Password</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                        <Input
+                                            type={
+                                                showConfirmPassword
+                                                    ? "text"
+                                                    : "password"
+                                            }
+                                            className="shad-input pr-10"
+                                            {...field}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                            onClick={() =>
+                                                setShowConfirmPassword(
+                                                    !showConfirmPassword
+                                                )
+                                            }
+                                        >
+                                            {showConfirmPassword ? (
+                                                <EyeOff size={18} />
+                                            ) : (
+                                                <Eye size={18} />
+                                            )}
+                                        </button>
+                                    </div>
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
