@@ -69,7 +69,17 @@ const BusinessSignUpForm = () => {
     }
 
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const tags = ["Grooming", "Walking", "Training"];
+    const tags = [
+        "Grooming",
+        "Walking",
+        "Training",
+        "Pet Sitting",
+        "Veterinary",
+        "Pet Photography",
+        "Pet Supplies",
+        "Microchipping",
+        "Pet Adoption",
+    ];
 
     const handleTagSelect = (tag: string) => {
         if (!selectedTags.includes(tag)) {
@@ -166,12 +176,12 @@ const BusinessSignUpForm = () => {
                     <FormField
                         control={form.control}
                         name="services"
-                        render={({ }) => (
+                        render={({}) => (
                             <FormItem>
                                 <FormLabel>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger className="cursor-pointer">
-                                            Services ↓
+                                            Services you will Provide ↓
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
                                             {tags.map((tag) => (
