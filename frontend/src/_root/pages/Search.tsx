@@ -95,6 +95,7 @@ const Products = () => {
                 <Rating
                     value={minStars}
                     onChange={(e) => setMinStars(e.target.value)}
+                    onDeselect={() => setMinStars("0")}
                 />
             </div>
             <div className="flex space-x-2 mt-6 mb-6">
