@@ -3,9 +3,19 @@ import styled from "styled-components";
 interface RatingProps {
     value?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onDeselect?: () => void;
 }
 
-const Rating = ({ onChange, value }: RatingProps) => {
+const Rating = ({ onChange, value, onDeselect }: RatingProps) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (value === e.target.value) {
+            if (onDeselect) {
+                onDeselect();
+            }
+        } else {
+            onChange(e);
+        }
+    };
     return (
         <StyledWrapper>
             <div className="rating">
@@ -15,7 +25,7 @@ const Rating = ({ onChange, value }: RatingProps) => {
                     name="rate"
                     value={5}
                     checked={value === "5"}
-                    onChange={onChange}
+                    onChange={handleChange}
                 />
                 <label title="Excellent!" htmlFor="star5">
                     <svg
@@ -32,7 +42,7 @@ const Rating = ({ onChange, value }: RatingProps) => {
                     id="star4"
                     value={4}
                     checked={value === "4"}
-                    onChange={onChange}
+                    onChange={handleChange}
                 />
                 <label title="Great!" htmlFor="star4">
                     <svg
@@ -49,7 +59,7 @@ const Rating = ({ onChange, value }: RatingProps) => {
                     id="star3"
                     value={3}
                     checked={value === "3"}
-                    onChange={onChange}
+                    onChange={handleChange}
                 />
                 <label title="Good" htmlFor="star3">
                     <svg
@@ -66,7 +76,7 @@ const Rating = ({ onChange, value }: RatingProps) => {
                     id="star2"
                     value={2}
                     checked={value === "2"}
-                    onChange={onChange}
+                    onChange={handleChange}
                 />
                 <label title="Okay" htmlFor="star2">
                     <svg
@@ -83,7 +93,7 @@ const Rating = ({ onChange, value }: RatingProps) => {
                     id="star1"
                     value={1}
                     checked={value === "1"}
-                    onChange={onChange}
+                    onChange={handleChange}
                 />
                 <label title="Bad" htmlFor="star1">
                     <svg
