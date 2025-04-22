@@ -100,20 +100,17 @@ const RootLayout = () => {
                         <MenubarContent>
                             <MenubarItem
                                 className="cursor-pointer"
-                                onClick={() => navigate("/services")}
+                                onClick={() => navigate("/product-listing")}
                             >
-                                Services
+                                List Service
                             </MenubarItem>
-                            {user?.is_business ? (
-                                <MenubarItem
-                                    className="cursor-pointer"
-                                    onClick={() => navigate("/product-listing")}
-                                >
-                                    Add listing
-                                </MenubarItem>
-                            ) : (
-                                <></>
-                            )}
+                            <MenubarSeparator />
+                            <MenubarItem
+                                className="cursor-pointer"
+                                onClick={() => navigate("/search")}
+                            >
+                                Browse Services
+                            </MenubarItem>
                             <MenubarSeparator />
                             <MenubarItem
                                 className="cursor-pointer"
