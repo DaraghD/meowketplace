@@ -59,7 +59,7 @@ const Messages = () => {
                             (m.message_content ===
                                 "--Service Inquiry Accepted--" ||
                                 m.message_content ===
-                                "--Service Inquiry Declined--")
+                                    "--Service Inquiry Declined--")
                     )
             );
 
@@ -165,25 +165,11 @@ const Messages = () => {
 
     const filteredMessages = selectedUser
         ? messages.filter(
-            (message) =>
-                message.sender_id === selectedUser.id ||
-                message.receiver_id === selectedUser.id
-        )
+              (message) =>
+                  message.sender_id === selectedUser.id ||
+                  message.receiver_id === selectedUser.id
+          )
         : [];
-
-    if (messages.length === 0) {
-        return (
-            <div className="flex items-center justify-center h-full">
-                <h1 className="text-center text-2xl">
-                    No conversations, start one with a service inquiry{" "}
-                    <a href="/product" className="text-blue-500 underline">
-                        here
-                    </a>
-                    .
-                </h1>
-            </div>
-        );
-    }
 
     const handleServiceInquiryResponse = async (response: string) => {
         if (!selectedUser || !currentUser) {
@@ -342,6 +328,20 @@ const Messages = () => {
         }
     };
 
+    if (messages.length === 0 && !loading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <h1 className="text-center text-2xl">
+                    No conversations, start one with a service inquiry{" "}
+                    <a href="/product" className="text-blue-500 underline">
+                        here
+                    </a>
+                    .
+                </h1>
+            </div>
+        );
+    }
+
     return (
         <div className="flex h-[calc(100vh-4rem)] bg-gray-100">
             {/* Sidebar */}
@@ -484,35 +484,36 @@ const Messages = () => {
                                             key={message.id}
                                             variant={
                                                 message.sender_id ===
-                                                    selectedUser.id
+                                                selectedUser.id
                                                     ? "received"
                                                     : "sent"
                                             }
                                         >
                                             <ChatBubbleAvatar
-                                                src={`http://localhost:8080/api/user/picture/${message.sender_id ===
+                                                src={`http://localhost:8080/api/user/picture/${
+                                                    message.sender_id ===
                                                     selectedUser.id
-                                                    ? selectedUser.id
-                                                    : currentUser?.id
-                                                    }`}
+                                                        ? selectedUser.id
+                                                        : currentUser?.id
+                                                }`}
                                                 fallback={
                                                     message.sender_id ===
-                                                        selectedUser.id
+                                                    selectedUser.id
                                                         ? selectedUser.username
-                                                            .substring(0, 2)
-                                                            .toUpperCase()
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
                                                         : (
-                                                            currentUser?.username ||
-                                                            ""
-                                                        )
-                                                            .substring(0, 2)
-                                                            .toUpperCase()
+                                                              currentUser?.username ||
+                                                              ""
+                                                          )
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
                                                 }
                                             />
                                             <ChatBubbleMessage
                                                 variant={
                                                     message.sender_id ===
-                                                        selectedUser.id
+                                                    selectedUser.id
                                                         ? "received"
                                                         : "sent"
                                                 }
