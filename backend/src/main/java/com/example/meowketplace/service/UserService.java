@@ -117,4 +117,9 @@ public class UserService {
         user.setBio(description);
         userRepository.save(user);
     }
+
+    public void updateTag(User user, String tag) {
+        user.setBusiness_tags(tag);
+        userRepository.save(user);
+    }
 }
