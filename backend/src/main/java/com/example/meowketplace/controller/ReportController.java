@@ -93,8 +93,7 @@ public class ReportController {
                 throw new Exception("Only admins can update reports");
 
             reportService.updateReport(report_update, user);
-
-            return ResponseEntity.status(HttpStatus.OK).body("Report updated");
+            return ResponseEntity.status(HttpStatus.OK).body("Report " + report_update.getReportStatus());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

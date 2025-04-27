@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 interface Report {
     id: number;
-    reportStatus: 'PENDING' | 'RESOLVED' | 'IGNORED'; // Adjust as needed
+    reportStatus: 'PENDING' | 'RESOLVED' | 'DENIED'; // Adjust as needed
     user: userData;
     reportType: 'PRODUCT' | 'REVIEW' | 'USER'; // Adjust as needed
     reportTypeId: number;
@@ -62,7 +62,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 </div>
             </CardContent>
             <CardFooter>
-                {report.reportStatus !== 'RESOLVED' && (
+                {(report.reportStatus === 'PENDING') && (
                     <Menubar className="h-8">
                         <MenubarMenu>
                             <MenubarTrigger
@@ -91,7 +91,9 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                                     </Button>
                                 </MenubarItem>
                                 <MenubarItem>
-                                    <Button>
+                                    <Button onClick={() => {
+                                        updateReport("DENIED", report.id);
+                                    }}>
                                         Reject report
                                     </Button>
                                 </MenubarItem>
