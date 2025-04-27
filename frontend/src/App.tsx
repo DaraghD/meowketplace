@@ -15,6 +15,7 @@ import { Toaster } from "./components/ui/sonner";
 import Products from "./_root/pages/Search";
 import Reports from "./_root/pages/Reports";
 import Admin from "./_root/pages/Admin";
+import Banned from "./Banned";
 
 const App = () => {
     const location = useLocation();
@@ -56,6 +57,8 @@ const App = () => {
                         <Route path="/reports" element={<Reports />} />
                         <Route path="/admin" element={<Admin />} />
                     </Route>
+                    <Route path="/banned" element={<Banned />} />
+
                 </Routes>
             </main>
             <Toaster />
