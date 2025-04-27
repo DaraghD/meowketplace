@@ -171,11 +171,10 @@ const BusinessProfile: React.FC<UserProfileProps> = ({ business }) => {
                     <Button
                         onClick={updateBusinessTags}
                         disabled={!hasChanges}
-                        className={`w-full ${
-                            hasChanges
+                        className={`w-full ${hasChanges
                                 ? "bg-blue-600 hover:bg-blue-700"
                                 : "bg-gray-400 cursor-not-allowed"
-                        }`}
+                            }`}
                     >
                         Update Tags
                     </Button>
