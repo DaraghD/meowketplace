@@ -25,6 +25,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     const navigate = useNavigate();
     const [reports, setReports] = useState<Report[] | null>(null);
     const context = useContext(Context);
+    const [uploadTrigger, setUploadTrigger] = useState(0);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [productWithTransaction, setProductWithTransaction] = useState<
         { product: Product; transaction: Transaction }[]
@@ -152,19 +153,30 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             toast("No file selected");
         }
 
-        const response = await fetch("http://localhost:8080/api/user/picture", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: formData,
-        });
-        if (!response.ok) {
-            throw new Error("Failed to upload image");
-        }
-        const data = await response.text();
-        console.log(data);
-    };
+        try {
+            const response = await fetch("http://localhost:8080/api/user/picture", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: formData,
+            });
+            if (!response.ok) {
+                const errorData = await response.text();
+                console.error("Failed to upload image:", errorData);
+                toast.error(`Failed to upload image: ${errorData}`);
+                return;
+            }
+            const data = await response.text();
+            console.log("Upload successful:", data);
+            toast.success("Profile picture uploaded successfully!");
+            setUploadTrigger((prev) => prev + 1); // Increment state to trigger re-render
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            toast.error("An unexpected error occurred during upload.");
+
+        };
+    }
 
     const verification_hint =
         "Verified means the user has not made a purchase yet";
@@ -174,7 +186,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                 <div className="bg-white p-6 w-full flex">
                     <div className="w-1/3 flex flex-col items-start">
                         <img
-                            src={`http://localhost:8080/api/user/picture/${user.id}`}
+                            src={`http://localhost:8080/api/user/picture/${user.id}?v=${uploadTrigger}`}
                             alt="Profile"
                             className="w-32 h-32 rounded-full mb-4"
                         />
