@@ -41,8 +41,6 @@ const SignInForm = () => {
             },
             body: JSON.stringify(values),
         });
-        const res = await response.text();
-        toast(res);
         if (response.status === 200) {
             const data = await response.json();
             const token = data.token;
@@ -51,6 +49,7 @@ const SignInForm = () => {
             localStorage.setItem("token", token);
             setUser(user_data as userData);
             console.log("Trying to log user : ", user);
+            toast("Sucessfully logged in");
             return (window.location.href = "/");
         }
     }
