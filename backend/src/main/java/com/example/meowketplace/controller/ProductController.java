@@ -118,6 +118,32 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
     }
 
+    @DeleteMapping("/{product_id}")
+    public ResponseEntity<String> removeReview(@RequestHeader("Authorization") String authHeader,
+            @PathVariable Long product_id) {
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                System.out.println(token);
+                String id = jwtUtil.extractUserID(token);
+                boolean valid = jwtUtil.validateToken(token, id);
+                User user = userService.getUserById(Long.parseLong(id));
+
+                Product product = productService.getProductById(product_id);
+
+                if (!user.isIs_admin() || product.getUser().getId() != Long.parseLong(id) || !valid)
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+
+                productService.deleteProduct(user, product);
+                return ResponseEntity.ok("Succesfully deleted review");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error");
+    }
+
     @GetMapping("/picture/{id}/{image}")
     public ResponseEntity<byte[]> getProductImage(@PathVariable Long id, @PathVariable Long image) {
         try {

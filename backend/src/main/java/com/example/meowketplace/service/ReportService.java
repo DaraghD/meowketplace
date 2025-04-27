@@ -11,25 +11,21 @@ import com.example.meowketplace.model.Report;
 import com.example.meowketplace.model.ReportStatus;
 import com.example.meowketplace.model.ReportType;
 import com.example.meowketplace.model.User;
-import com.example.meowketplace.repository.ProductRepository;
 import com.example.meowketplace.repository.ReportRepository;
-import com.example.meowketplace.repository.ReviewRepository;
-import com.example.meowketplace.repository.UserRepository;
 
 @Service
 public class ReportService {
-    private final ReviewRepository reviewRepository;
-    private final ProductRepository productRepository;
-    private final UserRepository userRepository;
     private final ReportRepository reportRepository;
+    private final UserService userService;
+    private final ReviewService reviewService;
+    private final ProductService productService;
 
-    public ReportService(ReportRepository reportRepository, ProductRepository productRepository,
-            UserRepository userRepository,
-            ReviewRepository reviewRepository) {
-        this.reviewRepository = reviewRepository;
+    public ReportService(ReportRepository reportRepository, ReviewService reviewService, UserService userService,
+            ProductService productService) {
         this.reportRepository = reportRepository;
-        this.productRepository = productRepository;
-        this.userRepository = userRepository;
+        this.productService = productService;
+        this.userService = userService;
+        this.reviewService = reviewService;
     }
 
     public void addReport(ReportRequest r, User user) throws Exception {
@@ -71,8 +67,6 @@ public class ReportService {
                 return ReportType.USER;
             case "REVIEW":
                 return ReportType.REVIEW;
-            case "MESSAGE":
-                return ReportType.MESSAGE;
             default:
                 throw new Exception("Unsupported Report Type");
         }
@@ -103,9 +97,20 @@ public class ReportService {
         return reportRepository.findAll();
     }
 
-    public void updateReport(ReportUpdate report_update, User user) throws Exception {
+    public void updateReport(ReportUpdate report_update, User user) throws Exception {// user doing the update
         Report report = reportRepository.findById(report_update.getId()).get();
         report.setReportStatus(getReportStatusFromString(report_update.getReportStatus()));
+
+        if (report.getReportStatus() == ReportStatus.RESOLVED) {
+            switch (report.getReportType()) {
+                case ReportType.REVIEW:
+                    reviewService.deleteReview(user, reviewService.getReviewById(report.getReportTypeId()));
+                case ReportType.USER:
+                    userService.deleteUser(report.getReportTypeId());
+                case ReportType.PRODUCT:
+                    productService.deleteProduct(user, productService.getProductById(report.getReportTypeId()));
+            }
+        }
         reportRepository.save(report);
     }
 }

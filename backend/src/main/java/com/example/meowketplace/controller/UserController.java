@@ -154,6 +154,33 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error");
     }
 
+    @DeleteMapping("/{user_id}")
+    public ResponseEntity<String> banUser(@RequestHeader("Authorization") String authHeader,
+            @PathVariable Long user_id) {
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                System.out.println(token);
+                String id = jwtUtil.extractUserID(token);
+                boolean valid = jwtUtil.validateToken(token, id);
+                User user = userService.getUserById(Long.parseLong(id));
+
+                if (!user.isIs_admin() || user_id != Long.parseLong(id) || !valid)
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+
+                System.out.println("User: ");
+                System.out.println(user);
+
+                userService.deleteUser(user_id);
+                return ResponseEntity.ok("Succesfully deleted user");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error");
+    }
+
     @RequestMapping("/auth") // maybe move to /user get request
     public ResponseEntity<String> authenticateUser(@RequestHeader("Authorization") String authHeader) {
         try {

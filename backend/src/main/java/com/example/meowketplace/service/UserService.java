@@ -51,6 +51,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void deleteUser(Long user_id) {
+        userRepository.deleteById(user_id);
+    }
+
     public boolean authenticateUserPassword(LoginRequest loginRequest) throws Exception {
         if (loginRequest.getEmail() == null || loginRequest.getPassword() == null)
             throw new Exception("Missing required fields");

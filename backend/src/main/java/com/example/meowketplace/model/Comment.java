@@ -18,12 +18,10 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "comment_id")
-    private Comment parentComment;  // Self-referencing for nested comments
+    private Comment parentComment; // Self-referencing for nested comments
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String messageContent;
-
-    //date
 
     public void setId(Long id) {
         this.id = id;

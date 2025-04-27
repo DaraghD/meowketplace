@@ -89,9 +89,12 @@ public class ReportController {
             @RequestHeader("Authorization") String authHeader) {
         try {
             User user = userService.getUserById(jwtUtil.authAndGetUserId(authHeader));
+            if (!user.isIs_admin())
+                throw new Exception("Only admins can update reports");
+
             reportService.updateReport(report_update, user);
 
-            return ResponseEntity.status(HttpStatus.OK).body("Report successfully made");
+            return ResponseEntity.status(HttpStatus.OK).body("Report updated");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
