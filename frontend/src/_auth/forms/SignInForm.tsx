@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { Context } from "@/context.tsx";
 import { userData } from "@/lib/types/types.ts";
+import { toast } from "sonner";
 
 const SignInForm = () => {
     const context = useContext(Context);
@@ -40,6 +41,8 @@ const SignInForm = () => {
             },
             body: JSON.stringify(values),
         });
+        const res = await response.text();
+        toast(res);
         if (response.status === 200) {
             const data = await response.json();
             const token = data.token;

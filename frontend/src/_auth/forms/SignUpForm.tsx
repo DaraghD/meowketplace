@@ -49,11 +49,9 @@ const SignUpForm = () => {
             );
 
             const data = await response.text();
+            toast(data);
             if (response.ok) {
-                toast(data);
                 navigate("/sign-in");
-            } else {
-                toast.error(data);
             }
         } catch (error) {
             console.log(error);
