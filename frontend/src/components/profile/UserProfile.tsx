@@ -235,7 +235,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                                 />
                                 <Button
                                     onClick={uploadPicture}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                                    className="hover:cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white"
                                 >
                                     Upload Picture
                                 </Button>
@@ -246,7 +246,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                                     <DrawerTrigger asChild>
                                         <Button
                                             variant="outline"
-                                            className="w-full"
+                                            className="hover:cursor-pointer w-full"
                                         >
                                             View Reports
                                         </Button>
@@ -287,7 +287,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
 
                                 <Button
                                     onClick={() => logout()}
-                                    className="w-full"
+                                    className="w-full hover:cursor-pointer"
                                 >
                                     Logout
                                 </Button>

@@ -442,7 +442,7 @@ const Messages = () => {
                         <Button
                             onClick={verifyUser}
                             disabled={isVerify}
-                            className="bg-green-600 hover:bg-green-700 text-white"
+                            className="hover:cursor-pointer bg-green-600 hover:bg-green-700 text-white"
                         >
                             Complete Transaction
                         </Button>

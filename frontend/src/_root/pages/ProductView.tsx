@@ -152,17 +152,6 @@ const ProductView = () => {
         }
     };
 
-    // const form = useForm<z.infer<typeof ReviewValidation>>({
-    //     resolver: zodResolver(ReviewValidation),
-    //     defaultValues: {
-    //         rating: 0,
-    //         text: "",
-    //     },
-    // });
-    // function onSubmit(values: z.infer<typeof ReviewValidation>) {
-    //     console.log(values);
-    // }
-
     const rating = product?.starRating;
     const priceSorted = product?.tiers
         .slice()
@@ -215,8 +204,9 @@ const ProductView = () => {
                         <CarouselNext />
                     </Carousel>
 
-                    <p>
+                    <p className="pr-2">
                         {rating} <span>{renderStars(product?.starRating)}</span>
+                        <ReportButton type="product" id={product?.id} />
                     </p>
                 </div>
                 <div className="pl-10 flex flex-col p-5 gap-4 w-full md:w-1/2">
@@ -243,10 +233,18 @@ const ProductView = () => {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    €{lowestPrice} - €{highestPrice}
-                    <div>
-                        <ReportButton type="product" id={product?.id} />
+                    <div className="relative group inline-block">
+                        <p className="cursor-pointer">
+                            from{" "}
+                            <span className="underline">
+                                {product?.user.username}
+                            </span>
+                        </p>
+                        <div className="absolute hidden group-hover:block z-10 w-64 p-2 mt-1 text-sm bg-white border border-gray-200 rounded shadow-lg">
+                            {product?.user.bio || "No bio available"}
+                        </div>
                     </div>
+                    €{lowestPrice} - €{highestPrice}
                     <p>Tag: {product?.tag}</p>
                     <ScrollArea className="h-[300px] w-full rounded-md border p-4">
                         {selectedTier

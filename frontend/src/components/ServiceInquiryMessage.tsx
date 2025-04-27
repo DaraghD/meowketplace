@@ -36,14 +36,14 @@ export const ServiceInquiryMessage = ({
                 <div className="flex gap-2 mt-2">
                     <Button
                         onClick={handleAccept}
-                        className="bg-green-500 hover:bg-green-600 text-white"
+                        className="bg-green-500 hover:bg-green-600 text-white hover:cursor-pointer"
                         disabled={isResponded}
                     >
                         Accept
                     </Button>
                     <Button
                         onClick={handleDecline}
-                        className="bg-red-500 hover:bg-red-600 text-white"
+                        className="bg-red-500 hover:bg-red-600 text-white hover:cursor-pointer"
                         disabled={isResponded}
                     >
                         Decline

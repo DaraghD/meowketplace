@@ -148,7 +148,10 @@ const BusinessProfile: React.FC<UserProfileProps> = ({ business }) => {
                         </label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="w-full">
+                                <Button
+                                    variant="outline"
+                                    className="hover:cursor-pointer w-full"
+                                >
                                     Select Services ↓
                                 </Button>
                             </DropdownMenuTrigger>
@@ -171,10 +174,11 @@ const BusinessProfile: React.FC<UserProfileProps> = ({ business }) => {
                     <Button
                         onClick={updateBusinessTags}
                         disabled={!hasChanges}
-                        className={`w-full ${hasChanges
+                        className={`w-full hover:cursor-pointer ${
+                            hasChanges
                                 ? "bg-blue-600 hover:bg-blue-700"
                                 : "bg-gray-400 cursor-not-allowed"
-                            }`}
+                        }`}
                     >
                         Update Tags
                     </Button>
