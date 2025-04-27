@@ -171,7 +171,7 @@ public class UserController {
                 if (!valid)
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
 
-                return ResponseEntity.ok("Succesfully updated description");
+                return ResponseEntity.ok("Succesfully updated tags");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
