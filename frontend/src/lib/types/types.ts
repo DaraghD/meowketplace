@@ -82,7 +82,7 @@ export interface Product {
 
 export interface Report {
     id: number;
-    reportStatus: 'PENDING' | 'RESOLVED' | 'IGNORED';
+    reportStatus: 'PENDING' | 'RESOLVED' | 'DENIED';
     user: userData;
     reportType: 'PRODUCT' | 'REVIEW' | 'USER';
     reportTypeId: number;
