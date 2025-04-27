@@ -88,7 +88,7 @@ public class ProductService {
     }
 
     public void deleteProduct(User user, Product product) throws Exception {
-        if (user.getId() != product.getUser().getId() || !user.isIs_admin())
+        if (user.getId() != product.getUser().getId() && !user.isIs_admin())
             throw new Exception("User unauthorized to delete review");
         productRepository.delete(product);
     }

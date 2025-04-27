@@ -4,5 +4,4 @@ public enum ReportType {
     PRODUCT,
     USER,
     REVIEW,
-    MESSAGE
 }

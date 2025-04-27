@@ -101,7 +101,7 @@ public class ReportService {
         Report report = reportRepository.findById(report_update.getId()).get();
         report.setReportStatus(getReportStatusFromString(report_update.getReportStatus()));
 
-        if (report.getReportStatus() == ReportStatus.RESOLVED) {
+        if (report.getReportStatus() != ReportStatus.PENDING) {
             switch (report.getReportType()) {
                 case ReportType.REVIEW:
                     reviewService.deleteReview(user, reviewService.getReviewById(report.getReportTypeId()));

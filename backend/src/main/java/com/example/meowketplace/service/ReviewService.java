@@ -10,6 +10,8 @@ import com.example.meowketplace.repository.ProductRepository;
 import com.example.meowketplace.repository.ReviewRepository;
 import com.example.meowketplace.repository.UserRepository;
 
+import java.util.Objects;
+
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
@@ -69,7 +71,8 @@ public class ReviewService {
     }
 
     public void deleteReview(User user, Review review) throws Exception {
-        if (user.getId() != review.getUser().getId() || !user.isIs_admin())
+        System.out.println(user);
+        if (!Objects.equals(user.getId(), review.getUser().getId()) && !user.isIs_admin())
             throw new Exception("User unauthorized to delete review");
         reviewRepository.delete(review);
     }
