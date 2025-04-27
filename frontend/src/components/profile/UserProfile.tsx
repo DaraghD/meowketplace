@@ -26,22 +26,21 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     const [reports, setReports] = useState<Report[] | null>(null);
     const context = useContext(Context);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [uploadTrigger, setUploadTrigger] = useState(0);
     const [productWithTransaction, setProductWithTransaction] = useState<
         { product: Product; transaction: Transaction }[]
     >([]);
     const [isEditingBio, setIsEditingBio] = useState(false);
     const [bioText, setBioText] = useState(user.bio || "");
+    const [file, setFile] = useState<File | null>(null);
 
     if (!context) return null;
-    const { logout } = context;
+    const { logout, uploadTrigger, triggerUpload } = context;
 
     console.log("LOGGING USER");
     console.log(user);
     if (!user) {
         navigate("/sign-in");
     }
-    const [file, setFile] = useState<File | null>(null);
 
     useEffect(() => {
         setBioText(user.bio || "");
@@ -171,6 +170,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         } else {
             console.log("No file selected");
             toast("No file selected");
+            return;
         }
 
         try {
@@ -195,7 +195,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             const data = await response.text();
             console.log("Upload successful:", data);
             toast.success("Profile picture uploaded successfully!");
-            setUploadTrigger((prev) => prev + 1); // Increment state to trigger re-render
+            triggerUpload(); // Use context's triggerUpload instead of local state
         } catch (error) {
             console.error("Error uploading image:", error);
             toast.error("An unexpected error occurred during upload.");
@@ -204,6 +204,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
 
     const verification_hint =
         "Verified means the user has not made a purchase yet";
+
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Profile Header Section */}
@@ -401,7 +402,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             </div>
 
             {/* Service History Section */}
-
             <div className="w-full flex flex-col items-center mt-4">
                 <h2 className="text-2xl font-bold ">Service History</h2>
             </div>
