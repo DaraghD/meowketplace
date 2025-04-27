@@ -123,4 +123,10 @@ public class UserService {
         user.setBusiness_tags(tag);
         userRepository.save(user);
     }
+
+    public void ban(Long reportTypeId) {
+        User user = userRepository.findById(reportTypeId).get();
+        user.setIs_banned(true);
+        userRepository.save(user);
+    }
 }

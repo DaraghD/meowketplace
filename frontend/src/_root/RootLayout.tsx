@@ -25,6 +25,10 @@ const RootLayout = () => {
         navigate("/");
     };
 
+    if (user?.is_banned) {
+        navigate("/banned");
+    }
+
     return (
         <div className="min-h-screen flex flex-col">
             <div className="hidden xl:block">
