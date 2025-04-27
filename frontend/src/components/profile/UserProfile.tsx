@@ -25,28 +25,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     const navigate = useNavigate();
     const [reports, setReports] = useState<Report[] | null>(null);
     const context = useContext(Context);
-    const [uploadTrigger, setUploadTrigger] = useState(0);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [productWithTransaction, setProductWithTransaction] = useState<
         { product: Product; transaction: Transaction }[]
     >([]);
+    const [isEditingBio, setIsEditingBio] = useState(false);
+    const [bioText, setBioText] = useState(user.bio || "");
+
     if (!context) return null;
     const { logout } = context;
-
-    const updateDescription = async (description: String) => {
-        const response = await fetch('http://localhost:8080/api/user/description', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({
-                description: description
-            }),
-        });
-        const text = await response.text()
-        toast(text);
-    };
 
     console.log("LOGGING USER");
     console.log(user);
@@ -54,6 +41,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         navigate("/sign-in");
     }
     const [file, setFile] = useState<File | null>(null);
+
+    useEffect(() => {
+        setBioText(user.bio || "");
+    }, [user.bio]);
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -70,7 +61,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                 );
                 const data: Transaction[] = await response.json();
                 setTransactions(data);
-                console.log("fucking piece of shit");
             } catch (err) {
                 console.error("Error fetching transactions:", err);
             }
@@ -117,6 +107,35 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         }
     };
 
+    const updateDescription = async (description: string) => {
+        try {
+            const response = await fetch(
+                "http://localhost:8080/api/user/description",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                    body: JSON.stringify({
+                        description: description,
+                    }),
+                }
+            );
+            if (!response.ok) {
+                throw new Error("Failed to update bio");
+            }
+            const text = await response.text();
+            toast.success(text);
+            setIsEditingBio(false);
+        } catch (error) {
+            toast.error("Failed to update bio");
+            console.error("Error updating bio:", error);
+        }
+    };
+
     useEffect(() => {
         const fetchReports = async () => {
             try {
@@ -153,160 +172,264 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             toast("No file selected");
         }
 
-        try {
-            const response = await fetch("http://localhost:8080/api/user/picture", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: formData,
-            });
-            if (!response.ok) {
-                const errorData = await response.text();
-                console.error("Failed to upload image:", errorData);
-                toast.error(`Failed to upload image: ${errorData}`);
-                return;
-            }
-            const data = await response.text();
-            console.log("Upload successful:", data);
-            toast.success("Profile picture uploaded successfully!");
-            setUploadTrigger((prev) => prev + 1); // Increment state to trigger re-render
-        } catch (error) {
-            console.error("Error uploading image:", error);
-            toast.error("An unexpected error occurred during upload.");
-
-        };
-    }
+        const response = await fetch("http://localhost:8080/api/user/picture", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: formData,
+        });
+        if (!response.ok) {
+            throw new Error("Failed to upload image");
+        }
+        const data = await response.text();
+        console.log(data);
+    };
 
     const verification_hint =
         "Verified means the user has not made a purchase yet";
     return (
-        <>
-            <div className="flex flex-col items-start justify-start bg-gray-100 ">
-                <div className="bg-white p-6 w-full flex">
-                    <div className="w-1/3 flex flex-col items-start">
-                        <img
-                            src={`http://localhost:8080/api/user/picture/${user.id}?v=${uploadTrigger}`}
-                            alt="Profile"
-                            className="w-32 h-32 rounded-full mb-4"
-                        />
-                        <input
-                            type="file"
-                            className="mb-4"
-                            onChange={handleFileChange}
-                        />
-                        <Button
-                            onClick={uploadPicture}
-                            className="bg-blue-500 text-white rounded hover:bg-blue-600"
-                            style={{ padding: "0.5rem 1rem" }}
-                        >
-                            Upload Picture
-                        </Button>
-                        <h1 className="text-3xl font-bold mb-2">
-                            {user.username}
-                        </h1>
-                        <p className="text-lg mb-2">Email: {user.email}</p>
-                        <p
-                            className="text-lg mb-2 underline cursor-help"
-                            title={verification_hint}
-                        >
-                            {user.is_verified ? "Verified" : "Not Verified"}
-                        </p>
-                        <Drawer>
-                            <DrawerTrigger>
-                                <Button>View Reports</Button>
-                            </DrawerTrigger>
-                            <DrawerContent>
-                                <DrawerHeader>
-                                    <DrawerTitle>User Reports</DrawerTitle>
-                                    <DrawerDescription>
-                                        Reports for this user.
-                                    </DrawerDescription>
-                                </DrawerHeader>
-                                <div className="p-4 overflow-y-auto">
-                                    {reports &&
-                                        [...reports] // Create a copy to avoid modifying the original array
-                                            .sort((a, b) => b.id - a.id)
-                                            .map((report) => (
-                                                <ReportCard
-                                                    key={report.id}
-                                                    report={report}
-                                                />
-                                            ))}
-                                    {reports && reports.length === 0 && (
-                                        <Card>
-                                            <CardContent>
-                                                <p>No reports found.</p>
-                                            </CardContent>
-                                        </Card>
-                                    )}
+        <div className="min-h-screen bg-gray-50">
+            {/* Profile Header Section */}
+            <div className="bg-white shadow-sm">
+                <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row gap-8">
+                        <div className="w-full md:w-1/3 flex flex-col items-center md:items-start space-y-6">
+                            <div className="relative group">
+                                <img
+                                    src={`http://localhost:8080/api/user/picture/${user.id}`}
+                                    alt="Profile"
+                                    className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 group-hover:border-blue-500 transition-colors"
+                                />
+                            </div>
+
+                            <div className="w-full space-y-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Change Profile Picture
+                                </label>
+                                <input
+                                    type="file"
+                                    onChange={handleFileChange}
+                                    className="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-blue-50 file:text-blue-700
+                                    hover:file:bg-blue-100"
+                                />
+                                <Button
+                                    onClick={uploadPicture}
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                                >
+                                    Upload Picture
+                                </Button>
+                            </div>
+
+                            <div className="w-full flex flex-col space-y-3">
+                                <Drawer>
+                                    <DrawerTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full"
+                                        >
+                                            View Reports
+                                        </Button>
+                                    </DrawerTrigger>
+                                    <DrawerContent>
+                                        <DrawerHeader>
+                                            <DrawerTitle>
+                                                User Reports
+                                            </DrawerTitle>
+                                            <DrawerDescription>
+                                                Reports for this user.
+                                            </DrawerDescription>
+                                        </DrawerHeader>
+                                        <div className="p-4 overflow-y-auto max-h-[60vh]">
+                                            {reports &&
+                                                [...reports]
+                                                    .sort((a, b) => b.id - a.id)
+                                                    .map((report) => (
+                                                        <ReportCard
+                                                            key={report.id}
+                                                            report={report}
+                                                        />
+                                                    ))}
+                                            {reports &&
+                                                reports.length === 0 && (
+                                                    <Card>
+                                                        <CardContent className="p-4">
+                                                            <p className="text-gray-500">
+                                                                No reports
+                                                                found.
+                                                            </p>
+                                                        </CardContent>
+                                                    </Card>
+                                                )}
+                                        </div>
+                                    </DrawerContent>
+                                </Drawer>
+
+                                <Button
+                                    onClick={() => logout()}
+                                    className="w-full"
+                                >
+                                    Logout
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Right Column - Profile Info */}
+                        <div className="w-full md:w-2/3 space-y-6">
+                            <div className="bg-white p-6 rounded-lg">
+                                <div className="flex items-center mb-6">
+                                    <h1 className="text-3xl font-bold text-gray-900 mr-4">
+                                        {user.username}
+                                    </h1>
+                                    <span
+                                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                            user.is_verified
+                                                ? "bg-green-100 text-green-800"
+                                                : "bg-yellow-100 text-yellow-800"
+                                        } cursor-help`}
+                                        title={verification_hint}
+                                    >
+                                        {user.is_verified
+                                            ? "Verified"
+                                            : "Not Verified"}
+                                    </span>
                                 </div>
-                            </DrawerContent>
-                        </Drawer>
-                        <Button
-                            onClick={() => {
-                                logout();
-                            }}
-                            className="bg-red-500 text-white rounded hover:bg-red-400"
-                            style={{ padding: "0.5rem 1rem" }}
-                        >
-                            Logout
-                        </Button>
-                    </div>
-                    <div className="w-full flex flex-col items-center">
-                        <h2 className="text-3xl font-bold mb-4">Bio</h2>
-                        <textarea
-                            placeholder={
-                                user.bio && user.bio !== "null"
-                                    ? user.bio
-                                    : "Make a bio!"
-                            }
-                            className="w-64 h-32 p-2 border border-gray-300 rounded"
-                        ></textarea>
-                        <p id="error_text" className="hidden">
-                            {" "}
-                            No changes made
-                        </p>
-                        <button
-                            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                            onClick={() => {
-                                const bio_text =
-                                    document.querySelector("textarea")?.value;
-                                if (
-                                    !bio_text ||
-                                    bio_text === "null" ||
-                                    bio_text === user.bio
-                                ) {
-                                    document
-                                        .querySelector("#error_text")
-                                        ?.classList.remove("hidden");
-                                } else {
-                                    //post user to backend
-                                    updateDescription(bio_text);
-                                }
-                            }}
-                        >
-                            Save Changes
-                        </button>
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <h3 className="text-sm font-medium text-gray-500">
+                                            Email
+                                        </h3>
+                                        <p className="mt-1 text-lg text-gray-900">
+                                            {user.email}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-sm font-medium text-gray-500">
+                                            Bio
+                                        </h3>
+                                        {isEditingBio ? (
+                                            <div className="mt-2 space-y-2">
+                                                <textarea
+                                                    className="w-full p-4 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                                    rows={4}
+                                                    value={bioText}
+                                                    onChange={(e) =>
+                                                        setBioText(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    placeholder={
+                                                        user.bio &&
+                                                        user.bio !== "null"
+                                                            ? user.bio
+                                                            : "Make a bio!"
+                                                    }
+                                                />
+                                                <div className="flex space-x-2">
+                                                    <Button
+                                                        onClick={() => {
+                                                            updateDescription(
+                                                                bioText
+                                                            );
+                                                        }}
+                                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => {
+                                                            setIsEditingBio(
+                                                                false
+                                                            );
+                                                            setBioText(
+                                                                user.bio || ""
+                                                            );
+                                                        }}
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div
+                                                className="mt-2 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer"
+                                                onClick={() =>
+                                                    setIsEditingBio(true)
+                                                }
+                                            >
+                                                {bioText &&
+                                                bioText !== "null" ? (
+                                                    <p className="text-gray-700 whitespace-pre-line">
+                                                        {bioText}
+                                                    </p>
+                                                ) : (
+                                                    <p className="text-gray-400 italic">
+                                                        Click to add a bio...
+                                                    </p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="w-full flex flex-col items-center mt-4">
-                <h2 className="text-2xl font-bold mb-4">Service History</h2>
-            </div>
-            <div className="w-full flex flex-col items-center mt-4">
-                <ul className="flex flex-col items-center space-y-4 mt-6">
-                    {productWithTransaction.map(({ product, transaction }) => (
-                        <div key={product.id} className="w-full">
-                            <ProductCard product={product} />
-                            <p className="text-sm text-gray-600 mt-1 ml-4">
-                                Status: {transaction.status}
+
+            {/* Service History Section */}
+            <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+                <div className="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                        Service History
+                    </h2>
+
+                    {productWithTransaction.length > 0 ? (
+                        <div className="space-y-4">
+                            {productWithTransaction.map(
+                                ({ product, transaction }) => (
+                                    <div
+                                        key={product.id}
+                                        className="border-b border-gray-200 pb-4 last:border-b-0"
+                                    >
+                                        <ProductCard product={product} />
+                                        <div className="mt-2 ml-4">
+                                            <span
+                                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                    transaction.status ===
+                                                    "completed"
+                                                        ? "bg-green-100 text-green-800"
+                                                        : transaction.status ===
+                                                          "pending"
+                                                        ? "bg-yellow-100 text-yellow-800"
+                                                        : "bg-blue-100 text-blue-800"
+                                                }`}
+                                            >
+                                                {transaction.status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    ) : (
+                        <div className="text-center py-8">
+                            <p className="text-gray-500">
+                                No service history yet.
                             </p>
                         </div>
-                    ))}
-                </ul>
+                    )}
+                </div>
             </div>
-        </>
+        </div>
     );
 };
+
 export default UserProfile;
