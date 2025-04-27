@@ -15,10 +15,6 @@ interface UserProfileProps {
     business: userData;
 }
 
-interface TagUpdate {
-    tag: string[];
-}
-
 const BusinessProfile: React.FC<UserProfileProps> = ({ business }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
