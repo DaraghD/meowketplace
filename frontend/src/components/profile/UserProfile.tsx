@@ -32,6 +32,21 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     if (!context) return null;
     const { logout } = context;
 
+    const updateDescription = async (description: String) => {
+        const response = await fetch('http://localhost:8080/api/user/description', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({
+                description: description
+            }),
+        });
+        const text = await response.text()
+        toast(text);
+    };
+
     console.log("LOGGING USER");
     console.log(user);
     if (!user) {
@@ -255,6 +270,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                                         ?.classList.remove("hidden");
                                 } else {
                                     //post user to backend
+                                    updateDescription(bio_text);
                                 }
                             }}
                         >

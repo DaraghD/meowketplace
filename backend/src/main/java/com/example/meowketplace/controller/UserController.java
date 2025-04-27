@@ -4,6 +4,7 @@ import com.example.meowketplace.Views;
 import com.example.meowketplace.component.JwtUtil;
 import com.example.meowketplace.dto.LoginRequest;
 import com.example.meowketplace.dto.LoginResponse;
+import com.example.meowketplace.dto.DescriptionUpdate;
 import com.example.meowketplace.dto.SignupRequest;
 import com.example.meowketplace.dto.VerifyUserRequest;
 import com.example.meowketplace.model.User;
@@ -146,6 +147,30 @@ public class UserController {
                 userService.verifyUser(user, verify_user);
 
                 return ResponseEntity.ok("User verified");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error");
+    }
+
+    @PostMapping("/description")
+    public ResponseEntity<String> updateDescription(@RequestHeader("Authorization") String authHeader,
+            @RequestBody DescriptionUpdate description) {
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                System.out.println(token);
+                String id = jwtUtil.extractUserID(token);
+                boolean valid = jwtUtil.validateToken(token, id);
+                User user = userService.getUserById(Long.parseLong(id));
+                userService.updateDescription(user, description.getDescription());
+
+                if (!valid)
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+
+                return ResponseEntity.ok("Succesfully updated description");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

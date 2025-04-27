@@ -112,4 +112,9 @@ public class UserService {
         verify_user.setIs_verified(true);
         userRepository.save(verify_user);
     }
+
+    public void updateDescription(User user, String description) {
+        user.setBio(description);
+        userRepository.save(user);
+    }
 }
