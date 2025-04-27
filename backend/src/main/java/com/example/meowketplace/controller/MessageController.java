@@ -2,7 +2,6 @@ package com.example.meowketplace.controller;
 
 import com.example.meowketplace.dto.MessageRequest;
 import com.example.meowketplace.model.Message;
-import com.example.meowketplace.repository.MessageRepository;
 import com.example.meowketplace.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
