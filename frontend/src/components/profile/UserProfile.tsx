@@ -174,13 +174,18 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         }
 
         try {
-            const response = await fetch("http://localhost:8080/api/user/picture", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: formData,
-            });
+            const response = await fetch(
+                "http://localhost:8080/api/user/picture",
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                    body: formData,
+                }
+            );
             if (!response.ok) {
                 const errorData = await response.text();
                 console.error("Failed to upload image:", errorData);
@@ -194,8 +199,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         } catch (error) {
             console.error("Error uploading image:", error);
             toast.error("An unexpected error occurred during upload.");
-        };
-    }
+        }
+    };
 
     const verification_hint =
         "Verified means the user has not made a purchase yet";
@@ -297,10 +302,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                                         {user.username}
                                     </h1>
                                     <span
-                                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${user.is_verified
-                                            ? "bg-green-100 text-green-800"
-                                            : "bg-yellow-100 text-yellow-800"
-                                            } cursor-help`}
+                                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                            user.is_verified
+                                                ? "bg-green-100 text-green-800"
+                                                : "bg-yellow-100 text-yellow-800"
+                                        } cursor-help`}
                                         title={verification_hint}
                                     >
                                         {user.is_verified
@@ -336,7 +342,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                                                     }
                                                     placeholder={
                                                         user.bio &&
-                                                            user.bio !== "null"
+                                                        user.bio !== "null"
                                                             ? user.bio
                                                             : "Make a bio!"
                                                     }
@@ -375,7 +381,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                                                 }
                                             >
                                                 {bioText &&
-                                                    bioText !== "null" ? (
+                                                bioText !== "null" ? (
                                                     <p className="text-gray-700 whitespace-pre-line">
                                                         {bioText}
                                                     </p>
@@ -395,47 +401,21 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             </div>
 
             {/* Service History Section */}
-            <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                        Service History
-                    </h2>
 
-                    {productWithTransaction.length > 0 ? (
-                        <div className="space-y-4">
-                            {productWithTransaction.map(
-                                ({ product, transaction }) => (
-                                    <div
-                                        key={product.id}
-                                        className="border-b border-gray-200 pb-4 last:border-b-0"
-                                    >
-                                        <ProductCard product={product} />
-                                        <div className="mt-2 ml-4">
-                                            <span
-                                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${transaction.status ===
-                                                    "completed"
-                                                    ? "bg-green-100 text-green-800"
-                                                    : transaction.status ===
-                                                        "pending"
-                                                        ? "bg-yellow-100 text-yellow-800"
-                                                        : "bg-blue-100 text-blue-800"
-                                                    }`}
-                                            >
-                                                {transaction.status}
-                                            </span>
-                                        </div>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    ) : (
-                        <div className="text-center py-8">
-                            <p className="text-gray-500">
-                                No service history yet.
+            <div className="w-full flex flex-col items-center mt-4">
+                <h2 className="text-2xl font-bold ">Service History</h2>
+            </div>
+            <div className="w-full flex flex-col items-center ">
+                <ul className="flex flex-col items-center space-y-4 mt-6">
+                    {productWithTransaction.map(({ product, transaction }) => (
+                        <div key={product.id} className="w-full">
+                            <ProductCard product={product} />
+                            <p className="text-sm text-gray-600 mt-1 ml-4">
+                                Status: {transaction.status}
                             </p>
                         </div>
-                    )}
-                </div>
+                    ))}
+                </ul>
             </div>
         </div>
     );
