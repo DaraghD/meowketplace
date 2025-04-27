@@ -99,7 +99,15 @@ public class ReportService {
 
     public void updateReport(ReportUpdate report_update, User user) throws Exception {// user doing the update
         Report report = reportRepository.findById(report_update.getId()).get();
-        report.setReportStatus(getReportStatusFromString(report_update.getReportStatus()));
+        ReportStatus status = getReportStatusFromString(report_update.getReportStatus());
+        report.setReportStatus(status);
+
+        List<Report> reports = reportRepository.findAll();
+        for (Report r : reports) { // if multiple reports exist for same item, then update them all
+            if (r.getReportTypeId().equals(report.getReportTypeId()) && r.getReportType() == report.getReportType()) {
+                r.setReportStatus(status);
+            }
+        }
 
         if (report.getReportStatus() != ReportStatus.PENDING) {
             switch (report.getReportType()) {
@@ -112,5 +120,6 @@ public class ReportService {
             }
         }
         reportRepository.save(report);
+        reportRepository.saveAll(reports);
     }
 }
