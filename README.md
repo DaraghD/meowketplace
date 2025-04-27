@@ -1,5 +1,6 @@
 # meowketplace - CS4116 Software Development Project
-A business marketplace website with a focus on pets
+A business marketplace website with a focus on pets  
+**Site is http, chrome does not allow http sites, firefox is recommended**
 # Development
 **main** branch is used to deploy the site at meowketplace.ie
 - Backend - Java Springboot
