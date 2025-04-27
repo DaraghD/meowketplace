@@ -17,7 +17,7 @@ const RootLayout = () => {
     if (!context) {
         throw new Error("Context not found");
     }
-    const { user } = context;
+    const { user, uploadTrigger } = context;
 
     const navigate = useNavigate();
 
@@ -71,7 +71,7 @@ const RootLayout = () => {
                         >
                             <Avatar onClick={() => navigate("/profile")}>
                                 <AvatarImage
-                                    src={`http://localhost:8080/api/user/picture/${user?.id}`}
+                                    src={`http://localhost:8080/api/user/picture/${user?.id}?v=${uploadTrigger}`}
                                 />
                                 <AvatarFallback>
                                     {user?.username
@@ -136,7 +136,7 @@ const RootLayout = () => {
                                 <span>Profile</span>{" "}
                                 <Avatar>
                                     <AvatarImage
-                                        src={`http://localhost:8080/api/user/picture/${user?.id}`}
+                                        src={`http://localhost:8080/api/user/picture/${user?.id}?v=${uploadTrigger}`}
                                     />
                                     <AvatarFallback>
                                         {user?.username

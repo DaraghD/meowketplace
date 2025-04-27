@@ -1,26 +1,38 @@
 import { MessageNotification, userData } from "@/lib/types/types.ts";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 import { Link } from "react-router-dom";
 
-export const Context = React.createContext<
-    | {
-        user: userData | null;
-        setUser: React.Dispatch<React.SetStateAction<userData | null>>;
-        isAuthenticated: boolean;
-        setAuthentication: React.Dispatch<React.SetStateAction<boolean>>;
-        logout: () => void;  // Ensure logout is part of the context type
-    }
-    | null
->(null);
-const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface ContextType {
+    user: userData | null;
+    setUser: React.Dispatch<React.SetStateAction<userData | null>>;
+    isAuthenticated: boolean;
+    setAuthentication: React.Dispatch<React.SetStateAction<boolean>>;
+    logout: () => void;
+    uploadTrigger: number;
+    triggerUpload: () => void; // New function to trigger profile picture updates
+}
+
+export const Context = React.createContext<ContextType | null>(null);
+
+const ContextProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     const [user, setUser] = useState<userData | null>(null);
     const [isAuthenticated, setAuthentication] = useState<boolean>(false);
     const [stompClient, setStompClient] = useState<Stomp.Client | null>(null);
+    const [uploadTrigger, setUploadTrigger] = useState<number>(0); // New state for profile picture updates
 
-    const sendMessageNotification = async (notification: MessageNotification) => {
+    // Function to trigger profile picture updates
+    const triggerUpload = () => {
+        setUploadTrigger((prev) => prev + 1);
+    };
+
+    const sendMessageNotification = async (
+        notification: MessageNotification
+    ) => {
         if (user) {
             if (notification.message === "Message sent!") {
                 toast(notification.message, { duration: 5000 });
@@ -29,19 +41,21 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                     <>
                         {notification.message}
                         <br />
-                        <Link to={`/messages/${notification.id}`} className="font-semibold text-blue-600">
+                        <Link
+                            to={`/messages/${notification.id}`}
+                            className="font-semibold text-blue-600"
+                        >
                             View Message
                         </Link>
                     </>,
                     {
-                        duration: 5000, // Optional: Adjust duration
+                        duration: 5000,
                     }
                 );
-
             }
-            window.dispatchEvent(new Event('newMessage'));
-        };
-    }
+            window.dispatchEvent(new Event("newMessage"));
+        }
+    };
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -52,12 +66,15 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
             }
 
             try {
-                const auth_response = await fetch("http://localhost:8080/api/user/auth", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
+                const auth_response = await fetch(
+                    "http://localhost:8080/api/user/auth",
+                    {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
 
                 if (!auth_response.ok) {
                     setAuthentication(false);
@@ -74,36 +91,54 @@ const ContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         };
 
         checkAuth();
-    }, []); // Only run once on mount
+    }, []);
 
     useEffect(() => {
         if (isAuthenticated && user) {
-            const socket = new SockJS('http://localhost:8080/ws');
+            const socket = new SockJS("http://localhost:8080/ws");
             const client = Stomp.over(socket);
 
             client.connect({}, () => {
-                client.subscribe(`/topic/messages/${user.id}`, (message: Stomp.Message) => {
-                    const notificiation: MessageNotification = JSON.parse(message.body);
-                    sendMessageNotification(notificiation);
-                });
+                client.subscribe(
+                    `/topic/messages/${user.id}`,
+                    (message: Stomp.Message) => {
+                        const notificiation: MessageNotification = JSON.parse(
+                            message.body
+                        );
+                        sendMessageNotification(notificiation);
+                    }
+                );
                 setStompClient(client);
             });
             return () => {
                 if (stompClient) {
-                    stompClient.disconnect(() => { console.log("disconnecting"); });
+                    stompClient.disconnect(() => {
+                        console.log("disconnecting");
+                    });
                 }
-            }
+            };
         }
     }, [isAuthenticated, user]);
-    // Function to log out and reset context state
+
     const logout = () => {
-        localStorage.removeItem("token"); // Remove stored token
-        setUser(null); // Reset user data
-        setAuthentication(false); // Reset authentication state
+        localStorage.removeItem("token");
+        setUser(null);
+        setAuthentication(false);
+        setUploadTrigger(0);
     };
 
     return (
-        <Context.Provider value={{ user, setUser, isAuthenticated, setAuthentication, logout }}>
+        <Context.Provider
+            value={{
+                user,
+                setUser,
+                isAuthenticated,
+                setAuthentication,
+                logout,
+                uploadTrigger,
+                triggerUpload,
+            }}
+        >
             {children}
         </Context.Provider>
     );
