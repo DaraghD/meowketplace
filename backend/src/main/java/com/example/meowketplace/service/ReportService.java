@@ -113,10 +113,13 @@ public class ReportService {
             switch (report.getReportType()) {
                 case ReportType.REVIEW:
                     reviewService.deleteReview(user, reviewService.getReviewById(report.getReportTypeId()));
+                    break;
                 case ReportType.USER:
-                    userService.deleteUser(report.getReportTypeId());
+                    userService.ban(report.getReportTypeId());
+                    break;
                 case ReportType.PRODUCT:
                     productService.deleteProduct(user, productService.getProductById(report.getReportTypeId()));
+                    break;
             }
         }
         reportRepository.save(report);
