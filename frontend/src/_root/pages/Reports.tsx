@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ReportCard from '@/components/ReportCard'; // Adjust path
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Report } from '@/lib/types/types.ts'
+import { Context } from "@/context.tsx";
 
 const Reports: React.FC = () => {
     const [reports, setReports] = useState<Report[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const context = useContext(Context);
+    if (!context) {
+        throw new Error("Context not found");
+    }
+    const { user } = context;
+    if (user == null)
+        return
     useEffect(() => {
         const fetchReports = async () => {
             setLoading(true);

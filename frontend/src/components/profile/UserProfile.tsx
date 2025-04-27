@@ -198,12 +198,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                                 </DrawerHeader>
                                 <div className="p-4 overflow-y-auto">
                                     {reports &&
-                                        reports.map((report) => (
-                                            <ReportCard
-                                                key={report.id}
-                                                report={report}
-                                            />
-                                        ))}
+                                        [...reports] // Create a copy to avoid modifying the original array
+                                            .sort((a, b) => b.id - a.id)
+                                            .map((report) => (
+                                                <ReportCard
+                                                    key={report.id}
+                                                    report={report}
+                                                />
+                                            ))}
                                     {reports && reports.length === 0 && (
                                         <Card>
                                             <CardContent>
