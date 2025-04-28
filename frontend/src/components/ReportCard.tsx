@@ -49,7 +49,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             <CardContent>
                 <div className="mb-4">
                     <strong className="block mb-1">Reason:</strong>
-                    <p>{report.reportReason || 'No reason provided.'}</p>
+                    <p style={{ whiteSpace: 'pre-wrap' }}>
+                        {report.reportReason || 'No reason provided.'}</p>
                 </div>
                 <div>
                     <strong className="block mb-1">{`Status: ${report.reportStatus}`}</strong>

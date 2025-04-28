@@ -1,15 +1,20 @@
 package com.example.meowketplace.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.example.meowketplace.dto.ReportRequest;
 import com.example.meowketplace.dto.ReportUpdate;
+import com.example.meowketplace.model.Message;
 import com.example.meowketplace.model.Report;
 import com.example.meowketplace.model.ReportStatus;
 import com.example.meowketplace.model.ReportType;
+import com.example.meowketplace.model.Review;
 import com.example.meowketplace.model.User;
 import com.example.meowketplace.repository.ReportRepository;
 
@@ -19,13 +24,16 @@ public class ReportService {
     private final UserService userService;
     private final ReviewService reviewService;
     private final ProductService productService;
+    private final MessageService messageService;
 
-    public ReportService(ReportRepository reportRepository, ReviewService reviewService, UserService userService,
+    public ReportService(MessageService messageService, ReportRepository reportRepository, ReviewService reviewService,
+            UserService userService,
             ProductService productService) {
         this.reportRepository = reportRepository;
         this.productService = productService;
         this.userService = userService;
         this.reviewService = reviewService;
+        this.messageService = messageService;
     }
 
     public void addReport(ReportRequest r, User user) throws Exception {
@@ -52,6 +60,24 @@ public class ReportService {
         report.setReportTypeId(r.getReportTypeId());
         report.setReportStatus(ReportStatus.PENDING);
 
+        if (report.getReportType() == ReportType.USER) {
+            List<Message> messages = messageService.findAllBySenderAndReceiver(report.getReportTypeId(), user.getId());
+            messages = messages.stream().filter(message -> message.getSender().getId().equals(report.getReportTypeId()))
+                    .collect(Collectors.toList());
+            messages = messages.stream()
+                    .sorted(Comparator.comparing(Message::getCreated_at).reversed())
+                    .limit(3).collect(Collectors.toList());
+            String message_string = "";
+            for (Message m : messages) {
+                message_string += m.getMessageContent() + "\n";
+            }
+            report.setReportReason(report.getReportReason() + "\n Last 3 messages : " + message_string);
+        }
+        if (report.getReportType() == ReportType.REVIEW) {
+            Review review = reviewService.getReviewById(report.getReportTypeId());
+            report.setReportReason(report.getReportReason() + "\n Reported review : " + review.getReviewText());
+        }
+        // if product the link works
         reportRepository.save(report);
     }
 
